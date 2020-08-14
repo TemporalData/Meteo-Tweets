@@ -149,7 +149,7 @@ papers['text_processed'] = papers['text_processed'].str.replace('just posted a p
 papers['text_processed'] = papers['text_processed'].str.replace('just posted a video', '')
 
 # recognizable unicode format
-papers['text_processed'] = papers['text_processed'].str.replace(r'<u\+',r'\u') 
+papers['text_processed'] = papers['text_processed'].str.replace(r'<u\+',r'\\u') 
 papers['text_processed'] = papers['text_processed'].str.replace('>','') 
 papers['text_processed'] = papers['text_processed'].map(lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
 
