@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
+
+<!-- Load d3-cloud -->
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+
+<!-- Create a div where the graph will take place -->
+
+<div id="mytitle"> 
+  <h1>Welcome to the visualization board!</h1>
+</div>
+<br>
+<div id="my_vis1"> Following is the distribution map:</div>
+<br><br>
+<div id='mytest1'></div>
+
+<p id="map-text">foo bar</p>
+<!-- <p id="map-text2">foo bar2</p> -->
+<div id="mytest2"> {{ place }} </div>
+
+<br><br>
+
+<form method="get">
+  <!-- Create a time selection panel -->
+  <label for="startlabel">Start date:</label>
+  <input type="date" id="start" name="start-date"
+         value= "2016-05-27"
+         min="2015-01-01" max="2017-12-31">
+
+
+  <label for="endlabel">End date:</label>
+  <input type="date" id="end" name="end-date"
+         value="2016-05-28"
+         min="2015-01-01" max="2017-12-31">
+  <br>
+  <input type="submit" class="btn" value="Reset" name="submitreset">
+
+ <!--  <input type="button" id="myButton" value="Apply change" name="buttonclick" onclick="update_map()"> -->
+  <button type="button" id="myButton" onclick="update_cloud()">Apply change</button><br>
+
+</form>
+
+<br><br>
+<div id="my_dataviz1"> Following is the wordcloud:</div>
+<br>
+<div id="my_cloudviz" data-value=""> {{ place2 }} </div>
+<br>
+<p id="word-doc-text">Corresponding doc_no are: {{ doclist }}</p>
+<br>
+<!-- <input type="submit" class="btn" value="Show WordCloud" name="wordcloud">
+ -->
+
+<br><br><br><br><br><br>
+<div id="mydataviz3"> Following is the graph for topics:</div>
+<div id= "mytest4">{{ place3 }}</div>
+<input type="text" id="user-input" value="Your input" autofocus="">
+<br>
+<button type="button" id="sender" onclick="refresh_input()">Send data</button><br>
+
+
+
+
+
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 30, right: 30, bottom: 30, left: 50},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_vis1")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+var g = svg.append("g")
+          .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+ 
+g.append("ellipse")
+  .attr("cx",250)
+  .attr("cy",250)
+  .attr("rx",50)
+  .attr("ry",80)
+  .attr("fill", "green")
+  .attr("opacity", 0.5);
+
+g.append("text")
+  .attr("x", 140)
+  .attr("y", 150)
+  .attr("stroke", "steelblue")
+  .attr("font-family", "sans-serif")
+  .attr("font-size", "24px")
+  .text("I am a pretty ellipse!");
+
+
+// =========================================================================
+
+
+function update_cloud(){
+  var startDate = document.getElementById("start").value;
+  var endDate = document.getElementById("end").value;
+
+  // pass dates to views.py to process data; 
+  // acquire new data results and generate graphs in template
+
+  // console.log(String(startDate),String(endDate));
+  // document.getElementById("mytest2").innerHTML = String(startDate)+' to '+String(endDate);
+
+  $.ajax({
+    url: '',
+    data: {
+      'start':startDate,
+      'end':endDate
+    },
+    dataType: 'json',
+    success: function (data) {
+      console.log(data);
+      $('#map-text').html(data["response"][0]);
+
+      var jsonObject = jQuery.parseJSON(data["response"][1]);//
+      console.log(jsonObject);
+
+      jsonObject.forEach(function(d){
+        d.event = d.event;
+        d.doc_list = d.doc_list;
+      }
+      );
+      console.log(jsonObject);
+      console.log(jsonObject[5]["doc_list"].length);
+
+      $("#my_cloudviz").data("value", jsonObject);
+      draw_cloud();
+
+    }
+  });
+
+};
+
+function draw_cloud(){
+
+  d3.selectAll("#my_cloudviz > *").remove();
+  var mywords = $("#my_cloudviz").data("value");
+
+
+// =====AnyChart-Based WordCloud(Only trial version available)============
+  // mywords.forEach(function(d){
+  //   d.x = d.event;
+  //   d.value = d.doc_list.length;
+
+  //   // for AnyChart
+  //   // d.x = d.event;
+  //   // d.value = d.doc_list.length;
+  // }
+  // );
+  // var chart = anychart.tagCloud(mywords);
+
+  // // chart.title('wordcloud');
+  // chart.angles([0]);
+  // // chart.fontSize(20);
+  // chart.fontWeight(900);
+  // // chart.colorRange(true);
+  // chart.colorRange().length('80%');
+  // chart.container('my_cloudviz');
+  // chart.listen("pointClick",function(e){
+  //   var event_name = e.point.get("x");
+  //   var documnet_name =  mywords.find(el.doc_list => el.event === event_name);
+
+  // })
+  // chart.draw();
+
+
+// ================D3-Based WordCloud======================
+  var cloud_svg = d3.select("#my_cloudviz")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
+  // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+  // Wordcloud features that are different from one word to the other must be here
+
+  var layout = d3.layout.cloud()
+    .size([width, height])
+    .words(mywords.map(function(d) { return {text: d.event, size:d.doc_list.length, list:d.doc_list}; }))
+    .padding(10)        //space between words
+    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+    // .rotate(0)
+    .font("Impact")
+    // .fontSize(20)
+    .fontSize(function(d) { return d.size; })      // font size of words
+    .text(function(d) { return d.text; })
+    .on("end", draw);
+  layout.start();
+
+  // This function takes the output of 'layout' above and draw the words
+  // Wordcloud features that are THE SAME from one word to the other can be here
+  function draw(words) {
+
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    cloud_svg
+      .append("g")
+        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+        .selectAll("text")
+          .data(words)
+        .enter().append("text")
+          .style("font-size", function(d) { return Math.log(d.size)*3+12; })
+          // .style("font-size",20)
+          .style("fill", function(d, i) { return fill(i); })//"#69b3a2")
+          .attr("text-anchor", "middle")
+          .style("font-family", "Impact")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; })
+          .on('click', function(d,event){
+            // console.log(d3.event.currentTarget);
+            // console.log(d3.select(this), d.list);
+            
+            $('#word-doc-text').html('corresponding documents are '+d.list+''); 
+          });
+  }
+
+}
+
+
+
+
+
+
+function refresh_input(){
+  var input = document.getElementById("user-input").value;
+  
+  $.ajax({
+      url: '',
+      data: {
+        'inputValue': input
+      },
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);
+        document.getElementById('p-text').innerHTML = data["response"];
+
+      }
+    });
+};
+
+
+
+
+// How to read csv file with unicode
+// First you need to change the encoding of the document and save it once in UTF-8 format, and then put your UTF-8 texts inside that document.
+
+
+// d3.csv("../partial.csv",function(data)){
+
+
+
+//   var startDate = d3.select("#start").html(this.value)
+//   var endDate = d3.select("#end").html(this.value)
+
+
+
+
+//   // d3.select("#myButton").on("click",update(startDate,endDate))
+
+
+//   // function update(){
+//   //   alert('Hello world! startDate,endDate');
+//   // }
+  
+
+// }
+
+
+
+
+
+
+
+
+// ==========================----------------------------==================
+
+</script>
