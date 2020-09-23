@@ -6,4 +6,6 @@ Way1(recommend):
 Run via script "clear.sh";
 
 Way2:
-'''python manage.py runserver'''
+```
+python manage.py runserver
+```
