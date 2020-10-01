@@ -28,7 +28,7 @@ DATA_PATH = CURRENT_PATH + 'partial.csv'
 DOCFILE = 'documents.csv'
 CLUFILE = 'clusters.csv'
 WEAFILE = 'events.csv'
-
+LDAFILE = 'lda.json'
 
 
 def graph(request):
@@ -60,11 +60,47 @@ def graph(request):
         user_input = request.GET.get('inputValue')
         data = {'response': f'You typed: {user_input}'} 
         return JsonResponse(data)
+    
+    elif(request.GET.get('selected_event')):
+        selection = request.GET.get('selected_event')
+
+        nested_topics,flat_js,max_prob,min_prob = topic_extract(selection)
+
+        # topics = json.dumps(topics)
+        # for t in topics:
+        #     t_id = t[0] #integer
+        #     t_str = t[1] #string, e.g. (0, '0.057*"repost"')
+
+        # with open(CURRENT_PATH+LDAFILE) as inputfile:
+        #     lda = json.load(inputfile)
+        # data = {'response': lda} 
+        data = {'response': f'selected_event is {selection}', 'topics':flat_js, 'extrem':[min_prob,max_prob]} 
+        return JsonResponse(data)
 
     else:
-        context = {'place':'No date selected!'}
+
+        # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
+        event_mild = pd.read_csv(CURRENT_PATH+'new_mild.csv').iloc[:,0].values.tolist()
+        event_severe = pd.read_csv(CURRENT_PATH+'new_severe.csv').iloc[:,0].values.tolist()
+        event_groups = [{"key":"Mild Weather Events","value":event_mild},{"key":"Severe Weather Events","value":event_severe}]
+        context = {'place':'No date selected!', "event_groups":json.dumps(event_groups)}
+
         return render(request, 'graph/graph.html', context=context)        
 
+def topic_extract(event):
+    topic_text = process.event_pipeline(event,CURRENT_PATH)
+    topic_result = process.topic_kw_pair(topic_text)
+    tw_list,max_prob,min_prob = process.save_topic(topic_result,CURRENT_PATH)
+
+    columns=['group','variable','prob','text']
+    tw_js = []
+    for row in tw_list:
+        row_group = dict.fromkeys(columns,0)
+        row_group.update(zip(row_group,row))
+        tw_js.append(row_group)
+
+
+    return topic_result,tw_js,max_prob,min_prob
 
 
 def _run_front_process(start,end,filepath):
@@ -73,8 +109,8 @@ def _run_front_process(start,end,filepath):
     _create_db(filepath, 'D') #create Document objects
     _create_db(filepath, 'W') #create DocWeatherEvent objects
 
-    event_fog = [{'event': b.event, 'doc_list': [a.doc_idx for a in b.doc_idx.all()]} for b in DocWeatherEvent.objects.prefetch_related('doc_idx')]
-    response_data = [json.dumps(event_fog)] 
+    event = [{'event': b.event, 'doc_list': [a.doc_idx for a in b.doc_idx.all()]} for b in DocWeatherEvent.objects.prefetch_related('doc_idx')]
+    response_data = [json.dumps(event)] 
 
     return response_data
 
@@ -83,6 +119,9 @@ def _run_front_process(start,end,filepath):
 
 def _run_back_process(start,end,filepath):
     process.pipeline(start,end,filepath)
+    # process.find_cloud_doc(start,end,filepath)
+
+
 
 
 # def _load_csv(filedir,start,end):

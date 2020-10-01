@@ -56,7 +56,6 @@ class Document(models.Model):
 # 		ordering = ['cluster_id']
 
 
-
 # Not related to a particular cluster, save in 'weather_terms.csv'
 class DocWeatherEvent(models.Model):
 	event = models.CharField(max_length=30,blank=True)
