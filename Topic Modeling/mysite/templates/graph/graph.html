@@ -20,6 +20,7 @@
   #left, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;}
   #left {width: 30%;}
   #right {width: 70%; }
+
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.css">
@@ -41,6 +42,9 @@
 <!-- Part 1: Wordcloud in chosen time -->
 
 <div id='part1_wordcloud'>
+  <div id="cloud-title"> 
+  <h2>Wordcloud</h2>
+  </div>
   <script type="text/javascript" src="/static/js/part1_wordcloud.js"></script>
   <!-- Dislay selected time duration in text-->
   <div id="mytest2"> {{ place }} </div>
@@ -84,8 +88,10 @@
 
 
 <!-- Part 2: Topics of selected weather glossary -->
-
-<div id="container">
+<div id="topic-title"> 
+<h2>Weather Topics</h2>
+</div>
+<div id="container" >
   <script type="text/javascript" src="/static/js/part2_topics.js"></script>
   <div id="left">
       <label for="selectButton" style=' font-size: 20px'>Weather Glossary</label>
@@ -115,13 +121,33 @@
 
 
 
+
+
+<!-- <button type="button" id="myButton" onclick="update_cloud()">Apply change</button> -->
+<!-- Part 3: Social Network -->
+<div>
+  <div id="network-title"> 
+  <h2>Social Networks</h2>
+  </div>
+  <div class="btn-group">
+    <input type="radio" id="user-net" name="age" value="30">
+    <label for="user-net">User Netw</label><br>
+
+
+    <button type="button" id='user-net' onclick="draw_user_net()">User Network</button>
+    <button type="button" id='bi-net' onclick="draw_bi_net()">Bi-Network</button>
+  </div>
+  <svg id='network'></svg>
+  <script type="text/javascript" src="/static/js/part3_network.js"></script>
+</div>
+
+
 <script>
 
 // set the dimensions and margins of the graph
 var margin = {top: 30, right: 30, bottom: 30, left: 50},
-    width = 500 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
-
+    width = 1000 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
 
 //============ Weather Event Dropdown Menu Initialization ============
 
@@ -149,7 +175,7 @@ d3.select("#selectButton").on("change", function(d) {
 
 
 
-// ================Refresh text input======================
+// ================ Refresh Text Input (For Test Only)======================
 
 
 function refresh_input(){
@@ -170,6 +196,9 @@ function refresh_input(){
 };
 
 
-// ========================== Social Networks ==================
+// ========================== Social Networks =======================
+
+
+
 
 </script>
