@@ -1,7 +1,7 @@
 function update_cloud(){
   var startDate = document.getElementById("start").value;
   var endDate = document.getElementById("end").value;
-
+  var button = document.getElementById("myButton").value;
   // pass dates to views.py to process data; 
   // acquire new data results and generate graphs in template
 
@@ -12,7 +12,8 @@ function update_cloud(){
     url: '',
     data: {
       'start':startDate,
-      'end':endDate
+      'end':endDate,
+      'apply_change': button
     },
     dataType: 'json',
     success: function (data) {

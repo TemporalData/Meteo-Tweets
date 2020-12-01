@@ -15,6 +15,9 @@
 <!-- Load color palettes -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
 <style type="text/css">
   #container {height:100%; width:100%;font-size: 0;}
   #left, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;}
@@ -23,7 +26,10 @@
 
 </style>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- 
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.css"> -->
 
 
 
@@ -66,10 +72,10 @@
     <br>
 
     <!-- Reset Button -->
-    <input type="submit" class="btn" value="Reset" name="submitreset">
+    <input type="submit" value="Reset" name="submitreset">
 
     <!-- Upply Change Button -->
-    <button type="button" id="myButton" onclick="update_cloud()">Apply change</button>
+    <button type="button" id="myButton" value="Apply Change" onclick="update_cloud()">Apply change</button>
     <br>
   </form>
   <br><br>
@@ -125,21 +131,22 @@
 
 <!-- <button type="button" id="myButton" onclick="update_cloud()">Apply change</button> -->
 <!-- Part 3: Social Network -->
-<div>
+<form method="get">
   <div id="network-title"> 
   <h2>Social Networks</h2>
   </div>
   <div class="btn-group">
-    <input type="radio" id="user-net" name="age" value="30">
-    <label for="user-net">User Netw</label><br>
 
-
-    <button type="button" id='user-net' onclick="draw_user_net()">User Network</button>
-    <button type="button" id='bi-net' onclick="draw_bi_net()">Bi-Network</button>
+    <button type="button" id='user-net' onclick="draw_user_net()" style='background-color:green;' class="btn btn-primary">User Network</button>
+    <button type="button" id='bi-net' onclick="draw_bi_net()" class="btn btn-primary">Bi-Network</button>
   </div>
+  <br>
   <svg id='network'></svg>
   <script type="text/javascript" src="/static/js/part3_network.js"></script>
-</div>
+</form>
+
+
+
 
 
 <script>

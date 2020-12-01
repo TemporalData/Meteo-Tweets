@@ -5,6 +5,7 @@ var color = d3.scaleOrdinal(d3.schemeDark2); //change color scheme https://obser
 
 
 function draw_network(filename) {
+    // console.log(filename);
     d3.json(filename, function(graph) {
 
     var label = {
@@ -189,20 +190,41 @@ function draw_network(filename) {
     });
 }
 
+function update_network_file(filename){
+    var startDate = document.getElementById("start").value;
+    var endDate = document.getElementById("end").value;
+    
+    $.ajax({
+        url: '',
+        data: {
+          'updated_network':filename,
+          'start':startDate,
+          'end':endDate
+        },
+        dataType: 'json',
+        success: function (data) {
+          console.log(data["network-info"]);
+          var filedir = '/static/js/'+String(filename)+'.json'
+          draw_network(filedir);
+        
+    }
+  });
+}
+
 
 
 function draw_user_net() {
-    var filename = '/static/js/week2016_sub.json';
-    draw_network(filename);
+    var filename = 'users';
+    update_network_file(filename);
 }
 
 function draw_bi_net() {
-    var filename = '/static/js/bi_week2016.json';
-    draw_network(filename);
+    var filename = 'bipartite';
+    update_network_file(filename);
 }
 
 // Display uesr network by default
-var filename = '/static/js/week2016_sub.json';
-draw_network(filename);
+var filedir = '/static/js/users.json';
+draw_network(filedir);
 
 

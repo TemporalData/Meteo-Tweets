@@ -18,7 +18,7 @@ import pandas as pd
 from ast import literal_eval
 
 from . import text_processing as process
-
+from . import generate_network as gn
 
 from django.utils import timezone
 today = timezone.now()
@@ -40,14 +40,14 @@ def graph(request):
     
 
 
-
+# Reset to default
     if(request.GET.get('submitreset')):
         context = {'place':'No date selected!'}
         return render(request, 'graph/graph.html', context=context)         
 
-
+# Part 1: update wordcloud
     # Acquire new start and end dates, and apply clustering algorithm
-    elif(request.GET.get('start')):
+    elif(request.GET.get('apply_change')):
         start = request.GET.get('start')
         end = request.GET.get('end')   
         response_data = _run_front_process(start,end,CURRENT_PATH) 
@@ -55,12 +55,7 @@ def graph(request):
         data = {'response': [f'start date is: {start}, end date is {end}', response_data]} 
         return JsonResponse(data)
 
-
-    elif(request.GET.get('inputValue')):
-        user_input = request.GET.get('inputValue')
-        data = {'response': f'You typed: {user_input}'} 
-        return JsonResponse(data)
-    
+# Part 2: update weather event's topics
     elif(request.GET.get('selected_event')):
         selection = request.GET.get('selected_event')
 
@@ -77,6 +72,24 @@ def graph(request):
         data = {'response': f'selected_event is {selection}', 'topics':flat_js, 'extrem':[min_prob,max_prob]} 
         return JsonResponse(data)
 
+
+# Part 3: update social networks
+    elif(request.GET.get('updated_network')):
+        start = request.GET.get('start')
+        end = request.GET.get('end') 
+        net = request.GET.get('updated_network')
+
+        gn.generate_json(start,end,net)
+        data = {'network-info':[start,end, net]}
+        return JsonResponse(data)
+
+# Test (optional)
+    elif(request.GET.get('inputValue')):
+        user_input = request.GET.get('inputValue')
+        data = {'response': f'You typed: {user_input}'} 
+        return JsonResponse(data)
+    
+# Default 
     else:
 
         # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
