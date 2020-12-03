@@ -74,27 +74,27 @@ def clean(temp,isdate=False,start='2016-07-01',end='2016-07-08'):
 
     # temp.reset_index(drop=True,inplace=True)
     # remove links starting with "http(s)"
-    temp['text'].apply(lambda x: x.split("http")[-1])
+    temp['text'] = temp['text'].apply(lambda x: x.split("http")[-1])
     
     # remove punctuations, normalize to lowercase, delete default text
-    temp['text'].apply(lambda x: re.sub('[,\.!?\@]', ' ', x))
-    temp['text'].apply(lambda x: re.sub('\r\n', ' ', x))
-    temp['text'].apply(lambda x: x.lower()) 
+    temp['text'] = temp['text'].apply(lambda x: re.sub('[,\.!?\@]', ' ', x))
+    temp['text'] = temp['text'].apply(lambda x: re.sub('\r\n', ' ', x))
+    temp['text'] = temp['text'].apply(lambda x: x.lower()) 
     
     # remove default text "Just posted a photo/video"
-    temp['text'].apply(lambda x: x.replace('just posted a photo', ''))
-    temp['text'].apply(lambda x: x.replace('just posted a video', ''))
+    temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a photo', ''))
+    temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a video', ''))
 
     # recognizable unicode format
-    temp['text'].apply(lambda x: x.replace(r'<u\+',r'\\u') )
-    temp['text'].apply(lambda x: x.replace('>','') )
-    temp['text'].apply(lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
+    temp['text'] = temp['text'].apply(lambda x: x.replace(r'<u\+',r'\\u') )
+    temp['text'] = temp['text'].apply(lambda x: x.replace('>','') )
+    temp['text'] = temp['text'].apply(lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
 
     # demojize emoji unicode to text
-    temp['text'].apply(lambda x: x.rstrip('\\')) #remove distracting "\" at the end of strings
-    temp['text'].apply(lambda x: emoji.demojize(bytes(x,encoding='latin_1').decode('unicode_escape')))
-    temp['text'].apply(lambda x: re.sub('[:\#]', ' ', x)) #remove new ":" from demojize
-    temp['text'].apply(lambda x: x.lower()) 
+    temp['text'] = temp['text'].apply(lambda x: x.rstrip('\\')) #remove distracting "\" at the end of strings
+    temp['text'] = temp['text'].apply(lambda x: emoji.demojize(bytes(x,encoding='latin_1').decode('unicode_escape')))
+    temp['text'] = temp['text'].apply(lambda x: re.sub('[:\#]', ' ', x)) #remove new ":" from demojize
+    temp['text'] = temp['text'].apply(lambda x: x.lower()) 
 
 # doc_no,user_screen_name,latitude,longitude,text,created_at_CET,date,text_processed
     temp = temp[['doc_no','user_screen_name','latitude','longitude','date','text']]
