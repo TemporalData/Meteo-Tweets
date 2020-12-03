@@ -6,8 +6,9 @@ var color = d3.scaleOrdinal(d3.schemeDark2); //change color scheme https://obser
 
 function draw_network(filename) {
     // console.log(filename);
+    // d3.json(filename).then(function(graph){
     d3.json(filename, function(graph) {
-
+    // console.log(graph);
     var label = {
         'nodes': [],
         'links': []
@@ -57,26 +58,117 @@ function draw_network(filename) {
             .on("zoom", function() { container.attr("transform", d3.event.transform); })
     );
 
-    var link = container.append("g").attr("class", "links")
-        .selectAll("line")
-        .data(graph.links)
-        .enter()
-        .append("line")
-        .attr("stroke", "#aaa")
-        //.attr("stroke-width", "1px");
-        .attr("stroke-width", function(d) { return (1 + Math.sqrt(d.weight)); }); // line thickness
-        //.attr("stroke-width", function(d) { return (d.weight * 100); }); // line thickness
+    if (filename == '/static/js/bipartite.json'){
+        console.log(filename);
+        var link = container.append("g").attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter()
+            .append("line")
+            .attr("stroke", "#aaa")
+            .attr("stroke-width", function(d) { return (1 + Math.sqrt(d.weight)); }); // line thickness
 
-    var node = container.append("g").attr("class", "nodes")
-        .selectAll("g")
-        .data(graph.nodes)
-        .enter()
-        .append("circle")
-        //.append("rect")
-        //.attr("width", 50)
-        //.attr("height", 50)
-        .attr("r", function(d) { return (d.degree*3); }) // node size (d.degree*3) (5 + Math.sqrt(d.degree - 1)*5)
-        .attr("fill", function(d) { return color(d.bipartite); }) // node color d.community
+        var node = container.append("g").attr("class", "nodes")
+            .selectAll("g")
+            .data(graph.nodes)
+            .enter()
+            .append("circle")
+            //.append("rect")
+            //.attr("width", 50)
+            //.attr("height", 50)
+
+            // d.degree(bipartite) d.node_weight(users)
+            .attr("r", function(d) { return (d.degree*3); }) // node size (d.degree*3) (5 + Math.sqrt(d.degree - 1)*5)
+            .attr("fill", function(d) { return color(d.bipartite); }) // node color d.community
+
+        var labelNode = container.append("g").attr("class", "labelNodes")
+            .selectAll("text")
+            .data(label.nodes)
+            .enter()
+            .append("text")
+            .text(function(d, i) { return i % 2 == 0 ? "" : d.node.id; })
+            .style("fill", "#555")
+            //.attr("fill", function(d) { return color(d.bipartite); }) // label color
+            .style("font-family", "Arial")
+            //.style("font-size", 12)
+            .style("font-size", function(d) { return (10 + (d.node.degree-1) * 5); }) // label size (10 + (d.node.degree-1) * 5) (d.node.degree*3)
+            .style("pointer-events", "none"); // to prevent mouseover/drag capture
+
+        function focus(d) {
+            var index = d3.select(d3.event.target).datum().index;
+            node.style("opacity", function(o) {
+                return neigh(index, o.index) ? 1 : 0.1;
+            });
+            labelNode.attr("display", function(o) {
+              return neigh(index, o.node.index) ? "block": "none";
+            });
+            //.style("visibility","visible");
+            link.style("opacity", function(o) {
+                return o.source.index == index || o.target.index == index ? 1 : 0.1;
+            });
+        }
+
+        function unfocus() {
+           labelNode.attr("display", "block");
+           //labelNode.style("visibility","hidden");
+           node.style("opacity", 1);
+           link.style("opacity", 1);
+        }
+
+    } else {
+        console.log(filename);
+        var link = container.append("g").attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter()
+            .append("line")
+            .attr("stroke", "#aaa")
+           .attr("stroke-width", function(d) { return (1 + Math.sqrt(d.edge_weight)); }); // line thickness
+   
+        var node = container.append("g").attr("class", "nodes")
+            .selectAll("g")
+            .data(graph.nodes)
+            .enter()
+            .append("circle")
+            .attr("r", function(d) { return (Math.sqrt(d.node_weight) / 5); }) // node size
+            .attr("fill", function(d) { return color(d.community); }) // node color
+
+        var labelNode = container.append("g").attr("class", "labelNodes")
+            .selectAll("text")
+            .data(label.nodes)
+            .enter()
+            .append("text")
+            .text(function(d, i) { return i % 2 == 0 ? "" : d.node.name; })
+            .style("fill", "#555")
+            .style("font-family", "Arial")
+            //.style("font-size", 12)
+            .style("font-size", function(d) { return (10 + (d.node.degree-1) * 3); }) // label size
+            .style("pointer-events", "none"); // to prevent mouseover/drag capture
+
+        // focus and show neighbours with labels
+        function focus(d) {
+            var index = d3.select(d3.event.target).datum().index;
+            node.style("opacity", function(o) {
+                return neigh(index, o.index) ? 1 : 0.1;
+            });
+            labelNode.attr("display", function(o) {
+              return neigh(index, o.node.index) ? "block": "none";
+            })
+            .style("visibility","visible");
+            link.style("opacity", function(o) {
+                return o.source.index == index || o.target.index == index ? 1 : 0.1;
+            });
+        }
+
+        function unfocus() {
+           labelNode.attr("display", "block");
+           labelNode.style("visibility","hidden");
+           node.style("opacity", 1);
+           link.style("opacity", 1);
+        }
+
+
+    }
 
     node.on("mouseover", focus).on("mouseout", unfocus);
 
@@ -87,20 +179,7 @@ function draw_network(filename) {
             .on("end", dragended)
     );
 
-    var labelNode = container.append("g").attr("class", "labelNodes")
-        .selectAll("text")
-        .data(label.nodes)
-        .enter()
-        .append("text")
-        .text(function(d, i) { return i % 2 == 0 ? "" : d.node.id; })
-        .style("fill", "#555")
-        //.attr("fill", function(d) { return color(d.bipartite); }) // label color
-        .style("font-family", "Arial")
-        //.style("font-size", 12)
-        .style("font-size", function(d) { return (10 + (d.node.degree-1) * 5); }) // label size (10 + (d.node.degree-1) * 5) (d.node.degree*3)
-        .style("pointer-events", "none"); // to prevent mouseover/drag capture
-
-    node.on("mouseover", focus).on("mouseout", unfocus);
+    // node.on("mouseover", focus).on("mouseout", unfocus);
 
     function ticked() {
 
@@ -135,26 +214,7 @@ function draw_network(filename) {
         return 0;
     }
 
-    function focus(d) {
-        var index = d3.select(d3.event.target).datum().index;
-        node.style("opacity", function(o) {
-            return neigh(index, o.index) ? 1 : 0.1;
-        });
-        labelNode.attr("display", function(o) {
-          return neigh(index, o.node.index) ? "block": "none";
-        });
-        //.style("visibility","visible");
-        link.style("opacity", function(o) {
-            return o.source.index == index || o.target.index == index ? 1 : 0.1;
-        });
-    }
 
-    function unfocus() {
-       labelNode.attr("display", "block");
-       //labelNode.style("visibility","hidden");
-       node.style("opacity", 1);
-       link.style("opacity", 1);
-    }
 
     function updateLink(link) {
         link.attr("x1", function(d) { return fixna(d.source.x); })
@@ -188,12 +248,13 @@ function draw_network(filename) {
     }
 
     });
+    
 }
 
 function update_network_file(filename){
     var startDate = document.getElementById("start").value;
     var endDate = document.getElementById("end").value;
-    
+    // console.log('update',filename);
     $.ajax({
         url: '',
         data: {
@@ -203,14 +264,13 @@ function update_network_file(filename){
         },
         dataType: 'json',
         success: function (data) {
-          console.log(data["network-info"]);
+          // console.log(data["network-info"]);
           var filedir = '/static/js/'+String(filename)+'.json'
           draw_network(filedir);
         
     }
   });
 }
-
 
 
 function draw_user_net() {
@@ -220,11 +280,13 @@ function draw_user_net() {
 
 function draw_bi_net() {
     var filename = 'bipartite';
+    // console.log(filename,'draw_bi_net')
     update_network_file(filename);
 }
 
 // Display uesr network by default
-var filedir = '/static/js/users.json';
-draw_network(filedir);
+// var filedir = '/static/js/bipartite.json';
+// var filedir = '/static/js/users.json';
+// draw_network(filedir);
 
 

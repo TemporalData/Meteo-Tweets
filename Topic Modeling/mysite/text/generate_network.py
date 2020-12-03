@@ -10,46 +10,49 @@ import ast
 import os
 from networkx.algorithms import bipartite
 
-def main():
-    start = '2016-05-27 00:00:00'
-    end = '2016-06-02 23:59:59'
-    filename = '/static/js/week2016_sub.json'
-    generate_json(start,end,filename)
+# def main():
+#     start = '2016-05-27 00:00:00'
+#     end = '2016-06-02 23:59:59'
+#     filename = '/static/js/week2016_sub.json'
+#     generate_json(start,end,filename)
 
 def generate_json(start,end,filename):
-    # filedir = 'data'
     current_dir = os.path.abspath(os.getcwd())
     filedir = current_dir+'/data/'
     file1 = os.path.join(filedir,'partial_net.csv')
     file2 =os.path.join(filedir,'allevents.csv')
 
     twitter_df = load_dataset(file1)
-    sample_df = generate_sample(start, end, twitter_df)
+    sample_df = generate_sample_df(start, end, twitter_df)
     network_df = generate_network_df(sample_df)
     events_df = generate_events_df(file2, network_df)
 
-    G, sub_b = generate_user_network(network_df)
-    # G = community_detection(G)
-    B, T, U, bi_sub_b = generate_bipartite(events_df)
-    # U = community_detection(U)
-    if filename == 'users':
+    # generate user network
+    G = generate_user_network(network_df)
+    G = add_degree(G)
+    sub_b = get_largest(G)
+    G = community_detection(G)
 
-    # JSON_output('sample_data.json', G)
+
+    B, T, U = generate_bipartite(events_df)
+    bi_sub_b = get_largest(B)
+    U = community_detection(U)
+    if filename == 'users':
         JSON_output(current_dir+'/text/static/js/users.json', sub_b)
     # JSON_output('bi_sample_data.json', B)
     # JSON_output('bi_term_data.json', T)
     # JSON_output('bi_user_data.json', U)
     if filename == 'bipartite':
         JSON_output(current_dir+'/text/static/js/bipartite.json', bi_sub_b)
-
 # Load Dataset
 def load_dataset(file1):
     twitter_df = pd.read_csv(file1, encoding='ISO-8859-15')
     return twitter_df
 
-def generate_sample(start, end, twitter_df):
-    # twitter_df['created_at_CET'] = pd.to_datetime(twitter_df['created_at_CET'])
+def generate_sample_df(start, end, twitter_df):
+    twitter_df['created_at_CET'] = twitter_df['created_at_CET']
     sample_df = twitter_df.loc[(twitter_df['created_at_CET']>=start) & (twitter_df['created_at_CET']<=end), ]
+
     return sample_df
 
 # Extract 'user_mentions_id' and 'user_mentions_screen_name' from 'user_mentions'
@@ -135,7 +138,8 @@ def generate_network_df(sample_df):
     # tweet weight
     network_df['tweet_weight'] = sample_df['retweet_count'] + sample_df['favorite_count']
     
-    network_df.reset_index(level=0, inplace=True)
+    # None values in the network
+    network_df = network_df.where((pd.notnull(network_df)), None)
 
     return network_df
 
@@ -191,13 +195,27 @@ def generate_user_network(network_df):
             G.nodes[user_id]['node_weight'] = tweet['user_followers_count']
             G.nodes[int_id]['name'] = int_name
             G.nodes[int_id]['node_weight'] = tweet['user_followers_count']
-    # get the largest component and subgraph
-    largest_component = max(nx.weakly_connected_components(G), key=len)
-    sub_b = G.subgraph(largest_component)
+    return(G)
 
-    return(G, sub_b)
+def add_degree(G):
+    degree_list = [val for (node, val) in G.degree()]
+    node_list = list(G.nodes())
+    degree_dict = {k:v for k,v in zip(node_list, degree_list)}
+    nx.set_node_attributes(G, degree_dict, 'degree')
+    return(G)
+
+def get_largest(G):
+    if bipartite.is_bipartite(G):
+        largest_component = max(nx.connected_components(G), key=len)     
+    else:
+        # weakly_connected_components: for large size of network
+        largest_component = max(nx.weakly_connected_components(G), key=len)
+    sub = G.subgraph(largest_component) 
+    return(sub)  
 
 def generate_events_df(file2, network_df):
+    network_df.reset_index(level=0, inplace=True)
+
     events_df = pd.read_csv(file2)
     events_df = events_df[events_df.astype(str)['doc_list'] != '[]']
     
@@ -225,11 +243,7 @@ def generate_bipartite(events_df):
     user_nodes = set(B) - term_nodes
     T = bipartite.weighted_projected_graph(B, term_nodes)
     U = bipartite.weighted_projected_graph(B, user_nodes)
-
-    # get the largest component and subgraph
-    largest_component_b = max(nx.connected_components(B), key=len)
-    bi_sub_b = B.subgraph(largest_component_b)
-    return(B, T, U, bi_sub_b)
+    return(B, T, U)
 
 def community_detection(U):
     # convert network from networkx to igraph
@@ -246,5 +260,5 @@ def JSON_output(file_name, network_data):
     with open(file_name, 'w') as outfile:
         json.dump(JSON_data, outfile)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
