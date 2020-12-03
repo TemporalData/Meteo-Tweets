@@ -50,7 +50,7 @@ def load_dataset(file1):
     return twitter_df
 
 def generate_sample_df(start, end, twitter_df):
-    twitter_df['created_at_CET'] = twitter_df['created_at_CET']
+    # twitter_df['created_at_CET'] = twitter_df['created_at_CET']
     sample_df = twitter_df.loc[(twitter_df['created_at_CET']>=start) & (twitter_df['created_at_CET']<=end), ]
 
     return sample_df
@@ -111,14 +111,14 @@ def generate_network_df(sample_df):
     network_df = pd.DataFrame(columns = ['created_at_CET', 'place_full_name', 'user_screen_name', 'id', 'text', 'retweet_count', 'favorite_count', 
                                      'is_retweet', 'is_favorite', 'is_quote', 'is_reply', 'quoted_status_id_permalink', 
                                      'in_reply_to_status_id', 'in_reply_to_user_id', 'in_reply_to_screen_name', 
-                                     'user_id', 'user_name', 'n_user_mentions', 'user_mentions_id', 'user_mentions_screen_name', 'hashtags_name', 
+                                     'user_id', 'n_user_mentions', 'user_mentions_id', 'user_mentions_screen_name', 'hashtags_name', 
                                      'user_followers_count', 'user_following_count', 'user_favourited_other_tweets_count', 'tweet_group', 'tweet_weight'])
   
     # columns with same values
     same_columns = ['created_at_CET', 'place_full_name', 'user_screen_name', 'id', 'text', 'retweet_count', 'favorite_count', 
                 'is_retweet', 'is_favorite', 'is_quote', 'is_reply', 'quoted_status_id_permalink', 
                 'in_reply_to_status_id', 'in_reply_to_user_id', 'in_reply_to_screen_name', 
-                'user_id', 'user_name', 'n_user_mentions', 
+                'user_id', 'n_user_mentions', 
                 'user_followers_count', 'user_following_count', 'user_favourited_other_tweets_count']
     network_df[same_columns] = sample_df[same_columns]
 
