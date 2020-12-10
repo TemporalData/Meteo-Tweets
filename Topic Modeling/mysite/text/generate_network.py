@@ -4,7 +4,7 @@ import re
 from operator import itemgetter
 from scipy import stats
 import networkx as nx
-import jgraph as ig
+import igraph as ig
 import json
 import ast
 import os
