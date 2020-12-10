@@ -56,9 +56,8 @@ def main():
 # input: pre-filtered csv file
 # output: dataframe read from the file
 def load(file='partial.csv'):
-    raw = pd.read_csv(file, engine='python',encoding='latin_1') #,encoding='latin_1'
-    # raw = raw.rename(columns={'Unnamed: 0': 'doc_no'}) # rename original indices
-    # raw = raw[raw.lang == 'en'] # keep English only
+    raw = pd.read_csv(file, engine='c',encoding='latin_1') #engine='python',encoding='latin_1'
+    raw['text'] = raw['text'].apply(lambda x: str(x))
     return raw
 
 
@@ -74,30 +73,30 @@ def clean(temp,isdate=False,start='2016-07-01',end='2016-07-08'):
 
     # temp.reset_index(drop=True,inplace=True)
     # remove links starting with "http(s)"
-    temp['text'] = temp['text'].apply(lambda x: x.split("http")[-1])
+#     temp['text'] = temp['text'].apply(lambda x: x.split("http")[0])
     
-    # remove punctuations, normalize to lowercase, delete default text
-    temp['text'] = temp['text'].apply(lambda x: re.sub('[,\.!?\@]', ' ', x))
-    temp['text'] = temp['text'].apply(lambda x: re.sub('\r\n', ' ', x))
-    temp['text'] = temp['text'].apply(lambda x: x.lower()) 
+#     # remove punctuations, normalize to lowercase, delete default text
+#     temp['text'] = temp['text'].apply(lambda x: re.sub('[,\.!?\@]', ' ', x))
+#     temp['text'] = temp['text'].apply(lambda x: re.sub('\r\n', ' ', x))
+#     temp['text'] = temp['text'].apply(lambda x: x.lower()) 
     
-    # remove default text "Just posted a photo/video"
-    temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a photo', ''))
-    temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a video', ''))
+#     # remove default text "Just posted a photo/video"
+#     temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a photo', ''))
+#     temp['text'] = temp['text'].apply(lambda x: x.replace('just posted a video', ''))
 
-    # recognizable unicode format
-    temp['text'] = temp['text'].apply(lambda x: x.replace(r'<u\+',r'\\u') )
-    temp['text'] = temp['text'].apply(lambda x: x.replace('>','') )
-    temp['text'] = temp['text'].apply(lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
+#     # recognizable unicode format
+#     temp['text'] = temp['text'].apply(lambda x: x.replace(r'<u+',r'\u') )
+#     temp['text'] = temp['text'].apply(lambda x: x.replace('>','') )
+#     temp['text'] = temp['text'].apply(lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
 
-    # demojize emoji unicode to text
-    temp['text'] = temp['text'].apply(lambda x: x.rstrip('\\')) #remove distracting "\" at the end of strings
-    temp['text'] = temp['text'].apply(lambda x: emoji.demojize(bytes(x,encoding='latin_1').decode('unicode_escape')))
-    temp['text'] = temp['text'].apply(lambda x: re.sub('[:\#]', ' ', x)) #remove new ":" from demojize
-    temp['text'] = temp['text'].apply(lambda x: x.lower()) 
+#     # demojize emoji unicode to text
+#     temp['text'] = temp['text'].apply(lambda x: x.rstrip('\\')) #remove distracting "\" at the end of strings
+#     temp['text'] = temp['text'].apply(lambda x: emoji.demojize(bytes(x,encoding='latin_1').decode('unicode_escape')))
+#     temp['text'] = temp['text'].apply(lambda x: re.sub('[:\#]', ' ', x)) #remove new ":" from demojize
+#     temp['text'] = temp['text'].apply(lambda x: x.lower()) 
 
-# doc_no,user_screen_name,latitude,longitude,text,created_at_CET,date,text_processed
-    temp = temp[['doc_no','user_screen_name','latitude','longitude','date','text']]
+# # doc_no,user_screen_name,latitude,longitude,text,created_at_CET,date,text_processed
+#     temp = temp[['doc_no','user_screen_name','latitude','longitude','date','text']]
     # print('clean data is \n'.format(temp.head()))
     return temp
 
@@ -322,7 +321,7 @@ def pipeline(start, end,filepath):
     # filename = 'complete_swiss_dataset.csv'
     # prefilter(filename)
 
-    dataset = 'partial.csv'
+    dataset = 'partial_clean.csv'
     docfile = 'documents.csv'
     clufile = 'clusters.csv'
     # weafile = 'weather_terms.csv'
@@ -372,7 +371,7 @@ def event_pipeline(eventname, filepath):
     
     doc_list = literal_eval(full_event_df[full_event_df.event == eventname]['doc_list'].values[0])
 
-    raw_df = load(filepath+'partial.csv')
+    raw_df = load(filepath+'partial_clean.csv')
     raw_doc_df = raw_df[raw_df.doc_no.isin(doc_list)]
     target = clean(temp=raw_doc_df)
     lem_data,stem_data = word_to_list(target)
