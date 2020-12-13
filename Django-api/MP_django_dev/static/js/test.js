@@ -14,8 +14,8 @@ function update_timeline(){
       dataType: 'json',
       data: {
         id_filter: "",
-        start:"2015-1-1 00:00",
-        end:"2015-1-2 00:00",
+        start:"2015-1-1",
+        end:"2015-1-2",
       },
       success: function (result) {
         console.log(result);

@@ -47,8 +47,8 @@ class TimeDataAPI(APIView):
         # Check whether start and end variables are the right format
         try:
             # Attempt to convert the variables into datetime
-            datetime.strptime(start, "%Y-%m-%d %H:%M")
-            datetime.strptime(end, "%Y-%m-%d %H:%M")
+            datetime.strptime(start, "%Y-%m-%d")
+            datetime.strptime(end, "%Y-%m-%d")
         # If the format is incorrect an exception will be thrown
         except Exception:
             # Return bad request as start or end is in the wrong format
@@ -62,17 +62,15 @@ class TimeDataAPI(APIView):
                 # Transform id_filter into an int list
                 id_filter = list(map(int, id_filter.split(',')))
                 # Load the filtered data into the 'data' variable
-                data = TimeData.objects.filter(
+                data = TimeData.objects.values_list("id", flat=True).filter(
                     id__in=id_filter).filter(
-                    time_created__gte=start).filter(
-                    time_created__lte=end
+                    time_created__range=(start, end)
                     )
             # 'id_filter' is empty list
             else:
                 # Set 'data' to all the entries in the Data model
-                data = TimeData.objects.filter(
-                    time_created__gte=start).filter(
-                    time_created__lte=end
+                data = TimeData.objects.values_list("id", flat=True).filter(
+                    time_created__range=(start, end)
                     )
         # If the Data model does not exist
         except TimeData.DoesNotExist:
@@ -81,7 +79,7 @@ class TimeDataAPI(APIView):
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Return the map data
-        return Response(np.array(data.values_list()).T[0, :])
+        return Response(data)
 
 
 class TimeLineDataAPI(APIView):

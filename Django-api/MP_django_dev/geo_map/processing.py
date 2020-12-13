@@ -13,6 +13,12 @@ def compute_map_data(latLongData):
     # Give the inputted dataframe column names for clarity
     latLongData.columns = ['latitude', 'longitude']
 
+    # Sort the list based on latitude and longitude
+    latLongData = latLongData.sort_values(by=['latitude', 'longitude']).copy()
+
+    # Reset the index for the calculation of densities
+    latLongData = latLongData.set_index(np.arange(0, len(latLongData)))
+
     # Drop all the duplciates
     # which keeps the first occuring entry in the dataframe
     latLongData = latLongData.drop_duplicates(
@@ -26,7 +32,7 @@ def compute_map_data(latLongData):
     for i in range(0, len(latLongData)-1):
         density[i] = latLongData.index[i+1] - latLongData.index[i]
 
-    # Add the column to the Map_data
+    # Add the column to the latLongData
     latLongData['density'] = density
 
     return latLongData

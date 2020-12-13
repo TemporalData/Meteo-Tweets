@@ -16,3 +16,8 @@ def login(request):
 def timeline(request):
 
     return render(request, "test.html")
+
+
+def leaflet(request):
+
+    return render(request, "leaflet-test.html")

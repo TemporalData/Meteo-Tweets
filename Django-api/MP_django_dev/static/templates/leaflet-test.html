@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style>
+    #mapid {height: 720px;}
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <title>Leaflet Map</title>
+</head>
+
+
+<body>
+    <h1>TEST</h1>
+
+    <div class="container">
+        <div id="mapid"></div>
+    </div>
+    <!-- Define two calenders, "Reset" and "Apply change" buttons -->
+    <form method="get">
+
+        <!-- Create a time selection panel -->
+        <label for="startlabel">Start date:</label>
+        <input type="date" id="start_date" name="start-date"
+            value= "2016-05-27"
+            min="2015-01-01" max="2017-12-31">
+
+        <label for="endlabel">End date:</label>
+        <input type="date" id="end_date" name="end-date"
+            value="2016-05-28"
+            min="2015-01-01" max="2017-12-31">
+        <br>
+
+        <!-- Reset Button -->
+        <input type="submit" value="Reset" name="submitreset">
+
+        <!-- Upply Change Button -->
+        <button type="button" id="myButton" value="Apply Change" onclick="update_leaflet()">Apply change</button>
+        <br>
+    </form>
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script type="text/javascript" src="/static/js/leaflet.js"></script>
+<script>
+    draw_leaflet()
+</script>
