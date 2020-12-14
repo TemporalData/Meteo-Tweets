@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Import the model from the app geo map
-from geo_map.models import GeoData
+from geo_map.models import GeoData, GeoCache
 # Import the serializer from the app geo map
-from geo_map.serializers import GeoDataSerializer
+from geo_map.serializers import GeoDataSerializer, GeoCacheSerializer
 # Import function from processing.py from the app geo map
 from geo_map.processing import compute_map_data
 
@@ -51,7 +51,16 @@ class GeoDataAPI(APIView):
             # 'id_filter' is empty list
             else:
                 # Set 'data' to all the entries in the Data model
-                data = GeoData.objects.all()
+                data = GeoCache.objects.all().values_list(
+                    'data_list',
+                    flat=True)
+
+                data_response = pd.DataFrame(np.array(data).T)
+
+                data_response.columns = ['latitude', 'longitude', 'density']
+
+                return Response(data_response)
+
         # If the Data model does not exist
         except GeoData.DoesNotExist:
             # Return a internal server error, as Data model isn't populated

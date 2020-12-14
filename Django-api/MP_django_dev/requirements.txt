@@ -1,0 +1,7 @@
+scipy
+pandas
+numpy
+networkx
+jgraph
+djangorestframework
+psycopg2

@@ -47,8 +47,8 @@ class TimeDataAPI(APIView):
         # Check whether start and end variables are the right format
         try:
             # Attempt to convert the variables into datetime
-            datetime.strptime(start, "%Y-%m-%d")
-            datetime.strptime(end, "%Y-%m-%d")
+            datetime.strptime(start, "%d/%m/%Y")
+            datetime.strptime(end, "%d/%m/%Y")
         # If the format is incorrect an exception will be thrown
         except Exception:
             # Return bad request as start or end is in the wrong format

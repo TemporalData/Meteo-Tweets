@@ -1,6 +1,6 @@
 function update_leaflet(){
-  var startDate = document.getElementById("start_date").value;
-  var endDate = document.getElementById("end_date").value;
+  var startDate = document.getElementById("start_date_input").value;
+  var endDate = document.getElementById("end_date_input").value;
 
     // pass dates to views.py to process data; 
     // acquire new data results and generate graphs in template
@@ -70,7 +70,7 @@ function update_leaflet(){
             ).addTo(map).bindPopup('marker' + latLongDensities['density'][i]);
     }
   }
-  var map = L.map("mapid");
+  var map = L.map("leafletMap");
   function draw_map(latLongDensities){
     
     var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -79,7 +79,7 @@ function update_leaflet(){
         maxZoom: 19
     }).addTo(map);
     
-    map.setView([46.8, 8.35], 8);
+    map.setView([46.8, 8.35], 7);
     
     var myRenderer = L.canvas({ padding: 0.5 });
 

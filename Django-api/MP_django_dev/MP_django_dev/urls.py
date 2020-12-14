@@ -23,6 +23,10 @@ urlpatterns = [
 
     path("", include("homepage.urls")),
 
+    path("dashboard/", include("dashboard.urls")),
+
+    path('text/', include('text.urls')),
+
     # REST FRAMEWORK URLS
     path('api/', include('api.urls')),
 
