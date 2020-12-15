@@ -45,6 +45,36 @@
 
 
 
+<!-- Part 0: TiemLine and Tweets Counts-->
+
+<style>
+.area {
+  fill: steelblue;
+  /*fill:orange;*/
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+</style>
+
+
+<div id='timeline'>
+  <div id="timeline-title"> 
+  <h2>Tweets Counting</h2>
+  </div>
+  <script type="text/javascript" src="/static/js/timeline.js"></script>
+</div>
+
+<br>
+<button type="button" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates</button>
+
+
+
+
 <!-- Part 1: Wordcloud in chosen time -->
 
 <div id='part1_wordcloud'>
