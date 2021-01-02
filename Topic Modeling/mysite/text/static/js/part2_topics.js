@@ -8,23 +8,20 @@ function update_menu(selected_event){
     dataType: 'json',
     success: function (data) {
       console.log(selected_event);
-      // $('#map-text').html(data["response"][0]);
-
-      // var ldavis_data = jQuery.parseJSON(data["response"][1]);//
-      var ldavis_data = data["response"];
-
-      console.log(ldavis_data)
-
-      // var topic_text = jQuery.parseJSON(data['topics']);
       var topic_text = data['topics'];
-      console.log(topic_text);
-      console.log(topic_text[0]);
-      console.log(topic_text.length);
-      // $('#topic-text').html(topic_text[0][1]);
-      var extrem = data['extrem'];
-      console.log(extrem);
-      display_topics(topic_text,extrem);
 
+      var min = Math.min.apply(Math, topic_text.map(function(o) { return o.prob; }))
+      var max = Math.max.apply(Math, topic_text.map(function(o) { return o.prob; }))
+      
+
+      var extrem = [];
+      // Handle log(0) error;
+      if(min == 0){min = "1e-6"}
+      if(max == 0){max = "1e-6"}
+      extrem.push(min.toString(),max.toString())
+      // console.log(extrem);
+
+      display_topics(topic_text,extrem);
       // display_topics();
       // $("#ldavis").data("value", ldavis_data);
       // LDAvis_load_lib();

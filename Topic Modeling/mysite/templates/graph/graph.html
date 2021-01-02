@@ -61,18 +61,16 @@
 }
 </style>
 
-
-<div id='timeline'>
-  <div id="timeline-title"> 
-  <h2>Tweets Counting</h2>
+<!-- Part 0: Tweet Counts and Timeline(with single brush and zoom)-->
+<div >
+  <h2>Tweet Counts</h2>
+  <div id='timeline'>
+    <script type="text/javascript" src="/static/js/timeline.js"></script>
+    <br>
+    <button type="button" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates</button>
+    <button type="button" id="slider2DatesButton" value="Pass Dates" onclick="update_calendar_cloud()">Pass Dates</button>
   </div>
-  <script type="text/javascript" src="/static/js/timeline.js"></script>
 </div>
-
-<br>
-<button type="button" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates</button>
-
-
 
 
 <!-- Part 1: Wordcloud in chosen time -->

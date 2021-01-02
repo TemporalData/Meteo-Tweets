@@ -17,21 +17,30 @@ function update_cloud(){
     },
     dataType: 'json',
     success: function (data) {
-      console.log(data);
-      // $('#map-text').html(data["response"][0]);
 
       var jsonObject = jQuery.parseJSON(data["response"][1]);//
-
-      jsonObject.forEach(function(d){
-        d.event = d.event;
-        d.doc_list = d.doc_list;
-      }
-      );
       console.log(jsonObject);
-      console.log(Object.keys(jsonObject[0]));
-      console.log(jsonObject[5]["doc_list"].length);
 
-      $("#my_cloudviz").data("value", jsonObject);
+      var groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x['doc_idx']);
+          return rv
+        }, []);
+      };
+
+      // Reform document objects to term-doclist objects
+      var groupedByTerm=groupBy(jsonObject, 'terms__term')
+
+      var eventlist = [];
+      for (var term_doc in groupedByTerm){
+        var pair = {};
+        pair.event = term_doc;
+        pair.doc_list = groupedByTerm[term_doc]
+        eventlist.push(pair);
+      }
+
+
+      $("#my_cloudviz").data("value", eventlist);
       draw_cloud();
 
     }
