@@ -97,6 +97,12 @@ d3.csv("/static/data/datecount.csv", type, function(error, data) {
 
   context.append("g")
       .attr("class", "brush")
+      //Right click to update calendars and wordcloud;
+      .on("mousedown", function(){
+          if(d3.event.button === 2){  
+              update_calendar_cloud();
+          };
+      })
       .call(brush)
       .call(brush.move, x.range());
 
