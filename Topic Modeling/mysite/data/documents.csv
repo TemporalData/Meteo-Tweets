@@ -1,0 +1,302 @@
+index,doc_no,user_screen_name,latitude,longitude,date,text,cluster_id
+445,917,__Gioja__,46.3,7.53333,2016-05-27,s //t co/bvbpj8co7m,-1
+1162,2578,_776BC,47.05,8.31,2016-05-27,s //t co/arwnglcb2u,12
+2507,5241,_GenevaCH,46.21,6.14,2016-05-27,current weather in geneva  broken clouds  21ãâ°c 41% humidity  wind 2kmh  pressure 1013mb,7
+2926,5671,_GenevaCH,46.21,6.14,2016-05-28,5 49am  sunrise sunset will be at 9 16pm,7
+3179,5929,_GenevaCH,46.21,6.14,2016-05-27,5 50am  sunrise sunset will be at 9 15pm,7
+3285,6037,_GenevaCH,46.21,6.14,2016-05-28,current weather in geneva  light rain  15ãâ°c 87% humidity  wind 2kmh  pressure 1014mb,7
+3382,6137,_GenevaCH,46.21,6.14,2016-05-27,scattered clouds -&gt; clear sky temperature down 18ãâ°c -&gt; 14ãâ°c humidity up 55% -&gt; 93% wind 2kmh -&gt; 1kmh,7
+3433,6190,_GenevaCH,46.21,6.14,2016-05-28,current weather in geneva  broken clouds  18ãâ°c 60% humidity  wind 3kmh  pressure 1013mb,7
+3791,6559,_GenevaCH,46.21,6.14,2016-05-28,light rain -&gt; moderate rain humidity up 87% -&gt; 93% wind 2kmh -&gt; 1kmh,7
+4004,6783,_GenevaCH,46.21,6.14,2016-05-27,geneva  9 16pm  sunset,7
+4148,6927,_GenevaCH,46.21,6.14,2016-05-28,at 2 05pm  temperature up 18ãâ°c -&gt; 19ãâ°c,7
+4303,7088,_GenevaCH,46.21,6.14,2016-05-28,broken clouds -&gt; shower rain humidity up 60% -&gt; 68% wind 3kmh -&gt; 2kmh,7
+4830,7641,_GenevaCH,46.21,6.14,2016-05-27,few clouds -&gt; scattered clouds temperature up 22ãâ°c -&gt; 23ãâ°c humidity up 34% -&gt; 36% wind 3kmh -&gt; 5kmh,7
+5042,7858,_GenevaCH,46.21,6.14,2016-05-28,heavy intensity rain -&gt; light rain temperature down 17ãâ°c -&gt; 15ãâ°c humidity down 88% -&gt; 87% wind 1kmh -&gt; 2kmh,7
+7233,10129,_GenevaCH,46.21,6.14,2016-05-27,temperature up 21ãâ°c -&gt; 22ãâ°c humidity down 44% -&gt; 34% wind 2kmh -&gt; 3kmh,7
+7519,10426,_GenevaCH,46.21,6.14,2016-05-28,geneva  9 16pm  sunset,7
+8833,11763,_GenevaCH,46.21,6.14,2016-05-27,current weather in geneva  clear sky  12ãâ°c 93% humidity  wind 1kmh  pressure 1015mb,7
+9438,12402,_GenevaCH,46.21,6.14,2016-05-27,temperature down 21ãâ°c -&gt; 19ãâ°c humidity up 41% -&gt; 60%,7
+9604,12574,_GenevaCH,46.21,6.14,2016-05-28,broken clouds -&gt; heavy intensity rain temperature down 19ãâ°c -&gt; 17ãâ°c humidity up 60% -&gt; 88% wind 2kmh -&gt; 1kmh,7
+10158,13142,_GenevaCH,46.21,6.14,2016-05-27,current weather in geneva  few clouds  21ãâ°c 44% humidity  wind 2kmh  pressure 1014mb,7
+10360,13356,_GenevaCH,46.21,6.14,2016-05-28,current weather in geneva  scattered clouds  17ãâ°c 88% humidity  wind 1kmh  pressure 1008mb,7
+11002,14021,_GenevaCH,46.21,6.14,2016-05-27,temperature up 12ãâ°c -&gt; 17ãâ°c humidity down 93% -&gt; 56%,7
+13658,23406,2Brides,46.20465,6.141152,2016-05-27,s //t co/vk1ginnygv,7
+14095,26723,3skool,46.21,6.151035,2016-05-27,s //t co/obkyqnipja,8
+14097,26727,3skool,46.230779999999996,6.108162,2016-05-28,s //t co/lp3vmnlwnq,3
+14109,26751,3skool,46.230779999999996,6.108162,2016-05-27,s //t co/d1meaggrkk,3
+14110,26752,3skool,46.23267,6.1106110000000005,2016-05-27,s //t co/mcrrrd16be,3
+15554,29879,A7med_Alsalami,46.68419,7.845875,2016-05-28,s //t co/iiylcaayxo,11
+17628,38316,AcidMoto,46.20597,6.148671,2016-05-27,s //t co/a4qcianxjs,8
+20165,43471,AFGHnetwork,46.22592,6.140496,2016-05-27,accountability critical to  uhc &amp; we can bring scale to health equity   gavi on aligning behind country-driven health needs &amp; health agenda,5
+20168,43474,AFGHnetwork,46.227090000000004,6.141183,2016-05-27,dr yamamoto  japangov welcomes uhc2030 international framework to achieve  uhc &amp; supports promoting  srhr  women&amp;girls in  uhc at  wha69,5
+20173,43479,AFGHnetwork,46.226000000000006,6.140818,2016-05-27,s //t co/3lhjedjout,5
+20176,43482,AFGHnetwork,46.225970000000004,6.140732,2016-05-27,great to hear  theelders' support  uhc based on need for equity in access to health care and right to health at  wha69,5
+20177,43483,AFGHnetwork,46.22614,6.140618,2016-05-27,"""the movement is the most important part of  uhc - citizens' voices are key""  asoucat at  wha69",5
+20696,44480,agnoxis,47.70015,8.644395,2016-05-28,s //t co/mx4pqmfff2,-1
+24926,56391,Alexis2laurens,46.199459999999995,6.15015,2016-05-27,s //t co/q6xhm0txcd,8
+29153,65477,AmericanPeyote,47.23215,9.194183,2016-05-27,s //t co/y01hygjgpc,2
+30844,70618,AndiFouberg,45.9833,7.784972,2016-05-28,s //t co/mfx2b6nmqw,-1
+32055,74097,AndresPardey,47.55918,7.61218,2016-05-28,s //t co/spn5lcnwv6,6
+32274,74633,andrew_myers,46.22508,6.14659,2016-05-27,s //t co/hair2uwxzi,5
+32446,74866,andrewthodge,47.05442,8.294205,2016-05-28,s //t co/vwyfrp0ldh,12
+33456,76881,Angelomokky,46.68697,7.858654,2016-05-28,s //t co/0rnh0ancgu,11
+33457,76882,Angelomokky,46.68558,7.856039,2016-05-27,s //t co/0wnby39plj,11
+33461,76891,Angelomokky,46.68782,7.859236,2016-05-27,s //t co/bk8ri0vqqv,11
+34065,78243,Anmol_xo,46.21492,6.1509199999999975,2016-05-28,s //t co/dyuottm5og,-1
+38694,83597,anoizet,47.34984,8.491142,2016-05-28,s //t co/riwojqzy06,-1
+41504,91010,arimansyah,47.41081,8.552539999999999,2016-05-28,s //t co/kozsupzs55,13
+42248,93187,arnomul,47.14123,8.13101,2016-05-28,s //t co/zbpewbqh4s,-1
+46968,105619,BABLAM07,46.9933,6.930739999999999,2016-05-27,s //t co/zd1ldxv8ef,4
+49646,121885,bastiangardel,46.5258,6.63687,2016-05-28,s //t co/r0bpw6fwjy,4
+52707,128552,BenThiebaud,47.54858,7.581954,2016-05-27,s //t co/jy1k8mi9jq,6
+53257,129515,BerryErwanto,47.45254,8.560755,2016-05-28,s //t co/k3jydwgwao,13
+55588,134382,biberstein,47.40519000000001,8.129725,2016-05-27,01 45 temp  18 2ãâ°c  hum  66%  dewp  10 6ãâ°c  bar  1012 8 hpa  rain today 0 mm  wind 270ãâ° 1 0 km/h,-1
+55702,134549,biberstein,47.40519000000001,8.129725,2016-05-28,01 54 temp  19 3ãâ°c  hum  67%  dewp  11 9ãâ°c  bar  1013 5 hpa  rain today 0 mm  wind 270ãâ° 1 0 km/h,-1
+58890,141447,Bjornvdende,47.04932,8.3045,2016-05-28,s //t co/piwy2i07cs,12
+60040,143452,BlaMM3,46.214040000000004,6.147375,2016-05-27,s //t co/jbqbccvnnk,-1
+62440,149650,BOOTIESONMYFEET,47.37069,8.540295,2016-05-27,s //t co/5xm6huil7q,15
+63043,151161,boyarskiy17,47.01753,9.503613,2016-05-28,s //t co/adbkae9kow,1
+67696,164915,bzu,46.31797,7.917775999999999,2016-05-28,s //t co/clag2xfp8r,-1
+70816,171652,carlopjose,47.54781,7.589647999999999,2016-05-27,s //t co/t08xnmrlpu,6
+71128,172378,Carlota_Guimier,46.45,6.85,2016-05-27,s //t co/e4gux7icqk,4
+71166,172445,Carlota_Guimier,46.45,6.85,2016-05-27,s //t co/3e8lbodbmf,4
+73546,177693,CaviezelRolf,47.19403,7.39629,2016-05-28,s //t co/x3kgvjdffu,-1
+74884,182836,cennet1907,47.12034,7.9862100000000025,2016-05-28,s //t co/jmo8ejow0j,-1
+77367,188728,Chemist_Sim,47.45221,8.559508000000001,2016-05-28,s //t co/k4njuhcce6,13
+83397,197608,chrishicks,46.23173,6.104992,2016-05-27,s //t co/1vihuajjhh,3
+84698,201371,christophearn,46.80589000000001,6.641628,2016-05-28,s //t co/nqg7ng8iwd,4
+85039,201852,chrmosimann,47.3667,8.55,2016-05-28,s //t co/1uzx1dsioz,15
+85305,202538,chusmartinez,47.56954,7.592642,2016-05-28,s //t co/kljzzg48hp,6
+85323,202569,chusmartinez,47.56942,7.592482,2016-05-28,s //t co/8lo2h7vce3,6
+85331,202581,chusmartinez,47.56946,7.592822,2016-05-28, dezeen  holdengraber so great ,6
+86993,206408,claudiobuettler,47.54534,7.574903999999999,2016-05-27,s //t co/owrdbsqavb,6
+87245,206969,cliffjs,47.36872,8.537411,2016-05-27,s //t co/ya7squhl2x,-1
+91404,214536,crazyholiday,47.37459000000001,8.54888,2016-05-28,s //t co/oms48fcgic,14
+94961,223804,DamP_92,46.20346,6.152218,2016-05-27,s //t co/4kk3qaxl6u,8
+96852,228215,Daniellewithers,46.2,6.15,2016-05-27,s //t co/dqzeovc4tp,8
+104341,245939,derdrummer,46.76015,7.61833,2016-05-27,s //t co/dvttnysmiw,10
+108438,254955,dimitryleger,46.20867,6.150097,2016-05-27,s //t co/qahsfdcrut,-1
+124937,292262,einaphil,47.31888,8.382741000000001,2016-05-28,s //t co/hmmdqzfcmv,-1
+126409,295394,elcordobesss,46.20247,6.1448300000000025,2016-05-28,s //t co/kwvr3uzgzy,8
+126814,296339,elenidigidiki,46.7333,8.18333,2016-05-28,s //t co/tu72ar5xzi,-1
+128943,301301,Emanuele4Music,47.36679,8.544433,2016-05-28,s //t co/wrf5kfas5d,15
+132516,311034,EstayHilton,47.3667,8.55,2016-05-27,s //t co/46gpcetf98,15
+133379,312859,EuroBuck,47.07578,8.440991,2016-05-28,s //t co/uvatvepb4x,12
+134890,315847,EvilMonkley,46.199459999999995,6.15015,2016-05-27,s //t co/tatnttcsju,8
+135999,318234,Fabijen,46.8,6.75,2016-05-28,s //t co/97wjsjn1oa,-1
+136398,319244,facemeetup,46.43148,6.909277,2016-05-27,s //t co/hktcev6djr,4
+137824,322388,fashionworldbiz,47.37489,8.48579,2016-05-28,s //t co/s4ov7ggm21,-1
+139822,329922,filippothomann,46.168279999999996,8.793961999999999,2016-05-28,s //t co/c3gho4riio,0
+141116,332145,flashbashblog,47.22247,8.814917,2016-05-28,s //t co/d0xognelys,-1
+142369,334637,flightlevel150,46.22589,6.1008330000000015,2016-05-27,s //t co/g8s6cavcub,3
+143107,336710,FloridaDkilos,46.18975,6.137296,2016-05-28,s //t co/vowygpsp76,-1
+146020,342151,foxxyroxyyy_,46.21138,6.1471279999999995,2016-05-27,s //t co/tbju2o9npr,8
+150853,355509,gautschimartin,46.54167,9.889832,2016-05-27,s //t co/adabk0cdry,1
+156337,380498,GiuliaPergolati,46.23064,6.106177,2016-05-28,s //t co/5aw5upul5a,3
+158908,389155,GPPVT,45.90405,8.970261,2016-05-28,s //t co/6imhwtnudr  gppswiss16,0
+160057,391263,Greta_Scacchi,47.36688,8.545573,2016-05-28,s //t co/rqeplzx46x,15
+160334,391699,GrindelwaldCH,46.6167,8.05,2016-05-28,s //t co/fnlwsfkgyj,-1
+162190,396514,hafelg,47.63848,9.190382000000001,2016-05-28,s //t co/qc2dqb5uw4,-1
+162221,396561,hafelg,46.68203,7.87793,2016-05-27,s //t co/7ms6mfcd3m,11
+162287,396663,hafelg,46.68203,7.87793,2016-05-28,s //t co/k2dkkpkp2x,11
+164023,399809,Handyhospital,47.56989,7.58305,2016-05-27,s //t co/tkhi3tccfw,6
+164772,401893,harlock00999,46.2032,6.1477900000000005,2016-05-28,s //t co/6hxcdaon9u,8
+164813,401979,harprobles,46.45,6.85,2016-05-28,s //t co/zfnuhzq5sx,4
+167524,407084,HeritageGeneve,46.2016,6.14768,2016-05-27,s //t co/9nny9sfvei,8
+167549,407112,HeritageGeneve,46.20167,6.147645,2016-05-28,s //t co/ncb4oejo7y,8
+167589,407157,HeritageGeneve,46.2016,6.14768,2016-05-27,s //t co/pae1qwwxzq,8
+168305,408571,HessaQue,46.2,6.15,2016-05-27,s //t co/1zxzzlbsw6,8
+168307,408579,HessaQue,46.2,6.15,2016-05-27,s //t co/d9ywhfaiqt,8
+168352,408710,hestuedli,47.44308,8.626725,2016-05-28,s //t co/i3the9fjrp,-1
+168436,408945,heymacoi,46.9167,7.46667,2016-05-28,s //t co/chwcfmjnyt,9
+170159,413373,HolySophie,46.203109999999995,6.158703,2016-05-27,s //t co/rngr32vxax,-1
+170903,414657,honigbaerli,46.94944,7.439697,2016-05-27,s //t co/dy1f4vzkgv,9
+171312,415414,honigbaerli,46.94923,7.4731869999999985,2016-05-28,s //t co/i2pkrktpfj,9
+172019,416803,honigbaerli,46.94047,7.4305910000000015,2016-05-28,s //t co/5tqmpk58mp,9
+172037,416829,honigbaerli,46.97352,7.50177,2016-05-27,s //t co/krwwk8t5bz,9
+173689,420316,hugocris,46.23037,6.108291,2016-05-27,s //t co/dl7ern9uip,3
+173797,420581,huihyee,47.04977,8.30926,2016-05-28,s //t co/eacsgkli8p,12
+175563,424121,iamhollyn,47.55,8.9,2016-05-27,s //t co/bhr03v5yhb,-1
+179374,434085,impacthubzurich,47.384879999999995,8.5338,2016-05-27,s //t co/lznchw1o8i,-1
+181265,444793,Invmatt,46.22606,6.138433,2016-05-27,s //t co/qqim0adj6n,5
+186827,458084,JamesBrewster,46.230779999999996,6.108162,2016-05-27,s //t co/6q6w842tce,3
+187478,459093,jane_klay,47.36667,7.9,2016-05-28,s //t co/bdqey7jlth,-1
+187482,459098,jane_klay,47.36667,7.9,2016-05-28,s //t co/cbhxhgnncy,-1
+188822,461516,Jaydays101,46.95,7.45,2016-05-27,s //t co/5xguxsadyf,9
+190513,465238,JeffreySomera,46.6858,7.78781,2016-05-27,s //t co/5njzvklsjr,11
+190539,465283,JeffreySomera,46.6858,7.78781,2016-05-27,s //t co/zlvlrjnug7,11
+190551,465298,JeffreySomera,46.6858,7.78781,2016-05-27,s //t co/ki56ynqvjd,11
+191920,468084,jesseddie,47.05,8.31,2016-05-28,s //t co/vztoebv4az,12
+195361,475997,joeymojuice,47.411390000000004,8.551667,2016-05-27,s //t co/fmkdajpt4p,13
+195398,476040,JoeyWestphal,46.605,7.92163,2016-05-27,s //t co/p3vrkhqgtw  photo,11
+196221,477679,johnofici,47.3822,8.53453,2016-05-28,s //t co/h3k6qicnme,-1
+197309,480221,JordanBryden,46.4973,9.8379,2016-05-28,s //t co/5vsp6bmryd,1
+198738,484071,jpblochphoto,46.4333,6.91667,2016-05-27,s //t co/7nnvcz8fyr,4
+198748,484094,jpblochphoto,46.4333,6.91667,2016-05-28,s //t co/mk3qiiexpi,4
+199005,484748,jsagencies,46.75778,8.137777999999999,2016-05-27,s //t co/nrq2puqmnc,-1
+200705,488214,JuliaStecherPro,47.27155,8.582896,2016-05-27,s //t co/3aptulyjdn,-1
+202129,491123,JustinaLeeBrown,47.5667,7.6,2016-05-27,s //t co/78b0ypngjk,6
+202815,492012,justthegoods,47.24937,9.343311,2016-05-28,s //t co/xki3zojr1q,2
+204370,496107,kammerhofer_net,46.95852,7.4686,2016-05-27,s //t co/q4qfkfiade,9
+204376,496137,kammerhofer_net,46.95852,7.4686,2016-05-27,s //t co/0ervconbrs,9
+204387,496180,kammerhofer_net,46.95852,7.4686,2016-05-27,s //t co/vt82qcivnc,9
+204392,496198,kammerhofer_net,46.9167,7.46667,2016-05-27,s //t co/5ljbblvwej,9
+204398,496232,kammerhofer_net,46.9293,7.4180009999999985,2016-05-27,s //t co/7vsf5rmbgt,9
+206767,511852,kebo_1,46.201029999999996,6.171941,2016-05-28,s //t co/uhc5cpn0nu,-1
+208811,517130,kickalert,47.34337,8.535699000000001,2016-05-27,s //t co/wg0wau4wdu,-1
+209874,520432,kindlimann,47.48242,8.209577000000001,2016-05-28,s //t co/r4osstmdwk,-1
+212476,527532,kpdepauw,46.19282000000001,9.022264,2016-05-28,s //t co/jmhknly6b3,0
+212483,527539,kpdepauw,45.90605,8.971336,2016-05-27,s //t co/jnjajez94d,0
+215293,535699,langenegger,47.38278,8.529227,2016-05-27,s //t co/vbw5hitxxz,-1
+222811,556801,linneacovington,47.3333,9.4,2016-05-27,s //t co/qhpvzzlujl,2
+223526,560741,LisunAlex,46.76008,7.629822,2016-05-27,s //t co/7sjnaax1mj,10
+223754,561003,LisunAlex,46.72972,7.668611,2016-05-27,s //t co/x1hfqvcwji,10
+223837,561097,LisunAlex,46.72972,7.668611,2016-05-27,s //t co/ezlyvklxhi,10
+223945,561216,LisunAlex,46.76008,7.629822,2016-05-27,s //t co/avidybkqcn,10
+223947,561218,LisunAlex,46.76078,7.60959,2016-05-27,s //t co/hwcuntttuj,10
+224777,562634,LizFoodco,47.04806,8.307711999999999,2016-05-28,s //t co/buf8u3nah4,12
+225112,563242,lloyddiz,46.370709999999995,6.2262010000000005,2016-05-28,s //t co/oxedhflcqy,-1
+230416,606597,lutfipamungkas,46.770920000000004,8.42417,2016-05-28,s //t co/fsmpbelkif,-1
+230849,607756,luzibus,46.88157,8.64588,2016-05-28,s //t co/1rxiztmpwn,-1
+231336,609581,LyerFan,46.3867,6.85,2016-05-28,s //t co/gxwrnsuj9t,4
+232711,613256,Madison_Oswald,47.3667,8.55,2016-05-28,s //t co/rptonliyem,15
+233744,615701,MagicManShow,47.57421,7.563110000000001,2016-05-27,s //t co/vrqhwju8ji,6
+237613,626732,marco_koch,47.431670000000004,8.559268,2016-05-27,s //t co/anlkl17rwo,13
+241289,635684,martcrossy,47.054990000000004,8.313373,2016-05-27, gorgnash  alexgregorygb  gregsearle2012 is there anything he's not perfect in  <u+0001f604,12
+241292,635688,martcrossy,47.3767,8.539572,2016-05-27,that's a gr8 3rd 1/4 alan <u+0001f44c  tidewaysculler,14
+241299,635696,martcrossy,47.20046,8.523392999999999,2016-05-27, julienbahain amazed u were up there 4 so long ,-1
+241305,635704,martcrossy,47.055009999999996,8.312789,2016-05-27, alexgregorygb with  gregsearle2012 in dispute cd u help  we're u  1 on  thelist  ,12
+241306,635705,martcrossy,47.0494,8.299965,2016-05-27, tomgreenleaves i know  justsaying,12
+241317,635717,martcrossy,47.06412,8.303137,2016-05-28,s //t co/rdvfnpdnkb,12
+241318,635718,martcrossy,47.31474,8.554884,2016-05-27,wow  fade patterns winners in heats lwt men's fours den heat 1  1 28  1 29  1 29  1 28 &amp; nzl heat 2  1 28  1 29  1 28  1 28 - that's pace ,-1
+241328,635729,martcrossy,47.06738,8.31092,2016-05-28,does it get any better - they moved the ergs at lucerne- semi finals from an erg <u+0001f44d,12
+245087,646242,maxandersen,47.01202,6.860403999999999,2016-05-27, michaelneale no  it still sucks  /,4
+248203,654961,melissa_gamba,46.45,6.85,2016-05-27,s //t co/t9w4okpd8o,4
+250916,669527,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+251507,672828,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+252494,679220,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+252497,679235,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+253028,682684,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+254004,689271,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+254337,691220,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+255066,695635,Metaija1,46.34083,6.889444,2016-05-28,s //t co/ushcpfr6ea,4
+257198,707151,mhegi,47.37812,8.533191,2016-05-27,s //t co/dx0j5siyde,-1
+257771,708618,MichaelSchranz,46.93204,7.082663,2016-05-27,s //t co/yzwf7jiptd,4
+263171,720441,MKPilates,46.296820000000004,6.166443,2016-05-28,s //t co/mc1rpyn7en,-1
+264073,721606,mman4,47.0333,9.06667,2016-05-27,s //t co/jje9hkrrwj,-1
+267536,726127,mogabuga,46.1702,8.799353,2016-05-27,s //t co/qkdxcvuwkx,0
+267967,726896,moisaalin,46.6167,9.98333,2016-05-27,s //t co/kwve6mbbhp,1
+267969,726898,moisaalin,46.6167,9.98333,2016-05-27,s //t co/btylrls369,1
+273043,737052,mslheureux,46.21282,6.144904,2016-05-28,s //t co/styjrkmkxj,-1
+276937,745887,NaNzJer,46.68513,7.855067,2016-05-28,s //t co/lwtb9zzcsw,11
+276938,745889,NaNzJer,47.45092,8.540203,2016-05-27,s //t co/qnwreppezs,13
+276939,745890,NaNzJer,46.69265,7.869606,2016-05-28,s //t co/a73z8adbjr,11
+276940,745891,NaNzJer,46.62445,8.034302,2016-05-28,s //t co/uemxtoijma,-1
+278096,750527,nbhare,47.05,8.31,2016-05-28,s //t co/qtel5xnycl,12
+281487,757222,NigraArbaro,46.56078,9.62443,2016-05-28,s //t co/cm8l96le7i,1
+285054,765969,notanitboy,46.5198,6.6335,2016-05-28,s //t co/9iqjdajxlu,4
+286703,769465,nTuna_ISIK,47.02466,8.297186,2016-05-28,s //t co/ks1ojrrw8i,12
+287707,772415,OBenghozi,46.50775,6.6304110000000005,2016-05-28,s //t co/it3w9xdyc8,4
+291689,781502,Orlaviva,46.0474,8.92234,2016-05-28,s //t co/zlkhh3ntzd,0
+294495,789191,papigreg82,46.82442,7.152811,2016-05-27,s //t co/nfcnecaimq,-1
+295607,792062,patriciakitto,46.6167,8.61667,2016-05-27,s //t co/sxm4uxmfo7,-1
+296184,793433,PatrickSwitzer,47.373020000000004,8.51465,2016-05-28,s //t co/qnmx5f1s8j,-1
+300449,808203,phun1IBA,47.2333,8.66667,2016-05-28,s //t co/ohr6vlpnia,-1
+301542,811299,pipedeor89,46.1538,8.768924,2016-05-27,s //t co/lquiqlspq8,0
+306466,829550,ptext,47.37689,8.541694,2016-05-27,s //t co/k4spkdg43r,-1
+308222,836011,RachelRayner,46.192809999999994,5.995782,2016-05-28,so the deal with today is you buy a branded wine glass for ten franks and then drink for free all day what could go wrong ,-1
+308303,836155,radias2002,47.56884,7.590545,2016-05-28,s //t co/fzbijwrreh,6
+318357,863400,robiinnxx3,45.9,8.96667,2016-05-28,s //t co/gd4qyuq9r4,0
+321094,870035,Roshan_rss,47.43965,8.568827,2016-05-27,s //t co/ry2uc1y0nc,13
+321685,871046,RowingIreland,47.06751,8.311677,2016-05-28,paul &amp; gary o'donovan makes their 2nd  wcup final taking 3  position  well done and congratulation  luck tomorrow ,12
+321688,871049,RowingIreland,47.06823,8.312101,2016-05-28,sinead lynch &amp; claire lambe a great race  4  position b final tomorrow ,12
+321695,871056,RowingIreland,47.06387,8.308931,2016-05-27,paul &amp; gary o'donovan directly to semis in lucerne wcup heat 2  position close to rsa ,12
+324859,877047,Sabrina___22,46.1667,8.8,2016-05-28,s //t co/ifkeyinejq,0
+325489,878548,sahdsimone,47.3667,8.55,2016-05-28,s //t co/mhmpy9srct,15
+325494,878553,sahdsimone,47.3667,8.55,2016-05-27,s //t co/7qjcrxooix,15
+331253,892278,savybabaay,47.05,8.31,2016-05-28,s //t co/0kbg6zamkg,12
+331281,892345,saxo_man,47.34957,8.491455,2016-05-27,s //t co/5v3gvgr7vs,-1
+331283,892373,saxo_man,47.35184,8.487507,2016-05-27,s //t co/bpflopjhyy,-1
+333880,898566,SDOLGY,47.45221,8.559508000000001,2016-05-27,s //t co/qwbsc62cd1,13
+335868,904093,sergelogereau,46.69025,8.595134,2016-05-28,s //t co/tzm9laaqv6,-1
+337088,907080,shalf,46.508340000000004,6.626253999999999,2016-05-27,s //t co/lueoif0mdt,4
+339264,911903,sidiq16,47.45274000000001,8.560789999999999,2016-05-27,s //t co/nhhflffeie,13
+339265,911904,sidiq16,47.45167,8.56095,2016-05-27,s //t co/8i5cd3t3qs,13
+339266,911905,sidiq16,47.41168,8.5447,2016-05-27,s //t co/hxz07sqtay,13
+340907,915503,SimonXaies,47.4167,9.3333,2016-05-27,s //t co/iayhztqbdq entitled  'pageflip xoops module',2
+341068,915664,SimonXaies,46.5833,9.1333,2016-05-27,s //t co/mxogscjkwr entitled  'profile xoops module',-1
+341541,916737,siriananv,47.05348,8.309225,2016-05-27,s //t co/x4oaefmulw,12
+341571,916826,SirLanzelott,47.56804,7.5979800000000015,2016-05-28,s //t co/qt5zuzhomt,6
+345002,924653,soltempore,47.3833,8.5333,2016-05-27,good morning  zãâ¼rich   )  sunrise 05 36  noon 13 23  sunset 21 10 cest (utc+2)  may 27  day length  15h 34m ,-1
+347154,931140,SOTAwatch,47.3624,7.8073,2016-05-28,13 15 hb9shd/p (remo) on hb/bl-004 (ruchen  1123m  2pt) 14 285 ssb  nice weather here [hb9shd],6
+347480,934421,SOTAwatch,47.3624,7.8073,2016-05-28,13 23 hb9shd/p (remo) on hb/bl-004 (ruchen  1123m  2pt) 14 2854 ssb  55 in ne scotland - needs contacts [gm4toe],-1
+347867,938267,SOTAwatch,47.133,7.0593,2016-05-27,11 29 hb9axl/p (paul) on hb/be-104 (chasseral  1606m  4pt) 7 034 cw  *[rbnhole] at hb9bxe 24 wpm 1 db snr [rbnhole],-1
+348099,940974,SOTAwatch,47.3624,7.8073,2016-05-28,13 15 hb9dhd/p on hb/bl-004 (ruchen  1123m  2pt) 14 285 ssb  nice weather here [hb9shd],6
+350804,952438,stawi,46.68513,7.855067,2016-05-27,s //t co/xip1kovdfy,11
+350807,952442,stawi,46.686479999999996,7.856910000000001,2016-05-27,s //t co/idvfu09svd,11
+350809,952445,stawi,46.686479999999996,7.856910000000001,2016-05-28,s //t co/wffgarzpek,11
+350812,952450,stawi,46.686479999999996,7.856910000000001,2016-05-28,s //t co/d8drvpomdp,11
+350821,952462,stawi,47.05,8.31,2016-05-27,s //t co/ywhvs0ulrm,12
+350825,952470,stawi,46.624359999999996,8.034416,2016-05-28,s //t co/ptoxww0fhg,-1
+350827,952472,stawi,46.68513,7.855067,2016-05-27,s //t co/mei1k2sadw,11
+350834,952479,stawi,46.686479999999996,7.856910000000001,2016-05-27,s //t co/wq8l4l8xss,11
+350835,952480,stawi,46.686479999999996,7.856910000000001,2016-05-27,s //t co/asidilyygj,11
+350850,952500,stawi,46.547259999999994,7.982384,2016-05-28,s //t co/a18t05yuhh,-1
+350867,952522,staydotcom,47.3667,8.55,2016-05-27,s //t co/j6qyxquv1m,15
+351773,954827,stemutz,46.82431,7.1531910000000005,2016-05-28,s //t co/etkqku8cjk,4
+352418,955782,stephtara,46.5198,6.6335,2016-05-27,s //t co/be56eyxj3t,4
+352874,956719,stevenanggrek,47.38521,8.519219999999999,2016-05-28,s //t co/mlmlvrvptu,-1
+358279,973034,svenseiz,46.994170000000004,8.605780000000001,2016-05-27,s //t co/iykdy6daow,-1
+358282,973060,svenseiz,47.05358,8.474302,2016-05-27,s //t co/tgi2r6sgio,-1
+368575,985827,Swisswhiskyman,46.60094,10.42225,2016-05-28,s //t co/tf6i0c4dlz,-1
+369298,987086,synapsen777,47.42395,9.380246000000001,2016-05-27,s //t co/7vv0qincfc,2
+372466,992960,TatyanaMcFadden,47.14063,8.130705,2016-05-27,s //t co/cqoqvhxckr,-1
+372812,993768,TeamCBManilaPH,47.3667,8.55,2016-05-27,s //t co/o5d82dxcb3,15
+372813,993769,TeamCBManilaPH,47.3667,8.55,2016-05-27,s //t co/joxk8jkmjo,15
+372947,994025,technomade,46.491640000000004,6.7458009999999975,2016-05-27,s //t co/5pilsmuzzb,4
+379477,1006614,ThSturzenegger,47.43051,8.559375,2016-05-27,s //t co/foudvqcm5s,13
+380578,1009341,TimAnderson1,47.38337,8.543302,2016-05-27,s //t co/b7brs7t6vr,14
+381019,1010060,timwllindsay,47.37444,8.51415,2016-05-27,s //t co/g4xqls5dpk,-1
+383335,1014658,TobySaintJust,47.45221,8.559508000000001,2016-05-28,s //t co/8jvvfs21cp,13
+383366,1014710,TobySaintJust,47.45221,8.559508000000001,2016-05-28,s //t co/63mciiw5gm,13
+383578,1015106,TobySaintJust,47.45221,8.559508000000001,2016-05-27,s //t co/i70tmba0eo,13
+384151,1016396,tomlinxvocals,47.411390000000004,8.551667,2016-05-27,s //t co/36zloibk5m,13
+384167,1016426,tomlinxvocals,47.411390000000004,8.551667,2016-05-28,s //t co/rolvhctt3e,13
+389206,1028357,tzivanidis,46.40838,6.273919,2016-05-27,s //t co/atmigc1laq,-1
+389386,1028611,tzivanidis,46.230779999999996,6.108162,2016-05-28,s //t co/yvki8rsqlx,3
+389501,1028762,tzivanidis,46.230779999999996,6.108162,2016-05-27,s //t co/6oncx0dfxr,3
+391462,1033024,ursbucher,47.56839,7.5979470000000005,2016-05-28,s //t co/9tckv6vhtj,6
+391469,1033059,ursbucher,47.36732,8.528067,2016-05-28,s //t co/5sebisonao,-1
+394429,1057837,Verndk,46.230779999999996,6.108162,2016-05-28,s //t co/0ouqvkakbc,3
+394432,1057842,Verndk,46.22498,6.131178,2016-05-28,s //t co/mlejmcf0q0,5
+397066,1063024,Vir_213,46.2,6.15,2016-05-28,s //t co/bea54gkfdq,8
+397693,1064630,VladiBarrosa,46.9167,7.46667,2016-05-27,s //t co/grxj23w8bq,9
+397988,1065266,vogth68,47.303909999999995,8.315694,2016-05-27,s //t co/6bginilfwn,-1
+398756,1066850,wacky0214,47.45221,8.559508000000001,2016-05-27,s //t co/lq8khvotgn,13
+399301,1068495,wanderer_methos,46.8,9.833333,2016-05-28,s //t co/7qb5ojazqs,1
+401286,1072815,WFrontierChris,46.1,7.08333,2016-05-28,s //t co/imf3thcr4k,-1
+401851,1073791,wiine_me,46.19485,5.994759999999999,2016-05-28,s //t co/hpocqmnhd9,-1
+405374,1084290,xue_hao,47.5833,7.63333,2016-05-28,s //t co/gxifizouoe,6
+409147,1094249,yuricatania,45.97017,8.883438,2016-05-27,s //t co/kjotia7msp,0
+411029,1097448,ZawadiNyongo,47.3667,8.55,2016-05-27,s //t co/xmq4lg6vlm,15
+412266,1106253,ZurichCH,47.38,8.55,2016-05-28,shower rain -&gt; light intensity shower rain temperature up 17ãâ°c -&gt; 18ãâ°c humidity down 93% -&gt; 72% wind 2kmh -&gt; 4kmh,14
+412529,1106560,ZurichCH,47.38,8.55,2016-05-27,temperature down 22ãâ°c -&gt; 16ãâ°c humidity up 44% -&gt; 72% wind 2kmh -&gt; 1kmh,14
+412769,1106817,ZurichCH,47.38,8.55,2016-05-27,broken clouds -&gt; scattered clouds temperature up 14ãâ°c -&gt; 15ãâ°c,14
+412925,1106988,ZurichCH,47.38,8.55,2016-05-27,scattered clouds -&gt; clear sky temperature up 15ãâ°c -&gt; 22ãâ°c humidity down 87% -&gt; 56% wind 1kmh -&gt; 2kmh,14
+413689,1107834,ZurichCH,47.38,8.55,2016-05-27,broken clouds -&gt; clear sky temperature down 16ãâ°c -&gt; 15ãâ°c humidity up 72% -&gt; 87%,14
+413801,1107960,ZurichCH,47.38,8.55,2016-05-28,temperature down 17ãâ°c -&gt; 15ãâ°c humidity up 88% -&gt; 93% wind 3kmh -&gt; 1kmh,14
+413959,1108144,ZurichCH,47.38,8.55,2016-05-27,clear sky -&gt; few clouds humidity down 50% -&gt; 41%,14
+414175,1108380,ZurichCH,47.38,8.55,2016-05-28,light intensity shower rain -&gt; shower rain temperature up 15ãâ°c -&gt; 17ãâ°c wind 1kmh -&gt; 2kmh,14
+415253,1109575,ZurichCH,47.38,8.55,2016-05-28,current weather in zurich  light intensity shower rain  18ãâ°c 72% humidity  wind 4kmh  pressure 1014mb,14
+415967,1110377,ZurichCH,47.38,8.55,2016-05-28,light intensity shower rain -&gt; few clouds temperature up 18ãâ°c -&gt; 20ãâ°c humidity down 72% -&gt; 68% wind 4kmh -&gt; 2kmh,14
+415997,1110410,ZurichCH,47.38,8.55,2016-05-27,current weather in zurich  shower rain  21ãâ°c 47% humidity  wind 2kmh  pressure 1012mb,14
+416008,1110421,ZurichCH,47.38,8.55,2016-05-27,shower rain -&gt; moderate rain temperature down 21ãâ°c -&gt; 19ãâ°c humidity up 47% -&gt; 72% wind 2kmh -&gt; 3kmh,14
+416041,1110457,ZurichCH,47.38,8.55,2016-05-28,temperature up 20ãâ°c -&gt; 22ãâ°c humidity down 68% -&gt; 60% wind 2kmh -&gt; 1kmh,14
+416317,1110772,ZurichCH,47.38,8.55,2016-05-27,5 36am  sunrise sunset will be at 9 10pm,14
+417739,1112349,ZurichCH,47.38,8.55,2016-05-28,current weather in zurich  light intensity shower rain  20ãâ°c 60% humidity  wind 2kmh  pressure 1009mb,14
+418145,1112798,ZurichCH,47.38,8.55,2016-05-27,few clouds -&gt; clear sky temperature up 23ãâ°c -&gt; 26ãâ°c humidity down 53% -&gt; 50%,14
+418182,1112837,ZurichCH,47.38,8.55,2016-05-27,current weather in zurich  broken clouds  14ãâ°c 87% humidity  wind 1kmh  pressure 1014mb,14
+418648,1113358,ZurichCH,47.38,8.55,2016-05-27,current weather in zurich  few clouds  23ãâ°c 53% humidity  wind 1kmh  pressure 1015mb,14
+418973,1113720,ZurichCH,47.38,8.55,2016-05-28,temperature down 20ãâ°c -&gt; 17ãâ°c humidity up 60% -&gt; 82% wind 2kmh -&gt; 1kmh,14
+419739,1114577,ZurichCH,47.38,8.55,2016-05-28,moderate rain -&gt; light intensity shower rain temperature down 19ãâ°c -&gt; 17ãâ°c humidity up 72% -&gt; 88%,14
