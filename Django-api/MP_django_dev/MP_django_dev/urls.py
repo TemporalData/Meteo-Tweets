@@ -19,13 +19,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("geo/", include("geo_map.urls")),
-
     path("", include("homepage.urls")),
 
     path("dashboard/", include("dashboard.urls")),
-
-    path('text/', include('text.urls')),
 
     # REST FRAMEWORK URLS
     path('api/', include('api.urls')),

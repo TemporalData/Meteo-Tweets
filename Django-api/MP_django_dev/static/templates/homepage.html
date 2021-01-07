@@ -10,16 +10,24 @@
 
   <title>Meteo Tweets</title>
 
+  {%load static%}
+
   <!-- Bootstrap Core CSS -->
-  <link href="static/homepage_template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="{% static 'homepage_template/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   <!-- Custom Fonts -->
-  <link href="static/homepage_template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="  https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
+  <!-- <link href="{% static 'homepage_template/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet"> -->
+
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-  <link href="static/homepage_template/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css">
+  <!-- <link href="{% static 'homepage_template/vendor/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet"> -->
 
   <!-- Custom CSS -->
-  <link href="static/homepage_template/css/stylish-portfolio.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-stylish-portfolio/5.0.7/css/stylish-portfolio.min.css" rel="stylesheet">
+  <link href="{% static 'homepage_template/css/stylish-portfolio.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -150,7 +158,7 @@
                 <p class="mb-0">Project 1 description</p>
               </div>
             </div>
-            <img class="img-fluid" src="static/homepage_template/img/portfolio-1.jpg" alt="">
+            <img class="img-fluid" src="{% static 'homepage_template/img/portfolio-1.jpg' %}" alt="">
           </a>
         </div>
         <div class="col-lg-6">
@@ -161,7 +169,7 @@
                 <p class="mb-0">Project 2 description</p>
               </div>
             </div>
-            <img class="img-fluid" src="static/homepage_template/img/portfolio-2.jpg" alt="">
+            <img class="img-fluid" src="{% static 'homepage_template/img/portfolio-2.jpg' %}" alt="">
           </a>
         </div>
         <div class="col-lg-6">
@@ -172,7 +180,7 @@
                 <p class="mb-0">Project 3 description</p>
               </div>
             </div>
-            <img class="img-fluid" src="static/homepage_template/img/portfolio-3.jpg" alt="">
+            <img class="img-fluid" src="{% static 'homepage_template/img/portfolio-3.jpg' %}" alt="">
           </a>
         </div>
         <div class="col-lg-6">
@@ -183,7 +191,7 @@
                 <p class="mb-0">Project 4 description</p>
               </div>
             </div>
-            <img class="img-fluid" src="static/homepage_template/img/portfolio-4.jpg" alt="">
+            <img class="img-fluid" src="{% static 'homepage_template/img/portfolio-4.jpg' %}" alt="">
           </a>
         </div>
       </div>
@@ -238,14 +246,17 @@
   </a>
 
   <!-- Bootstrap core JavaScript -->
-  <script src="static/homepage_template/vendor/jquery/jquery.min.js"></script>
-  <script src="static/homepage_template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- <script src="{% static 'homepage_template/vendor/jquery/jquery.min.js' %}"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+  <script src="{% static 'homepage_template/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"> </script>
 
   <!-- Plugin JavaScript -->
-  <script src="static/homepage_template/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="{% static 'homepage_template/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
   <!-- Custom scripts for this template -->
-  <script src="static/homepage_template/js/stylish-portfolio.min.js"></script>
+  <script src="{% static 'homepage_template/js/stylish-portfolio.min.js' %}"></script>
 
 </body>
 
