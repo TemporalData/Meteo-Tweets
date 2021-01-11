@@ -30,8 +30,8 @@ DOCFILE = "partial_clean_term.csv"#"test.csv" Or "partial_clean_term.csv" after 
 
 def graph(request):
     
-    weatherterms = WeatherTerm.objects.all()
-    documents = Document.objects.all()
+    # weatherterms = WeatherTerm.objects.all()
+    # documents = Document.objects.all()
 
     
 # Reset to default
@@ -87,8 +87,8 @@ def graph(request):
     else:
         # Overwrite database and reload the webpage
 
-        _clear_db()
-        _create_db('DW') # Create document and weather term objects 
+        # _clear_db()
+        # _create_db('DW') # Create document and weather term objects 
 
         # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
         event_mild = pd.read_csv(CURRENT_PATH+'new_mild.csv').iloc[:,0].values.tolist()
@@ -110,9 +110,9 @@ def topic_extract(event):
 
 
 def fetch_date(start,end,filepath):
-    selected_docs = Document.objects.filter(pub_date__gte=start, pub_date__lte=end)
-    doc_term_list = list(selected_docs.filter(terms__isnull=False).values('doc_idx','terms__term'))#.annotate(freq=Count('terms__term')))
-    response_data = json.dumps(doc_term_list) # [{'term1':1}, {'term2':2}]
+    selected_docs = Document.objects.values('doc_idx','terms__term').filter(terms__isnull=False).filter(pub_date__gte=start, pub_date__lte=end)
+    # doc_term_list = list(selected_docs.filter(terms__isnull=False).values('doc_idx','terms__term'))#.annotate(freq=Count('terms__term')))
+    response_data = json.dumps(list(selected_docs)) # [{'term1':1}, {'term2':2}]
 
     return response_data
 

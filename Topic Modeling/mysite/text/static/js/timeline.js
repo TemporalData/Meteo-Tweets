@@ -1,15 +1,15 @@
-var svg = d3.select("#timeline")
+var svg_t = d3.select("#timeline")
 			.append("svg")
 			.attr("width", 960)
             .attr("height", 500),
 
     // define top focus size parameters
-    margin = {top: 20, right: 20, bottom: 110, left: 40},
+    margin_t = {top: 20, right: 20, bottom: 110, left: 40},
     // define bottom context size parameters
-    margin2 = {top: 430, right: 20, bottom: 30, left: 40}, 
-    width_t = +svg.attr("width") - margin.left - margin.right,
-    height_t = +svg.attr("height") - margin.top - margin.bottom,
-    height2_t = +svg.attr("height") - margin2.top - margin2.bottom;
+    margin2_t = {top: 430, right: 20, bottom: 30, left: 40}, 
+    width_t = +svg_t.attr("width") - margin_t.left - margin_t.right,
+    height_t = +svg_t.attr("height") - margin_t.top - margin_t.bottom,
+    height2_t = +svg_t.attr("height") - margin2_t.top - margin2_t.bottom;
 
 // var parseDate = d3.timeParse("%b %Y");
 var parseDate = d3.timeParse("%Y/%m/%d");
@@ -46,21 +46,21 @@ var area2 = d3.area()
     .y0(height2_t)
     .y1(function(d) { return y2(d.count); });
 
-svg.append("defs").append("clipPath")
+svg_t.append("defs").append("clipPath")
     .attr("id", "clip")
   .append("rect")
     .attr("width", width_t)
     .attr("height", height_t);
 
 // Top line chart
-var focus = svg.append("g")
+var focus = svg_t.append("g")
     .attr("class", "focus")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")");
 
 // Bottom whole timeline for zoom and brush
-var context = svg.append("g")
+var context = svg_t.append("g")
     .attr("class", "context")
-    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+    .attr("transform", "translate(" + margin2_t.left + "," + margin2_t.top + ")");
 
 d3.csv("/static/data/datecount.csv", type, function(error, data) {
   if (error) throw error;
@@ -98,19 +98,19 @@ d3.csv("/static/data/datecount.csv", type, function(error, data) {
   context.append("g")
       .attr("class", "brush")
       //Right click to update calendars and wordcloud;
-      .on("mousedown", function(){
-          if(d3.event.button === 2){  
-              update_calendar_cloud();
-          };
-      })
+      // .on("mousedown", function(){
+      //     if(d3.event.button === 2){  
+      //         update_calendar_cloud();
+      //     };
+      // })
       .call(brush)
       .call(brush.move, x.range());
 
-  var rect = svg.append("rect")
+  var rect = svg_t.append("rect")
       .attr("class", "zoom")
       .attr("width", width_t)
       .attr("height", height_t)
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")")
       .call(zoom);
 });
 
@@ -121,7 +121,7 @@ function brushed() {
 
   focus.select(".area").attr("d", area);
   focus.select(".axis--x").call(xAxis);
-  svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+  svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
       .scale(width_t / (s[1] - s[0]))
       .translate(-s[0], 0));
 
@@ -137,6 +137,9 @@ function zoomed() {
   focus.select(".area").attr("d", area);
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+  // console.log("zoomed");
+  // update_cloud();
+  update_calendar_cloud();
 }
 
 function type(d) {
@@ -154,17 +157,18 @@ function update_slider(){
 
   var startDate = parseCalender(document.getElementById("start").value);
   var endDate = parseCalender(document.getElementById("end").value);
-  var selectedDuration = Math.floor((endDate-startDate)/(1000 * 60 * 60 * 24))/totalDuration*(width-20);
+  var selectedDuration = Math.floor((endDate-startDate)/(1000 * 60 * 60 * 24))/totalDuration*(x.range()[1]-x.range()[0]);
 
   var start2first = Math.floor((startDate-first)/(1000 * 60 * 60 * 24)) ;
-  var startIndex = start2first/totalDuration*(width_t-20);
+  var startIndex = start2first/totalDuration*(width_t-20); //width_t+2
   var sliderbutton = document.getElementById("sliderButton").value;
 
   x.domain([startDate,endDate])
+  console.log(x.domain);
 
   focus.select(".area").attr("d", area);
   focus.select(".axis--x").call(xAxis);
-  svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+  svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
       .scale((width_t-20) / selectedDuration)
       .translate(-startIndex, 0));
 
