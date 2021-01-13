@@ -35,7 +35,8 @@ function update_cloud(){
       for (var term_doc in groupedByTerm){
         var pair = {};
         pair.event = term_doc;
-        pair.doc_list = groupedByTerm[term_doc]
+        pair.doc_list = groupedByTerm[term_doc];
+        pair.size = pair.doc_list.length;
         eventlist.push(pair);
       }
 
@@ -215,43 +216,43 @@ function draw_no_overlap_cloud(){
 
       function drawSkillCloud(words) {
 
-          cloud_svg
-              .append("g")
-              // .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-              .attr("transform", "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")")
-              .selectAll("text")
-              .data(words)
-              .enter().append("text")
-              .style("font-size", function(d) {
-                  return d.size + "px";
-              })
-              .style("-webkit-touch-callout", "none")
-              .style("-webkit-user-select", "none")
-              .style("-khtml-user-select", "none")
-              .style("-moz-user-select", "none")
-              .style("-ms-user-select", "none")
-              .style("user-select", "none")
-              .style("cursor", "default")
-              .style("font-family", "Impact")
-              .style("fill", function(d, i) {
-                  return fill(i);
-              })
-              .attr("text-anchor", "middle")
-              .attr("transform", function(d) {
-                  return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-              })
-              .text(function(d) {
-                  return d.text;
-              });
+        cloud_svg
+            .append("g")
+            // .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+            .attr("transform", "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) {
+                return d.size + "px";
+            })
+            .style("-webkit-touch-callout", "none")
+            .style("-webkit-user-select", "none")
+            .style("-khtml-user-select", "none")
+            .style("-moz-user-select", "none")
+            .style("-ms-user-select", "none")
+            .style("user-select", "none")
+            .style("cursor", "default")
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) {
+                return fill(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) {
+                return d.text;
+            });
               
       // set the viewbox to content bounding box (zooming in on the content, effectively trimming whitespace)
-          // var svg_cloud = document.getElementsByTagName("svg")[0];
-          var selected_svg = document.getElementsByTagName("svg")[1]; // cloud_svg
-          // console.log(selected_svg, typeof selected_svg);
-          // console.log(cloud_svg, typeof cloud_svg);
-          var bbox = selected_svg.getBBox();
-          var viewBox = [bbox.x, bbox.y, bbox.width, bbox.height].join(" ");
-          selected_svg.setAttribute("viewBox", viewBox);
+        // var svg_cloud = document.getElementsByTagName("svg")[0];
+        var selected_svg = document.getElementsByTagName("svg")[1]; // cloud_svg
+        // console.log(selected_svg, typeof selected_svg);
+        // console.log(cloud_svg, typeof cloud_svg);
+        var bbox = selected_svg.getBBox();
+        var viewBox = [bbox.x, bbox.y, bbox.width, bbox.height].join(" ");
+        selected_svg.setAttribute("viewBox", viewBox);
       
       }
   }
