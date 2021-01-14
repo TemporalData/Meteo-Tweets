@@ -20,7 +20,7 @@ function update_menu(selected_event){
       if(max == 0){max = "1e-6"}
       extrem.push(min.toString(),max.toString())
       // console.log(extrem);
-
+      update_relevant_terms(selected_event);
       display_topics(topic_text,extrem);
       // display_topics();
       // $("#ldavis").data("value", ldavis_data);
@@ -35,6 +35,16 @@ function update_menu(selected_event){
 //     update_menu(selectedOption);
 // })
 
+function update_relevant_terms(event){
+  for ( var i=0; i<merged_terms.length; i++){
+    // console.log(event, merged_terms[i].event, merged_terms[i].event === event);
+    if (merged_terms[i].event === event){
+      
+      document.getElementById("term-dict").innerHTML = merged_terms[i].keywords;
+      // $('#relevant-term').innerHTML('Corresponding terms are '+merged_terms[i].keywords+'');
+    }
+  }
+}
 
 
 // Visualize topics and terms in table form

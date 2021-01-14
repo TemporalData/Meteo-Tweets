@@ -91,10 +91,17 @@ def dashboard(request):
         # _create_db('DW') # Create document and weather term objects 
 
         # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
-        event_mild = pd.read_csv(CURRENT_PATH+'new_mild.csv').iloc[:,0].values.tolist()
-        event_severe = pd.read_csv(CURRENT_PATH+'new_severe.csv').iloc[:,0].values.tolist()
+        mild = pd.read_csv(CURRENT_PATH+'new_mild.csv')
+        severe = pd.read_csv(CURRENT_PATH+'new_severe.csv')
+
+        merged_mild = mild.loc[:,['event','keywords']].to_dict('records')
+        merged_severe = severe.loc[:,['event','keywords']].to_dict('records')
+        merged_groups = merged_mild + merged_severe
+        event_mild = mild.iloc[:,0].values.tolist()
+        event_severe = severe.iloc[:,0].values.tolist()
         event_groups = [{"key":"Mild Weather Events","value":event_mild},{"key":"Severe Weather Events","value":event_severe}]
-        context = {'place':'No date selected!', "event_groups":json.dumps(event_groups)}
+      
+        context = {'place':'No date selected!', "event_groups":json.dumps(event_groups), "merged_terms": json.dumps(merged_groups)}
 
         return render(request, 'dashboard.html', context=context)        
 
@@ -103,7 +110,6 @@ def topic_extract(event):
         event = 'dusk_dawn' # rename and direct to the topic file 
     with open(CURRENT_PATH+'termtopic/'+event+'.json','r') as event_file:
         tw_js = json.load(event_file)
-
 
     return tw_js
 

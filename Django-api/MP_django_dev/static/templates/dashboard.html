@@ -24,7 +24,12 @@
   pointer-events: all;
 }
 
-/*datepicker*/
+/*Weather Term Topic Column Layout*/
+#container {height:100%; width:100%;font-size: 0;}
+#left, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;}
+#left {width: 30%;}
+#right {width: 70%; }
+
 
 </style>
 
@@ -267,6 +272,53 @@
                     </div>
 
                     <div class="row">
+                        <!-- Weather Topic -->
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Accordion -->
+                                <a href="#collapseCardTopic" class="d-block card-header py-3" data-toggle="collapse"
+                                    role="button" aria-expanded="true" aria-controls="collapseCardTopic">
+                                    <h6 class="m-0 font-weight-bold text-primary">Weather Topics</h6>
+                                </a>
+                                <!-- Card Content - Collapse -->
+                                <div class="collapse show text-center" id="collapseCardTopic" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px; height: 600px">
+                                        <div id="sandbox-container" class="container">
+                                    
+                                            <div id="container" >
+                                              <div id="left">
+                                                  <label for="selectButton" style=' font-size: 20px'>Weather Glossary</label>
+                                                <br>
+                                                <form method="get">
+                                                  <select id="selectButton"></select>
+                                                </form>
+                                                <br>
+                                                <div>
+                                                    <label> Relevant terms are: </label>
+                                                    <div id="term-dict"></div>
+
+
+                                                </div>
+
+                                              </div>
+                                              <div id="right">
+                                                <div id="mydataviz3"> Following is the graph for topics: </div>
+                                                
+                                                <div id= "topic-div" data-value="">
+                                                    
+                                                </div>
+
+
+                                              </div>
+                                           
+                                        </div> 
+                                                                           
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
 
                         <!-- Social Networks -->
                         <div class="col-xl-12 col-lg-12">
@@ -383,7 +435,37 @@
     <!-- Network script -->
     <script type="text/javascript" src="{% static 'js/part3_network.js' %}"></script>
 
+    <script>
+        //============ Weather Event Dropdown Menu Initialization ============
 
+
+        var event_groups = JSON.parse('{{ event_groups|escapejs }}');
+        var merged_terms = JSON.parse('{{ merged_terms|escapejs }}');
+
+
+        d3.select("#selectButton")
+          .selectAll('optgroup')
+          .data(event_groups)
+          .enter()
+          .append('optgroup')
+          .attr('label',function(d){return d.key})
+          .selectAll('option')
+          .data(function(d){return d.value})
+          .enter()
+          .append('option')
+          .text(function(d){return d;})
+          .attr('value', function(d) {return d;});
+
+
+        d3.select("#selectButton").on("change", function(d) {
+            var selectedOption = d3.select(this).property("value");
+            update_menu(selectedOption);
+        })
+
+        $("#term-dict").data("value", merged_terms);
+        
+
+    </script> 
 
 </body>
 
