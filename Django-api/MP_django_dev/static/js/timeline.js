@@ -138,7 +138,7 @@ function zoomed() {
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 
-  update_calendar_cloud();
+  // update_calendar_cloud();
 }
 
 function type(d) {
