@@ -300,10 +300,12 @@ function draw_no_overlap_cloud(){
             .text(function(d) {
                 return d.text;
             })
-            .on("mousedown", function(d){
-                if(d3.event.button === 2){  
-                    update_text(d);
-                };
+            .on("click", function(d){ // can also use "mousedown"
+                console.log("onclick!");
+                update_text(d);
+                // if(d3.event.button === 2){  
+                //     update_text(d);
+                // };
             })
             ;
               

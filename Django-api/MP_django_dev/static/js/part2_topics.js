@@ -99,11 +99,11 @@ function display_topics(data,extrem){
     .style("font-size", 15)
     .call(d3.axisLeft(y).tickSize(0))
     .select(".domain").remove()
-  var colorbar = ["#FFFFBF", "#5E4FA2", "#66C2A5", "#3288BD", "#ABDDA4", "#E6F598", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]
+  var colorbar = ["#FFFFFF","#0497cc","#FFFFBF", "#5E4FA2", "#66C2A5", "#3288BD", "#ABDDA4", "#E6F598", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]
   // Build color scale
   var myColor = d3.scaleLog()//d3.scalePow() //d3.scaleLinear()
     // .range(["white", "#69b3a2"])
-    .range([colorbar[0],colorbar[3]])
+    .range([colorbar[0],colorbar[1]])
     .domain([extrem[0],extrem[1]])
 
    // var myColor = d3.scaleSequential()
