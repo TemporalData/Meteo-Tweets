@@ -1,3 +1,8 @@
+$(start).datepicker('setStartDate', '01-01-2015');
+$(start).datepicker('setEndDate', '06-09-2018');
+$(end).datepicker('setStartDate', '01-01-2015');
+$(end).datepicker('setEndDate', '06-09-2018');
+
 var svg_t = d3.select("#timeline")
 			.append("svg")
 			.attr("width", 960)
@@ -138,7 +143,7 @@ function zoomed() {
   focus.select(".axis--x").call(xAxis);
   context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 
-  // update_calendar_cloud();
+  update_calendar_cloud();
 }
 
 function type(d) {

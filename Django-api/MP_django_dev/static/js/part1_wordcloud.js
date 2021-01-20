@@ -240,7 +240,9 @@ function draw_no_overlap_cloud(){
           return _.map(skills, function(skill) {
               return {
                   text: skill.event.toLowerCase() ,
-                  size: toFontSize(skill.doc_list.length, 3, retryCycle)
+                  size: toFontSize(skill.doc_list.length, 3, retryCycle),
+                  list: skill.doc_list,
+
                   // size: toFontSize(skill.years, skill.relevancy, retryCycle)
               };
           });
@@ -297,7 +299,13 @@ function draw_no_overlap_cloud(){
             })
             .text(function(d) {
                 return d.text;
-            });
+            })
+            .on("mousedown", function(d){
+                if(d3.event.button === 2){  
+                    update_text(d);
+                };
+            })
+            ;
               
       // set the viewbox to content bounding box (zooming in on the content, effectively trimming whitespace)
       // var svg_cloud = document.getElementsByTagName("svg")[0];
@@ -308,4 +316,8 @@ function draw_no_overlap_cloud(){
   
       }
   }
+}
+
+function update_text(data){
+  console.log(data.text, data.list);
 }
