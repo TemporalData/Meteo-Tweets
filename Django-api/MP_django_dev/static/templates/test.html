@@ -1,25 +1,67 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
+<html>
 
 <head>
+    {%load static%}
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <style>
+        body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+        svg { width:100%; height: 100% }
+        .canton {
+        fill: #222;
+        }
+
+        .lakes {
+        fill: rgb(0, 217, 255);
+        }
+
+        .canton-boundary {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+        }
+
+    </style>
 </head>
-
-
+      
 <body>
-    <h1>TEST</h1>
+    <script>
+        var width = 1920;
+        var height = 1080;
+        
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
-    <div class="container">
-        <div id="timeline">
+        var path = d3.geoPath().projection(null);
 
-        </div>
-    </div>
+        
+        var url = "{% static 'data/ch-cantons-lakes.json' %}";
+        
+    d3.json(url, function(error, swiss) {
+        if (error) throw error;
 
-    <button type="button" id="myButton" value="Apply Change" onclick="update_timeline()">Apply change</button>
+        var cantons = topojson.feature(swiss, swiss.objects.cantons);
+        var lakes = topojson.feature(swiss, swiss.objects.lakes);
 
+        svg.append("path")
+        .datum(cantons)
+        .attr("class", "canton")
+        .attr("d", path);
+
+        svg.append("path")
+            .datum(lakes)
+            .attr("class", "lakes")
+            .attr("d", path);
+
+        svg.append("path")
+            .datum(topojson.mesh(swiss, swiss.objects.cantons, function(a, b) { return a !== b; }))
+            .attr("class", "canton-boundary")
+            .attr("d", path);
+
+    });
+        
+    </script>
 </body>
-<script src="//d3js.org/d3.v4.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script type="text/javascript" src="/static/js/test.js"></script>
+</html>

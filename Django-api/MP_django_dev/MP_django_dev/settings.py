@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'geo_map',
     'rest_framework',
     'timeline',
-    'text',
 ]
 
 MIDDLEWARE = [
