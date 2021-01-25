@@ -13,35 +13,29 @@ function update_menu(selected_event){
       var min = Math.min.apply(Math, topic_text.map(function(o) { return o.prob; }))
       var max = Math.max.apply(Math, topic_text.map(function(o) { return o.prob; }))
       
-
       var extrem = [];
       // Handle log(0) error;
       if(min == 0){min = "1e-6"}
       if(max == 0){max = "1e-6"}
       extrem.push(min.toString(),max.toString())
-      // console.log(extrem);
+      
       update_relevant_terms(selected_event);
       display_topics(topic_text,extrem);
-      // display_topics();
-      // $("#ldavis").data("value", ldavis_data);
-      // LDAvis_load_lib();
+      draw_timeline(selected_event); //Update timeline with relevant tweets count data
+
 
     }
   });
 }
 
-// d3.select("#selectButton").on("change", function(d) {
-//     var selectedOption = d3.select(this).property("value");
-//     update_menu(selectedOption);
-// })
+
 
 function update_relevant_terms(event){
   for ( var i=0; i<merged_terms.length; i++){
-    // console.log(event, merged_terms[i].event, merged_terms[i].event === event);
     if (merged_terms[i].event === event){
-      
+     
       document.getElementById("term-dict").innerHTML = merged_terms[i].keywords;
-      // $('#relevant-term').innerHTML('Corresponding terms are '+merged_terms[i].keywords+'');
+    
     }
   }
 }
@@ -52,11 +46,6 @@ function display_topics(data,extrem){
 
   //clear old vis chart
   d3.selectAll("#topic-div > *").remove();
-
-  // var max_prob = max(data, key=itemgetter('prob'))
-  // var min_prob = min(data, key=itemgetter('prob'))
-
-  // console.log(max_prob,min_prob)
 
   var margin = {top: 80, right: 25, bottom: 30, left: 40},
   width = 450 - margin.left - margin.right,
@@ -71,9 +60,7 @@ function display_topics(data,extrem){
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-  //Read the data
-  // d3.csv("/Users/zou/Desktop/courses/msc_project/project/CH_tweets/mysite/data/topics.csv", function(data) {
-
+  
   // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
   var myGroups = d3.map(data, function(d){return d.group;}).keys()
   var myVars = d3.map(data, function(d){return d.variable;}).keys()
@@ -101,15 +88,10 @@ function display_topics(data,extrem){
     .select(".domain").remove()
   var colorbar = ["#FFFFFF","#0497cc","#FFFFBF", "#5E4FA2", "#66C2A5", "#3288BD", "#ABDDA4", "#E6F598", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]
   // Build color scale
-  var myColor = d3.scaleLog()//d3.scalePow() //d3.scaleLinear()
-    // .range(["white", "#69b3a2"])
+  var myColor = d3.scaleLog()// Options: d3.scalePow(), d3.scaleLinear()
     .range([colorbar[0],colorbar[1]])
     .domain([extrem[0],extrem[1]])
 
-   // var myColor = d3.scaleSequential()
-   //  .interpolator(d3.interpolateInferno)
-   //  .domain([extrem[0],extrem[1]])
-   // var myColor2 = ["#5E4FA2", "#3288BD", "#66C2A5", "#ABDDA4", "#E6F598", "#FFFFBF", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F"]
 
   // create a tooltip
   var tooltip = d3.select("#topic-div")
@@ -172,12 +154,9 @@ function display_topics(data,extrem){
     .enter()
     .append('text')
     .text(function(d) { return d.text; })
-    // .attr("x", function(d,i) { return x.bandwidth()*(i%10+0.5) })
-    // .attr("y", function(d,i) { return y.bandwidth()*(i%4+0.5) })
     .attr("x", function(d) { return x(d.group)+x.bandwidth()/2; })
     .attr("y", function(d) { return y(d.variable)+y.bandwidth()/2; })
     .attr('text-anchor', 'middle')
-    // .style("fill", "black").style("stroke-width", 1.5)
     .style("font-size", "14px")
 
 

@@ -3,9 +3,16 @@ from django.db import models
 # Create your models here.
 import pandas as pd
 
+class TermType(models.Model):
+	typename = models.CharField(max_length=30)
+	
+	def __str__(self):
+		return self.typename
+
 
 class WeatherTerm(models.Model):
-	term = models.CharField(max_length=30,blank=True)
+	term = models.CharField(max_length=30, blank=True)
+	ttype = models.ForeignKey(TermType, on_delete=models.RESTRICT,null=True, blank=True)
 	def __str__(self):
 		return self.term
 
@@ -28,6 +35,5 @@ class Document(models.Model):
 
 	class Meta:
 		ordering = ['pub_date','doc_idx'] 
-
 
 

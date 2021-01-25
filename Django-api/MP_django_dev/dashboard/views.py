@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core import serializers
 # from django.contrib.postgres.aggregates.general import ArrayAgg
 import json
-from text.models import Document, WeatherTerm
+from text.models import Document, WeatherTerm, TermType
 
 import random
 import os
@@ -30,39 +30,25 @@ DOCFILE = "test.csv"#"partial_clean_term.csv"#"test.csv" Or "partial_clean_term.
 
 def dashboard(request):
     
-    # weatherterms = WeatherTerm.objects.all()
-    # documents = Document.objects.all()
-
     
-# Reset to default
-    if(request.GET.get('submitreset')):
-        context = {'place':'No date selected!'}
-        return render(request, 'graph/graph.html', context=context)         
+# Update timeline with termtype-related data
+    if(request.GET.get('termtype')):
+        data = {'response': count_tweet(request.GET.get('termtype'))}
+        return JsonResponse(data)   
 
 # Part 1: update wordcloud
     # Acquire new start and end dates, and apply clustering algorithm
     elif(request.GET.get('apply_change')):
         start = request.GET.get('start')
         end = request.GET.get('end')   
-        response_data = _run_front_process(start,end,CURRENT_PATH) 
-
+        response_data = fetch_date(start,end,CURRENT_PATH) 
         data = {'response': [f'start date is: {start}, end date is {end}', response_data]} 
         return JsonResponse(data)
 
 # Part 2: update weather event's topics
     elif(request.GET.get('selected_event')):
         selection = request.GET.get('selected_event')
-
         flat_js= topic_extract(selection)
-
-        # topics = json.dumps(topics)
-        # for t in topics:
-        #     t_id = t[0] #integer
-        #     t_str = t[1] #string, e.g. (0, '0.057*"repost"')
-
-        # with open(CURRENT_PATH+LDAFILE) as inputfile:
-        #     lda = json.load(inputfile)
-        # data = {'response': lda} 
         data = {'response': f'selected_event is {selection}', 'topics':flat_js,} 
         return JsonResponse(data)
 
@@ -83,12 +69,14 @@ def dashboard(request):
         data = {'response': f'You typed: {user_input}'} 
         return JsonResponse(data)
     
-# Default 
+# Load the default webpage 
     else:
-        # Overwrite database and reload the webpage
+        # Overwrite database (Approximate 15 mins for creating a complete database!!!) 
 
         # _clear_db()
+        # _create_db('T')  # Create termtype objects
         # _create_db('DW') # Create document and weather term objects 
+
 
         # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
         mild = pd.read_csv(CURRENT_PATH+'new_mild.csv')
@@ -105,9 +93,20 @@ def dashboard(request):
 
         return render(request, 'dashboard.html', context=context)        
 
+
+
+def count_tweet(input):
+    if input == "all":
+        result = Document.objects.values('pub_date').annotate(count=Count('pub_date')).order_by('pub_date')
+    else:
+        result = Document.objects.values('pub_date','terms__ttype__typename').filter(terms__ttype__typename=input).annotate(count=Count('pub_date')).order_by('pub_date')
+    
+    return list(result)
+
+
 def topic_extract(event):
     if event == 'dusk/dawn':
-        event = 'dusk_dawn' # rename and direct to the topic file 
+        event = 'dusk_dawn' # Rename to find the topic file 
     with open(CURRENT_PATH+'termtopic/'+event+'.json','r') as event_file:
         tw_js = json.load(event_file)
 
@@ -117,25 +116,47 @@ def topic_extract(event):
 
 def fetch_date(start,end,filepath):
     selected_docs = Document.objects.values('doc_idx','terms__term').filter(terms__isnull=False).filter(pub_date__gte=start, pub_date__lte=end)
-    # doc_term_list = list(selected_docs.filter(terms__isnull=False).values('doc_idx','terms__term'))#.annotate(freq=Count('terms__term')))
-    # selected_docs = Document.objects.values('doc_idx','terms__term').all()
     response_data = json.dumps(list(selected_docs)) # [{'term1':1}, {'term2':2}]
 
     return response_data
 
 
-
-
-def _run_front_process(start,end,filepath):
-    response_data = fetch_date(start,end,filepath)
-
-    return response_data
-
-
-
-
 # def _load_csv(filedir,start,end):
 def _create_db(model):
+    # Create 
+    if model == 'T':
+        milddir = CURRENT_PATH + 'new_mild.csv'
+        mild = pd.read_csv(milddir, engine='python')
+
+        severedir = CURRENT_PATH + 'new_severe.csv'
+        severe = pd.read_csv(severedir, engine='python')
+
+        for line in mild.iterrows():
+            new_type = TermType.objects.create(
+                typename = line[1]['event'],)
+            # Add new ttype to matching weatherterm objects
+            for term in line[1]['keywords'].split(','):
+                try:
+                    match_term = WeatherTerm.objects.get(term=term)
+                except WeatherTerm.DoesNotExist:
+                    match_term = WeatherTerm.objects.create(term=term)
+                match_term.ttype = new_type
+                match_term.save()
+
+        for line in severe.iterrows():
+            new_type = TermType.objects.create(
+                typename = line[1]['event'])
+            # Add new ttype to matching weatherterm objects
+            for term in line[1]['keywords'].split(','):
+                try:
+                    match_term = WeatherTerm.objects.get(term=term)
+                except WeatherTerm.DoesNotExist:
+                    match_term = WeatherTerm.objects.create(term=term)
+                match_term.ttype = new_type
+                match_term.save()
+
+            
+
     if model == 'DW': # 'D'
         # Read all EN data with doc_no, user_screen_name, latitude, longitude, text, date.
         filedir = CURRENT_PATH + DOCFILE 
@@ -160,15 +181,24 @@ def _create_db(model):
                     except WeatherTerm.DoesNotExist:
                         match_term = WeatherTerm.objects.create(term=term)
 
-                    new_doc.terms.add(match_term)          
-  
+                    new_doc.terms.add(match_term)   
 
 
 
 # Delete all existing objects in db
 def _clear_db():
-    Document.objects.all().delete()
-    WeatherTerm.objects.all().delete()
+    try:
+        Document.objects.all().delete()
+    except Document.DoesNotExist:
+        pass
+    try:
+        WeatherTerm.objects.all().delete()
+    except WeatherTerm.DoesNotExist:
+        pass
+    try:
+        TermType.objects.all().delete()
+    except TermType.DoesNotExist:
+        pass
 
 
     return '_clear_db is done!'

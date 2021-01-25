@@ -4,7 +4,7 @@ var margin = {top: 30, right: 30, bottom: 30, left: 50},
 
 
 function update_cloud(){
-  // console.log(width);
+  
 
   var start_picker = $("#start").datepicker("getDate");
   var end_picker  = $("#end").datepicker("getDate");
@@ -154,20 +154,17 @@ function draw_cloud(){
 
 function draw_no_overlap_cloud(){
   var width = 600;
-  // console.log(height);
   var height = 400;
-  // console.log(width, height);
+  
   d3.selectAll("#my_cloudviz > *").remove();
   var mywords = $("#my_cloudviz").data("value");
-  // var mywords = jQuery.parseJSON([{event: "sunny", doc_list: [1,2,3]]}])
-  console.log(mywords);
+  
+  // console.log(mywords);
 
   var cloud_svg = d3.select("#my_cloudviz")
     .append("svg")
     .attr("width", '100%')
     .attr("height",'100%')
-      // .attr("width", width + margin.left + margin.right)
-      // .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
       "translate(" + margin.left + "," + margin.top + ")");
@@ -178,24 +175,20 @@ function draw_no_overlap_cloud(){
 
   var minfont = 18;
   var maxfont = 35;
-
-  // var width = 800;
-  // var height = 400;
   
-  var fill = d3.scaleOrdinal(d3.schemeCategory20)//d3.scale.category20();
+  var fill = d3.scaleOrdinal(d3.schemeCategory20)
   
   // for small screens (and slow cpu's) limit retries
-  console.log(width)
+  // console.log(width)
   var MAX_TRIES = (width > 400) ? 6 : 3;
 
   // draw initial cloud wilthout filters
   generateSkillCloud();
 
   function generateSkillCloud(retryCycle) {
-    // console.log(mywords);
+
       var skillsToDraw = transformToCloudLayoutObjects(filterSkills(mywords), retryCycle);
-      // var skillsToDraw = mywords;
-      // console.log(skillsToDraw);
+
       var layout = d3.layout.cloud()
                       .size([width, height])
                       .words(skillsToDraw)
@@ -272,13 +265,10 @@ function draw_no_overlap_cloud(){
         console.log(words);
         cloud_svg
           .append("g")
-            // .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
             .attr("transform", "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")")
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            // .style("font-size", function(d) { return Math.log(d.size)*3+14; })
-        
             .style("font-size", function(d) {
                 return d.size + "px";
             })
@@ -300,17 +290,19 @@ function draw_no_overlap_cloud(){
             .text(function(d) {
                 return d.text;
             })
-            .on("click", function(d){ // can also use "mousedown"
+            .on("click", function(d){ 
                 console.log("onclick!");
                 update_text(d);
-                // if(d3.event.button === 2){  
-                //     update_text(d);
-                // };
             })
+            // .on("mousedown", function(d){ //Option: right click
+            //   if(d3.event.button === 2){
+            //     update_text(d);
+            //   };  
+            // })
             ;
               
+              
       // set the viewbox to content bounding box (zooming in on the content, effectively trimming whitespace)
-      // var svg_cloud = document.getElementsByTagName("svg")[0];
       var selected_svg = document.getElementsByTagName("svg")[1]; // cloud_svg
       var bbox = selected_svg.getBBox();
       var viewBox = [bbox.x, bbox.y, bbox.width, bbox.height].join(" ");
