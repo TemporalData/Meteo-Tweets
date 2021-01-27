@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'geo_map',
     'rest_framework',
     'timeline',
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'MP_django_dev.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'django_db',
         'USER': 'django_user',
         'PASSWORD': 'testtest',
