@@ -91,30 +91,35 @@
 
 
 
-        var data2 = Array([8.3,47.1], [9,46.3]); // Can be updated with ajax function
+        var data2 = [{"long": 8.3, "lat": 47.1, "id": 3}, {"long": 9, "lat": 46.1, "id": 10}];
+        //Array([8.3,47.1,0], [9,46.3,1]); // Can be updated with ajax function
         // console.log(data,data2);
         // d3.csv(url2, function(data) {
         svg.selectAll("circle")
             .data(data2)
             .enter()
             .append("circle")
+            .attr("fill", "yellow")
+            .attr("id",function(d){return d.id})
+
             // .attr("cx",d=>d[0]*w)
             // .attr("cy",d=>d[1]*h)
-            
-            .attr("cx", function(d) {
-              console.log(d[0],projection([d[0], d[1]])[0]);
-              return projection([d[0], d[1]])[0];
-            })
-            .attr("cy", function(d) {
-              return projection([d[0], d[1]])[1];
-            })
 
             // .attr("cx", function(d) {
-            //   return projection([d.longitude, d.latitude])[0];
+
+            //   console.log(d[0],projection([d[0], d[1]])[0]);
+            //   return projection([d[0], d[1]])[0];
             // })
             // .attr("cy", function(d) {
-            //   return projection([d.longitude, d.latitude])[1];
+            //   return projection([d[0], d[1]])[1];
             // })
+
+            .attr("cx", function(d) {
+              return projection([d.long, d.lat])[0];
+            })
+            .attr("cy", function(d) {
+              return projection([d.long, d.lat])[1];
+            })
             .attr("r",r);
         // });
 
@@ -155,7 +160,7 @@
             lasso.notSelectedItems()
                 .attr("r",3.5);
 
-            console.log(lasso.selectedItems())
+            console.log(lasso.selectedItems().attr("id"))
 
         };
         
