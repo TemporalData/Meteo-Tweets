@@ -34,4 +34,4 @@ See [requirements]()
 
 ## Bugs
 
-Find a bug in the project? [Open a new issue on GitHub]()
+Find a bug in the project? [Open a new issue on GitHub](https://github.com/fanfeng07/social-media-analytics/issues)
