@@ -15,7 +15,7 @@ def login(request):
 
 def d3map(request):
 
-    return render(request, "test.html")
+    return render(request, "d3map.html")
 
 
 def testing(request):

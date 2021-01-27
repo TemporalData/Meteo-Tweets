@@ -151,18 +151,18 @@
             if(lasso.selectedItems().size() == 0){
                 // Reset the style of the not selected dots
                 lasso.notSelectedItems()
-                    .attr("color",function(d){return d.color});
+                    .attr("color",function(d){return d.color})
+                    .attr("r", 5);
             }
             else {
 
                 // Style the selected dots
                 lasso.selectedItems()
-                    .classed("selected",true)
-                    .attr("r", 7.5);
+                    .classed("selected",true);
 
                 // Reset the style of the not selected dots
                 lasso.notSelectedItems()
-                    .attr("color",function(d){return d.color});
+                    .attr("r",0.5);
 
                 console.log(lasso.selectedItems().attr("id"))
 
