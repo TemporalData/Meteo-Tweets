@@ -45,9 +45,7 @@ var term_type = 'all';
 draw_timeline(term_type)
 
 function draw_timeline(term_type){
-		if (term_type !== 'all'){
-				d3.selectAll("#timeline > *").remove(); // clear old content in timeline
-		}
+		d3.selectAll("#timeline > *").remove();
 		//change timeline's title
 		document.getElementById("timeline-title").innerHTML = ' Tweets Frequency('+term_type+')'; //.toUpperCase()
 		
