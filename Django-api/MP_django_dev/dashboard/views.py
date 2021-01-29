@@ -123,7 +123,8 @@ def fetch_date(start,end,filepath):
 
 # def _load_csv(filedir,start,end):
 def _create_db(model):
-    # Create 
+
+    # Create TermType objects
     if model == 'T':
         milddir = CURRENT_PATH + 'new_mild.csv'
         mild = pd.read_csv(milddir, engine='python')
@@ -156,7 +157,7 @@ def _create_db(model):
                 match_term.save()
 
             
-
+    # Create Document and WeatherTerm objects
     if model == 'DW': # 'D'
         # Read all EN data with doc_no, user_screen_name, latitude, longitude, text, date.
         filedir = CURRENT_PATH + DOCFILE 
