@@ -292,13 +292,9 @@ function draw_no_overlap_cloud(){
             })
             .on("click", function(d){ 
                 console.log("onclick!");
-                update_text(d);
+                update_text(d); 
             })
-            // .on("mousedown", function(d){ //Option: right click
-            //   if(d3.event.button === 2){
-            //     update_text(d);
-            //   };  
-            // })
+
             ;
               
               
@@ -313,5 +309,24 @@ function draw_no_overlap_cloud(){
 }
 
 function update_text(data){
-  console.log(data.text, data.list);
+  // console.log(data.text, data.list);
+  var sw = d3.selectAll("#my_cloudviz text")
+            .filter(function(){
+                return d3.select(this).text() == data.text;
+              })
+            .style('opacity', 0.9);
+
+  console.log(sw);
+
+}
+
+
+
+function topic2cloud(term){
+  var sw = d3.selectAll("#my_cloudviz text")
+            .filter(function(){
+                return d3.select(this).text() == term;
+              })
+            .style('opacity', 0.9);
+  console.log(sw);
 }

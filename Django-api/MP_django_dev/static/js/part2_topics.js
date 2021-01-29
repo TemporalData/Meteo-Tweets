@@ -29,17 +29,20 @@ function update_menu(selected_event){
 }
 
 
-
 function update_relevant_terms(event){
   for ( var i=0; i<merged_terms.length; i++){
     if (merged_terms[i].event === event){
-     
+      // console.log(merged_terms[i].keywords);
       document.getElementById("term-dict").innerHTML = merged_terms[i].keywords;
-    
+
+      // Update wordcloud
+      var cw = d3.selectAll("#my_cloudviz text")
+                 .style('opacity', 0.1);      
+      var sp = merged_terms[i].keywords.split(",").forEach(function(d){topic2cloud(d);});
+     
     }
   }
 }
-
 
 // Visualize topics and terms in table form
 function display_topics(data,extrem){
