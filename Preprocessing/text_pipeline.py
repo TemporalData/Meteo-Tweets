@@ -1,11 +1,9 @@
 # Packages and modules
 import os
 import re
-import numpy as np
 import pandas as pd
 from ast import literal_eval
 import unicodedata
-from wordcloud import WordCloud
 import emoji
 from emoji.unicode_codes import UNICODE_EMOJI
 
@@ -15,16 +13,11 @@ from nltk.stem import WordNetLemmatizer,PorterStemmer
 stop_words = stopwords.words('english')
 stop_words.extend(['switzerland']) #'geneva','zurich','day','basel', ...
 
-from time import time
-
 import gensim
 import gensim.corpora as corpora
 from gensim.models import CoherenceModel
-from gensim.summarization import keywords
-from gensim.models import LdaModel
 
 
-from datetime import date
 
 
 # Dataset name and directories
@@ -93,27 +86,6 @@ def word_to_list(data):
 
    #might generate meaningless term: e.g. stormy --> stormi
     return lemmatized_words,data_no_stop
-
-
-# Searching weather-relaetd terms in each tweet and build an index to doc_idx
-# input: lemmatized list of lists of words, in order of doc_idx
-# output: dataframe['weather_terms','doc_list']
-def find_weather_event(filename, lem_data, idx2doc):
-    weather_dict = {}
-    event_list = pd.read_csv(filename)
-    event_list = event_list.terms.map(lambda x: x.lower()).values.tolist()
-    event_list.append('thunderstorm')
-    for event in event_list:
-        weather_dict[event] = []
-
-    for i in range(len(lem_data)):
-        for word in lem_data[i]:
-            if word in event_list:
-                weather_dict[word].append(idx2doc.iloc[i])
-
-
-    event_df = pd.DataFrame([{'terms':term, 'doc_list': doc_list} for term,doc_list in weather_dict.items()])
-    return event_df
 
 
 
@@ -211,12 +183,11 @@ def generate_type_topics(filedir):
     event_df = pd.concat([event_mild, event_severe]).reset_index(drop=True)
     
     for i in range(event_df.shape[0]):
-        ttpye = event_df.event[i]
-        
-        doc_list = literal_eval(event_df.loc[i, 'doc_list'])
-        
+        ttpye = event_df.event[i]       
+        doc_list = literal_eval(event_df.loc[i, 'doc_list'])     
         docs = raw[raw.doc_no.isin(doc_list)]
         lem, dlist = word_to_list(docs)
+
         num_topics = 4
         num_words = 10
         ldamodel = gensim_lda(lem,n_topic=num_topics,n_word=num_words)
@@ -234,7 +205,10 @@ def generate_type_topics(filedir):
 
 
 def main():
-
     generate_partial_dataset(FILE_DIR, DATAFILE)
     generate_type_topics(FILE_DIR)
+
+
+if __name__ == '__main__':
+    main()
 
