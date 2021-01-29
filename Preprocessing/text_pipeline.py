@@ -148,7 +148,7 @@ def _clear_old_files(fpath, flist):
 
 # Read original data, slice columns, text propcessing, and save to new file
 # input: filedir, filename
-# output: partial-clean-term.csv ['user_screen_name', 'latitude', 'longitude', 'text', 'created_at_CET']
+# output: partial-clean-term.csv ['doc_no', 'user_screen_name', 'latitude', 'longitude', 'date', 'text', 'terms']
 def generate_partial_dataset(filedir, filename):
     # Read, slice data
     raw = pd.read_csv(os.path.join(filedir, filename), engine='python', encoding='latin_1')
@@ -174,7 +174,7 @@ def generate_partial_dataset(filedir, filename):
 
 
 
-# Create topic json files
+# Create topic json files for each weather type
 def generate_type_topics(filedir):
     raw = pd.read_csv(os.path.join(filedir, "partial_clean_term.csv"), engine='c', encoding='latin_1')
 
