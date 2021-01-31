@@ -47,13 +47,16 @@ function update_d3Map(){
 
 var w = 1000;
 var h = 600;
-var r = 5;
+var r = 1;
 
 function update_map(map_data){
 
   var svg = d3.select("body").append("svg")
       .attr("width",w)
-      .attr("height",h);
+      .attr("height",h)
+      .call(d3.zoom().on("zoom", function () {
+        svg.attr("transform", d3.event.transform)
+      }));
 
 
   //Define map projection
@@ -111,7 +114,7 @@ var circles = d3.selectAll("circle");
 // Lasso functions
 var lasso_start = function() {
     lasso.items()
-        .attr("r",3.5) // reset size
+        .attr("r",r) // reset size
         .classed("not_possible",true)
         .classed("selected",false);
 };
@@ -139,7 +142,7 @@ var lasso_end = function() {
         // Reset the style of the not selected dots
         lasso.notSelectedItems()
             .attr("color",function(d){return d.color})
-            .attr("r", 5);
+            .attr("r", 1);
     }
     else {
 

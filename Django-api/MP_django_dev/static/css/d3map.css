@@ -19,7 +19,7 @@ circle {
 
 .lasso .origin {
     fill:#3399FF;
-    fill-opacity:.5;
+    fill-opacity:0;
 }
 
 .not_possible {
