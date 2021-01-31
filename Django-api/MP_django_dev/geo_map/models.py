@@ -7,11 +7,12 @@ from django.contrib.gis.db import models
 # Create your models here.
 
 
-class GeoData(models.Model):
-    tweet_id = models.IntegerField(null=False)
-    location = models.PointField(null=True, default=None)
+class GeoLocation(models.Model):
+    # Lat and long coordinates
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    # Geometry of lat long coorginates
+    location = models.PointField(null=True, blank=True)
 
 
 class GeoCache(models.Model):
