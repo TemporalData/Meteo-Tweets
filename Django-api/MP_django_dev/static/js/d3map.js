@@ -47,11 +47,11 @@ function update_d3Map(){
 
 var w = 1000;
 var h = 600;
-var r = 1;
+var r = 0.05;
 
 function update_map(map_data){
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("#d3map").append("svg")
       .attr("width",w)
       .attr("height",h)
       .call(d3.zoom().on("zoom", function () {
@@ -113,36 +113,35 @@ function update_map(map_data){
 var circles = d3.selectAll("circle");
 // Lasso functions
 var lasso_start = function() {
-    lasso.items()
-        .attr("r",r) // reset size
-        .classed("not_possible",true)
-        .classed("selected",false);
+    // lasso.items()
+    //     .attr("r",r) // reset size
+    //     .classed("not_possible",true)
+    //     .classed("selected",false);
 };
 
 var lasso_draw = function() {
 
     // Style the possible dots
-    lasso.possibleItems()
-        .classed("not_possible",false)
-        .classed("possible",true);
+    // lasso.possibleItems()
+    //     .classed("not_possible",false)
+    //     .classed("possible",true);
 
-    // Style the not possible dot
-    lasso.notPossibleItems()
-        .classed("not_possible",true)
-        .classed("possible",false);
+    // // Style the not possible dot
+    // lasso.notPossibleItems()
+    //     .classed("not_possible",true)
+    //     .classed("possible",false);
 };
 
 var lasso_end = function() {
     // Reset the color of all dots
-    lasso.items()
-        .classed("not_possible",false)
-        .classed("possible",false);
+    // lasso.items()
+    //     .classed("not_possible",false)
+    //     .classed("possible",false);
 
     if(lasso.selectedItems().size() == 0){
         // Reset the style of the not selected dots
         lasso.notSelectedItems()
-            .attr("color",function(d){return d.color})
-            .attr("r", 1);
+            .attr("color",function(d){return d.color});
     }
     else {
 
@@ -151,10 +150,9 @@ var lasso_end = function() {
             .classed("selected",true);
 
         // Reset the style of the not selected dots
-        lasso.notSelectedItems()
-            .attr("r",0.5);
+        lasso.notSelectedItems();
 
-        console.log(lasso.selectedItems().attr("id"))
+        console.log(lasso.selectedItems())
 
     }
 
