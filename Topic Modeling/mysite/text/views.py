@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core import serializers
 # from django.contrib.postgres.aggregates.general import ArrayAgg
 import json
-from .models import Document,RegionTopic,DocWeatherEvent
+from .models import Document, RegionTopic, DocWeatherEvent
 
 import random
 import os

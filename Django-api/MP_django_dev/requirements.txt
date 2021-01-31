@@ -1,0 +1,16 @@
+gunicorn
+django
+djangorestframework
+whitenoise
+
+numpy
+pandas
+bokeh
+scipy
+networkx
+jgraph
+wordcloud
+emoji
+gensim
+hdbscan
+nltk
