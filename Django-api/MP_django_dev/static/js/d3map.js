@@ -81,35 +81,41 @@ function update_map(map_data){
   .attr("fill-opacity",0.75)
   .attr("fill", "steelblue");
 
-  svg.selectAll("circle")
+  svg.selectAll("rect")
       .data(map_data)
       .enter()
-      .append("circle")
-      .attr("fill", "#000000")
+      .append("rect")
+      .attr("fill", function(d){return d.color})
       .attr("id",function(d){return d.id})
-
-      // .attr("cx",d=>d[0]*w)
-      // .attr("cy",d=>d[1]*h)
-
-      // .attr("cx", function(d) {
-
-      //   console.log(d[0],projection([d[0], d[1]])[0]);
-      //   return projection([d[0], d[1]])[0];
-      // })
-      // .attr("cy", function(d) {
-      //   return projection([d[0], d[1]])[1];
-      // })
-
-      .attr("cx", function(d) {
+      
+      .attr("x", function(d) {
         return projection([d.long, d.lat])[0];
       })
-      .attr("cy", function(d) {
+      .attr("y", function(d) {
         return projection([d.long, d.lat])[1];
       })
-      .attr("r",r);
+      .attr("width", 1.1)
+      .attr("height", 1.1);
+
+  // possible plotting of circles, but it renders far slower
+  // svg.selectAll("circles")
+  //     .data(map_data)
+  //     .enter()
+  //     .append("circle")
+  //     .attr("fill", "#FFFFFF")
+  //     .attr("id",function(d){return d.id})
+
+  //     .attr("cx", function(d) {
+  //       return projection([d.long, d.lat])[0];
+  //     })
+  //     .attr("cy", function(d) {
+  //       return projection([d.long, d.lat])[1];
+  //     })
+  //     .attr("r", 0.5);
+
 // });
 
-var circles = d3.selectAll("circle");
+var rects = d3.selectAll("rect");
 // Lasso functions
 var lasso_start = function() {
     lasso.items()
@@ -161,13 +167,13 @@ var lasso_end = function() {
 var lasso = d3.lasso()
     .closePathSelect(true)
     .closePathDistance(100)
-    .items(circles)
+    .items(rects)
     .targetArea(svg)
     .on("start",lasso_start)
     .on("draw",lasso_draw)
     .on("end",lasso_end);
 
-//svg.call(lasso);
+svg.call(lasso);
 
 let zoom = d3.zoom()
     .scaleExtent([1,10])
@@ -176,6 +182,6 @@ let zoom = d3.zoom()
       svg.attr('transform', d3.event.transform)
     });
 
-container.call(zoom);
+// container.call(zoom);
 
 }
