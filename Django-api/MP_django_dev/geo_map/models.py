@@ -15,6 +15,11 @@ class GeoLocation(models.Model):
     #location = models.PointField(null=True, blank=True)
 
 
+class GeoTweet(models.Model):
+    # field which points to the location of the tweet
+    geo_location = models.ForeignKey(GeoLocation, models.CASCADE, null=False)
+
+
 class GeoCache(models.Model):
     field_name = models.TextField(null=False)
     data_list = ArrayField(models.FloatField())

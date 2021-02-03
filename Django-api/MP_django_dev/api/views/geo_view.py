@@ -82,6 +82,6 @@ class GeoDataAPI(APIView):
         output.columns = ["id", "lat", "long"]
 
         json_output = output.to_json(orient="records")
-        
+
         # Return the map data
         return HttpResponse(json_output, content_type="application/json")

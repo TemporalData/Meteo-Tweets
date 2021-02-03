@@ -1,6 +1,6 @@
 circle {
             
-    fill-opacity: 0.75;
+    fill-opacity: 1;
 }
 
 .lasso path {
@@ -28,4 +28,9 @@ circle {
 
 .possible {
     fill: #15ff00;
+}
+
+.d3map {
+    border: 1px solid darkgray;
+    overflow: hidden;
 }

@@ -47,16 +47,15 @@ function update_d3Map(){
 
 var w = 1000;
 var h = 600;
-var r = 0.05;
+var r = 0.4;
 
 function update_map(map_data){
 
-  var svg = d3.select("#d3map").append("svg")
+  var container = d3.select("#d3map");
+
+  var svg = container.append("svg")
       .attr("width",w)
-      .attr("height",h)
-      .call(d3.zoom().on("zoom", function () {
-        svg.attr("transform", d3.event.transform)
-      }));
+      .attr("height",h);
 
 
   //Define map projection
@@ -113,35 +112,35 @@ function update_map(map_data){
 var circles = d3.selectAll("circle");
 // Lasso functions
 var lasso_start = function() {
-    // lasso.items()
-    //     .attr("r",r) // reset size
-    //     .classed("not_possible",true)
-    //     .classed("selected",false);
+    lasso.items()
+        .classed("not_possible",true)
+        .classed("selected",false);
 };
 
 var lasso_draw = function() {
 
     // Style the possible dots
-    // lasso.possibleItems()
-    //     .classed("not_possible",false)
-    //     .classed("possible",true);
+    lasso.possibleItems()
+        .classed("not_possible",false)
+        .classed("possible",true)
+        .attr("opacity",1);
 
-    // // Style the not possible dot
-    // lasso.notPossibleItems()
-    //     .classed("not_possible",true)
-    //     .classed("possible",false);
+    // Style the not possible dot
+    lasso.notPossibleItems()
+        .classed("not_possible",true)
+        .classed("possible",false);
 };
 
 var lasso_end = function() {
     // Reset the color of all dots
-    // lasso.items()
-    //     .classed("not_possible",false)
-    //     .classed("possible",false);
+    lasso.items()
+        .classed("not_possible",false)
+        .classed("possible",false);
 
     if(lasso.selectedItems().size() == 0){
         // Reset the style of the not selected dots
         lasso.notSelectedItems()
-            .attr("color",function(d){return d.color});
+        .attr("opacity",1);
     }
     else {
 
@@ -150,7 +149,8 @@ var lasso_end = function() {
             .classed("selected",true);
 
         // Reset the style of the not selected dots
-        lasso.notSelectedItems();
+        lasso.notSelectedItems()
+        .attr("opacity",0.1);
 
         console.log(lasso.selectedItems())
 
@@ -167,6 +167,15 @@ var lasso = d3.lasso()
     .on("draw",lasso_draw)
     .on("end",lasso_end);
 
-svg.call(lasso);
+//svg.call(lasso);
+
+let zoom = d3.zoom()
+    .scaleExtent([1,10])
+    .translateExtent([[-400,-400],[1000,1000]])
+    .on('zoom', () => {
+      svg.attr('transform', d3.event.transform)
+    });
+
+container.call(zoom);
 
 }
