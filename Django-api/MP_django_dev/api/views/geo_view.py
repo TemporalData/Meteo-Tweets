@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.http import HttpResponse
+
 # Import the model from the app geo map
 from geo_map.models import GeoCache, GeoLocation
 # Import function from processing.py from the app geo map
@@ -16,7 +18,6 @@ import pandas as pd
 # Takes ID list and returns:
 # id, latitude, longitude
 ###
-
 
 class GeoDataAPI(APIView):
 
@@ -80,5 +81,7 @@ class GeoDataAPI(APIView):
         # Add columns for the output
         output.columns = ["id", "lat", "long"]
 
+        json_output = output.to_json(orient="records")
+
         # Return the map data
-        return Response(output)
+        return HttpResponse(json_output, content_type="application/json")

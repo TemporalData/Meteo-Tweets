@@ -1,0 +1,36 @@
+circle {
+            
+    fill-opacity: 1;
+}
+
+.lasso path {
+    stroke: rgb(80,80,80);
+    stroke-width:2px;
+}
+
+.lasso .drawn {
+    fill-opacity:.05 ;
+}
+
+.lasso .loop_close {
+    fill:none;
+    stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+    fill:#3399FF;
+    fill-opacity:0;
+}
+
+.not_possible {
+    fill: rgb(0, 0, 0);
+}
+
+.possible {
+    fill: #15ff00;
+}
+
+.d3map {
+    border: 1px solid darkgray;
+    overflow: hidden;
+}
