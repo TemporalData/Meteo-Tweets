@@ -12,7 +12,7 @@ class GeoLocation(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     # Geometry of lat long coorginates
-    #location = models.PointField(null=True, blank=True)
+    # location = models.PointField(null=True, blank=True)
 
 
 class GeoTweet(models.Model):

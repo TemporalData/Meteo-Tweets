@@ -51,6 +51,8 @@ var r = 0.4;
 
 function update_map(map_data){
 
+  console.log(map_data)
+
   var container = d3.select("#d3map");
 
   var svg = container.append("svg")

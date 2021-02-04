@@ -43,6 +43,21 @@ def compute_map_densities(latLongData):
     return latLongData
 
 
+def density_to_color(density_array):
+
+    # Store the maximal density
+    max = density_array.max()
+
+    # Declare an empty list to contain the colors
+    color_list = []
+
+    # Loop all the densities and compute the colors
+    for density in density_array:
+        color = density_color_map(density, max)
+        color_list.append(color)
+    return (np.array(color_list))
+
+
 def density_color_map(value, max):
     palette = [
         '#000e5c', '#000f5e', '#000f60', '#011061', '#011063', '#011165',
@@ -89,6 +104,6 @@ def density_color_map(value, max):
         '#f7ec47', '#f7ed48', '#f7ef48', '#f7f049', '#f6f14a', '#f6f34a',
         '#f6f44b', '#f5f64c', '#f5f74d', '#f5f84d']
 
-    color_index = math.round((math.log10(value)/max)*256)
+    color_index = round((math.log10(value)/math.log10(max))*255)
 
-    return palette[color_index-1]
+    return palette[color_index]
