@@ -51,9 +51,7 @@ var r = 0.4;
 
 function update_map(map_data){
 
-  console.log(map_data)
-
-  var container = d3.select("#d3map");
+  var container = d3.select("#d3Map");
 
   var svg = container.append("svg")
       .attr("width",w)
@@ -186,4 +184,23 @@ let zoom = d3.zoom()
 
 // container.call(zoom);
 
+}
+
+function draw_d3map(){
+
+  $.ajax({
+    url: 'http://127.0.0.1:8000/api/geo/',
+    type: "GET",
+    contentType: "application/json; charset=utf-8",
+    dataType: 'json',
+    data: {
+      id_filter: "",
+      start:"",
+      end:"",
+    },
+    success: function (result) {
+      
+      update_map(result)
+    }
+  })
 }
