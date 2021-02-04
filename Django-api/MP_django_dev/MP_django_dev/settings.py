@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'geo_map',
     'rest_framework',
     'timeline',
+    'text',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,7 @@ WSGI_APPLICATION = 'MP_django_dev.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -91,7 +93,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

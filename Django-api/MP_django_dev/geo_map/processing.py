@@ -9,7 +9,7 @@ import math
 
 
 def compute_map_data(latLongData):
-
+  
     return compute_map_densities(latLongData)
 
 
@@ -41,7 +41,6 @@ def compute_map_densities(latLongData):
     latLongData['density'] = density
 
     return latLongData
-
 
 def density_to_color(density_array):
 

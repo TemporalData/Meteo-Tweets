@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<style>#leafletMap {height: 20rem;}
+<style>
+#leafletMap {height: 20rem;}
+  
 @media (min-width: 1920px) {
     #leafletMap {
     height: 40rem;
   }
-}</style>
+}
+
+/*TimeLine and Tweets Counts*/
+
+.area {
+  fill: steelblue;
+  /*fill:orange;*/
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
+/* Wordcloud text hover style */
+text:hover { opacity: .5 !important; }
+
+
+/*Weather Term Topic Column Layout*/
+#container {height:100%; width:100%;font-size: 0;}
+#left, #right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 15px;}
+#left {width: 30%;}
+#right {width: 70%; }
+
+
+</style>
 
 <head>
 
@@ -41,6 +70,17 @@
 
     <!-- Datepicker css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
+ <!--    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>  
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>  
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> 
+
+    <script type="text/javascript">
+       $(function() {
+               $("#start").datepicker({ dateFormat: "yyyy-mm-dd" , changeMonth: true, changeYear: true});
+               $("#end").datepicker({ dateFormat: "yyyy-mm-dd" , changeMonth: true, changeYear: true});
+       });
+    </script> -->
 
 </head>
 
@@ -88,32 +128,195 @@
                                 <!-- Card Header - Accordion -->
                                 <a href="#collapseCardTime" class="d-block card-header py-3" data-toggle="collapse"
                                     role="button" aria-expanded="true" aria-controls="collapseCardTime">
-                                    <h6 class="m-0 font-weight-bold text-primary">Time Selection</h6>
+                                  
+                                    <h6 class="m-0 font-weight-bold text-primary">Tweets Count</h6>
                                 </a>
                                 <!-- Card Content - Collapse -->
-                                <div class="collapse show text-center" id="collapseCardTime" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;">
+                                <div class="collapse show text-center" id="collapseCardTime" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px; height: 700px">
                                         <div id="sandbox-container" class="container">
-                                            <div class="input-daterange input-group" id="datepicker">
-                                                <input type="text" class="input-sm form-control" name="start" style="margin-right: 20px;"/>
-                                                <span class="input-group-addon">to</span>
-                                                <input type="text" class="input-sm form-control" name="end" style="margin-left: 20px;"/>
+                                            <!-- datepicker -->
+                                            <div class="input-daterange" id="datepicker" style="height: 100px">
+                                                <div class="input-group">
+                                                    <input type="text" class="input-sm form-control" name="start" id="start" style="margin-right: 20px;" value="27-06-2016"/>
+                                                    <span class="input-group-addon">to</span>
+                                                    <input type="text" class="input-sm form-control" name="end" id="end" style="margin-left: 20px;" value="05-07-2016"/>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="container" style="margin-top: 10px">
+ <!--                                        <div class="container" style="margin-top: 10px height: 100px" >
+
                                             <div class="btn btn-success btn-icon-split" onclick="update_leaflet()">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-check"></i>
                                                 </span>
-                                                <span class="text">Update</span>
+                                                <span class="text">Update Leaflet</span>
                                             </div>
+                                        </div> -->
+
+                                        <!-- Tweets Count Timeline Chart -->
+                                        <div id="time-section" style="height: 500px">
+                                            
+                                                <button type="button" class="btn btn-secondary" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates</button>
+
+                                                <button type="button" class="btn btn-secondary" id="slider2DatesButton" value="Pass Dates" onclick="update_calendar_cloud()">Pass Dates</button>
+                                                
+                                                <button type="button" class="btn btn-secondary" id="reset_timeline" value="Reset Timeline" onclick="draw_timeline('all')">Reset Timeline</button>
+                                                
+                                                <br>
+                                                <div id="timeline" ></div>
+                                                <h3 id="timeline-title" ></h3>
+                                            
                                         </div>
-                                                                            
+                                                                           
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card shadow mb-4">
+
+                                <a href="#collapseCardLeaflet" class="d-block card-header py-3" data-toggle="collapse"
+                                    role="button" aria-expanded="true" aria-controls="collapseCardLeaflet">
+                                    <h6 class="m-0 font-weight-bold text-primary">Leaflet</h6>
+                                </a>
+
+                                <!-- <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Leaflet</h6>
+                                    <div id="some-id"></div>
+                                </div> -->
+                                <!-- Card Body -->
+                                <div class="collapse show text-center" id="collapseCardLeaflet" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;">
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <div id="leafletMap"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col" > 
+
+                            <!-- Weather Topic -->
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card shadow mb-4">
+                                    <!-- Card Header - Accordion -->
+                                    <a href="#collapseCardTopic" class="d-block card-header py-3" data-toggle="collapse"
+                                        role="button" aria-expanded="true" aria-controls="collapseCardTopic">
+                                        <h6 class="m-0 font-weight-bold text-primary">Weather Topics</h6>
+                                    </a>
+                                    <!-- Card Content - Collapse -->
+                                    <div class="collapse show text-center" id="collapseCardTopic" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px; height: 600px">
+                                        <div id="sandbox-container" class="container">
+                                    
+                                            <div id="container" >
+                                                <div id="left">
+                                                    <label for="selectButton" style=' font-size: 20px'>Weather Glossary</label>
+                                                    <br>
+                                                    <form method="get">
+                                                    <select id="selectButton"></select>
+                                                    </form>
+                                                    <br>
+                                                    <div>
+                                                        <label> Relevant terms are: </label>
+                                                        <div id="term-dict"></div>
+
+
+                                                    </div>
+
+                                                </div>
+                                                <div id="right">
+                                                    <div id="mydataviz3"> Following is the graph for topics: </div>
+                                                    
+                                                    <div id= "topic-div" data-value=""></div>
+
+
+                                                </div>
+                                        
+                                            </div> 
+                                                                            
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                   
+                        </div>
+
+                        <div class="col">
+                            
+                            <!-- Wordcloud Chart -->
+                            <div class="col-xl-12 col-lg-12" >
+                                <div class="card shadow mb-4">
+
+                                    <a href="#collapseCardCloud" class="d-block card-header py-3" data-toggle="collapse"
+                                        role="button" aria-expanded="true" aria-controls="collapseCardCloud">
+                                        <h6 class="m-0 font-weight-bold text-primary">Wordcloud</h6>
+                                    </a>
+
+                                    <!-- <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Leaflet</h6>
+                                        <div id="some-id"></div>
+                                    </div> -->
+                                    <!-- Card Body -->
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="collapse show text-center" id="collapseCardCloud" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px; height: 600px " >
+                                                <div class="card" style="width:100%; height: 600px">
+                                                    <div class="card-body">
+                                                        <div class="chart-area">
+                                                            <!-- <button type="button" class="btn btn-secondary" id="myButton" value="Apply Change" onclick="update_cloud()">Apply change</button> -->
+                                                            <div id="my_cloudviz" data-value="" style="height: 500px; object-fit: cover;">
+                                                            </div>
+                                                           <!--  <p  id="word-doc-text" style="object-fit: cover;"> No corresponding document</p> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+                        <!-- Social Networks -->
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card shadow mb-4">
+
+                                <a href="#collapseCardNetwork" class="d-block card-header py-3" data-toggle="collapse"
+                                    role="button" aria-expanded="true" aria-controls="collapseCardNetwork">
+                                    <h6 class="m-0 font-weight-bold text-primary">Social Networks</h6>
+                                </a>
+
+                                <!-- <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Leaflet</h6>
+                                    <div id="some-id"></div>
+                                </div> -->
+                                <!-- Card Body -->
+                                <div class="collapse show text-center" id="collapseCardNetwork" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;">
+                                    <div class="card-body">
+                                        <div class="chart-area">
+                                            <div id="networkGraph"></div>
 
                         <!-- Area Chart -->
                         <div class="col-xl-12 col-lg-12">
@@ -136,6 +339,7 @@
                         </div>
 
                     </div>
+                </div>
 
                 <!-- /.container-fluid -->
 
@@ -175,17 +379,83 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
+
     <!-- Datepicker script-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{% static 'js/datepicker.js' %}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
 
+
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+
+    <!-- Load d3-cloud -->
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+    <!-- Load lodash -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+    <!-- Load color palettes -->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+
+
+    <!-- Timeline script -->
+    <script type="text/javascript" src="{% static 'js/timeline.js' %}"></script>
+
+
+    <!-- Wordcloud script -->
+    <script type="text/javascript" src="{% static 'js/part1_wordcloud.js' %}"></script>
+
+    <!-- Topic script-->
+
+    <script type="text/javascript" src="{% static 'js/part2_topics.js' %}"></script>
+
+    <!-- Network script -->
+    <script type="text/javascript" src="{% static 'js/part3_network.js' %}"></script>
+
+    <script>
+        //============ Weather Event Dropdown Menu Initialization ============
+
+
+        var event_groups = JSON.parse('{{ event_groups|escapejs }}');
+        var merged_terms = JSON.parse('{{ merged_terms|escapejs }}');
+
+
+        d3.select("#selectButton")
+          .selectAll('optgroup')
+          .data(event_groups)
+          .enter()
+          .append('optgroup')
+          .attr('label',function(d){return d.key})
+          .selectAll('option')
+          .data(function(d){return d.value})
+          .enter()
+          .append('option')
+          .text(function(d){return d;})
+          .attr('value', function(d) {return d;});
+
+
+        d3.select("#selectButton").on("change", function(d) {
+            var selectedOption = d3.select(this).property("value");
+            update_menu(selectedOption);
+        })
+
+        $("#term-dict").data("value", merged_terms);
+        
+
+    </script> 
+                      
     <!-- D3 Map -->
     <script type="text/javascript" src="{% static 'js/d3map.js' %}"></script>
 
     <script>draw_d3map()</script>
-
 
 </body>
 

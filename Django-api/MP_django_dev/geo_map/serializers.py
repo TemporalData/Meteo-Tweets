@@ -3,6 +3,7 @@ from rest_framework import serializers
 from geo_map.models import GeoLocation, GeoCache
 
 
+
 class GeoDataSerializer(serializers.ModelSerializer):
 
     class Meta:

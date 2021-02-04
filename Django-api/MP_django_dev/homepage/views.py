@@ -11,8 +11,11 @@ def homepage(request):
 def login(request):
 
     return render(request, "loginpage.html")
+  
+def timeline(request):
 
-
+    return render(request, "test.html")
+  
 def d3map(request):
 
     return render(request, "d3map.html")

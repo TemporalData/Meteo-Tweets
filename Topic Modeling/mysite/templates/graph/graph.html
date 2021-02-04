@@ -10,7 +10,8 @@
 <!-- Load d3-cloud -->
 <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
 
-
+<!-- Load lodash -->
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
 <!-- Load color palettes -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -26,6 +27,7 @@
 
 </style>
 
+<!-- Buttons' stylesheet -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
 <!-- 
@@ -43,6 +45,34 @@
 </div>
 <br>
 
+
+
+<!-- Part 0: TimeLine and Tweets Counts-->
+
+<style>
+.area {
+  fill: steelblue;
+  /*fill:orange;*/
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+</style>
+
+<!-- Part 0: Tweet Counts and Timeline(with single brush and zoom)-->
+<div >
+  <h2>Tweet Counts</h2>
+  <div id='timeline'>
+    <script type="text/javascript" src="/static/js/timeline.js"></script>
+    <br>
+    <button type="button" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates</button>
+    <button type="button" id="slider2DatesButton" value="Pass Dates" onclick="update_calendar_cloud()">Pass Dates</button>
+  </div>
+</div>
 
 
 <!-- Part 1: Wordcloud in chosen time -->

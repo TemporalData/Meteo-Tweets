@@ -8,7 +8,9 @@ from django.http import JsonResponse
 from django.core import serializers
 # from django.contrib.postgres.aggregates.general import ArrayAgg
 import json
-from .models import Document, RegionTopic, DocWeatherEvent
+
+from .models import Document, WeatherTerm
+
 
 import random
 import os
@@ -17,7 +19,7 @@ import numpy as np
 import pandas as pd
 from ast import literal_eval
 
-from . import text_processing as process
+# from . import text_processing as process
 from . import generate_network as gn
 
 from django.utils import timezone
@@ -25,21 +27,15 @@ today = timezone.now()
 
 CURRENT_PATH = os.path.abspath(os.getcwd())+'/data/'
 DATA_PATH = CURRENT_PATH + 'partial.csv'
-DOCFILE = 'documents.csv'
-CLUFILE = 'clusters.csv'
-WEAFILE = 'events.csv'
-LDAFILE = 'lda.json'
+DOCFILE = "partial_clean_term.csv"#"test.csv" Or "partial_clean_term.csv" after done with test(load takes a long time)
 
 
 def graph(request):
     
-    regiontopics = RegionTopic.objects.all()
-    documents = Document.objects.all()
-    docweatherevents = DocWeatherEvent.objects.all()
-    # clusters = Cluster.objects.all()
+    # weatherterms = WeatherTerm.objects.all()
+    # documents = Document.objects.all()
+
     
-
-
 # Reset to default
     if(request.GET.get('submitreset')):
         context = {'place':'No date selected!'}
@@ -59,7 +55,7 @@ def graph(request):
     elif(request.GET.get('selected_event')):
         selection = request.GET.get('selected_event')
 
-        nested_topics,flat_js,max_prob,min_prob = topic_extract(selection)
+        flat_js= topic_extract(selection)
 
         # topics = json.dumps(topics)
         # for t in topics:
@@ -69,7 +65,7 @@ def graph(request):
         # with open(CURRENT_PATH+LDAFILE) as inputfile:
         #     lda = json.load(inputfile)
         # data = {'response': lda} 
-        data = {'response': f'selected_event is {selection}', 'topics':flat_js, 'extrem':[min_prob,max_prob]} 
+        data = {'response': f'selected_event is {selection}', 'topics':flat_js,} 
         return JsonResponse(data)
 
 
@@ -91,6 +87,10 @@ def graph(request):
     
 # Default 
     else:
+        # Overwrite database and reload the webpage
+
+        # _clear_db()
+        # _create_db('DW') # Create document and weather term objects 
 
         # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
         event_mild = pd.read_csv(CURRENT_PATH+'new_mild.csv').iloc[:,0].values.tolist()
@@ -101,103 +101,70 @@ def graph(request):
         return render(request, 'graph/graph.html', context=context)        
 
 def topic_extract(event):
-    topic_text = process.event_pipeline(event,CURRENT_PATH)
-    topic_result = process.topic_kw_pair(topic_text)
-    tw_list,max_prob,min_prob = process.save_topic(topic_result,CURRENT_PATH)
-
-    columns=['group','variable','prob','text']
-    tw_js = []
-    for row in tw_list:
-        row_group = dict.fromkeys(columns,0)
-        row_group.update(zip(row_group,row))
-        tw_js.append(row_group)
+    if event == 'dusk/dawn':
+        event = 'dusk_dawn' # rename and direct to the topic file 
+    with open(CURRENT_PATH+'termtopic/'+event+'.json','r') as event_file:
+        tw_js = json.load(event_file)
 
 
-    return topic_result,tw_js,max_prob,min_prob
+    return tw_js
 
 
-def _run_front_process(start,end,filepath):
-    _clear_db()
-    _run_back_process(start,end,filepath)
-    _create_db(filepath, 'D') #create Document objects
-    _create_db(filepath, 'W') #create DocWeatherEvent objects
 
-    event = [{'event': b.event, 'doc_list': [a.doc_idx for a in b.doc_idx.all()]} for b in DocWeatherEvent.objects.prefetch_related('doc_idx')]
-    response_data = [json.dumps(event)] 
+def fetch_date(start,end,filepath):
+    selected_docs = Document.objects.values('doc_idx','terms__term').filter(terms__isnull=False).filter(pub_date__gte=start, pub_date__lte=end)
+    # doc_term_list = list(selected_docs.filter(terms__isnull=False).values('doc_idx','terms__term'))#.annotate(freq=Count('terms__term')))
+    response_data = json.dumps(list(selected_docs)) # [{'term1':1}, {'term2':2}]
 
     return response_data
 
 
 
 
-def _run_back_process(start,end,filepath):
-    process.pipeline(start,end,filepath)
-    # process.find_cloud_doc(start,end,filepath)
+def _run_front_process(start,end,filepath):
+    response_data = fetch_date(start,end,filepath)
+
+    return response_data
 
 
 
 
 # def _load_csv(filedir,start,end):
-def _create_db(filepath,model):
-
-    if model == 'D':
-        filedir = CURRENT_PATH + DOCFILE
+def _create_db(model):
+    if model == 'DW': # 'D'
+        # Read all EN data with doc_no, user_screen_name, latitude, longitude, text, date.
+        filedir = CURRENT_PATH + DOCFILE 
         raw = pd.read_csv(filedir, engine='python')
 
         for line in raw.iterrows():
-            if RegionTopic.objects.filter(cluster_idx=line[1]['cluster_id']):
-                match_cluster = RegionTopic.objects.get(cluster_idx=line[1]['cluster_id'])
-            else:
-                match_cluster = RegionTopic.objects.create(cluster_idx = line[1]['cluster_id'])
-
             new_doc = Document.objects.create(
                 doc_idx = line[1]['doc_no'],
                 user_name = line[1]['user_screen_name'],
                 latitude = line[1]['latitude'],
                 longitude = line[1]['longitude'],
-                text = line[1]['text'],
+                # text = line[1]['text'],
                 pub_date = line[1]['date'],
-                cluster_idx = match_cluster
+
                         )
-            
-
-    if model == 'W':
-        filedir = CURRENT_PATH + WEAFILE
-        raw = pd.read_csv(filedir, engine='python')
-
-        for line in raw.iterrows():
-            if literal_eval(line[1]['doc_list']) != []:
-                new_term = DocWeatherEvent.objects.create(
-                    event = line[1]['terms'])
-
-                # Many-To-Many field
-                for index in literal_eval(line[1]['doc_list']):
+                
+            # Many-To-Many field: terms --> [term1, term2, ...]
+            if (not pd.isna(line[1]['terms'])):
+                for term in literal_eval(line[1]['terms']):
                     try:
-                        match_doc = Document.objects.get(doc_idx=index)
-                        new_term.doc_idx.add(match_doc)
-                    except Document.DoesNotExist:
-                        pass
+                        match_term = WeatherTerm.objects.get(term=term)
+                    except WeatherTerm.DoesNotExist:
+                        match_term = WeatherTerm.objects.create(term=term)
 
-
-    if model == 'C':
-        filedir = CURRENT_PATH + CLUFILE
-        
+                    new_doc.terms.add(match_term)          
+  
 
 
 
 # Delete all existing objects in db
 def _clear_db():
-    RegionTopic.objects.all().delete() 
     Document.objects.all().delete()
-    DocWeatherEvent.objects.all().delete()
-    # if RegionTopic.objects.all():
-    #     RegionTopic.objects.all().delete() 
-    # if Document.objects.all():
-    #     Document.objects.all().delete()
-    # # if Cluster.objects.all():
-    # #     Cluster.objects.all().delete()
-    # if DocWeatherEvent.objects.all():
-    #     DocWeatherEvent.objects.all().delete()
+    WeatherTerm.objects.all().delete()
+
 
     return '_clear_db is done!'
 

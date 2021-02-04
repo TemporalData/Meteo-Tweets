@@ -16,7 +16,7 @@ import pandas as pd
 
 ###
 # Takes ID list and returns:
-# id, latitude, longitude
+# id, latitude, longitude, color
 ###
 
 class GeoDataAPI(APIView):
@@ -35,10 +35,10 @@ class GeoDataAPI(APIView):
             id_filter = request.query_params['id_filter']
         # Catch exceptions caused by 'id_filter' not being in the request
         except Exception:
-            # Return a bad request status due to lacking
-            # 'id_filter' or 'geoloc_filter'
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
+            # Return a bad request status due to lacking 'id_filter'
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+  
         # Try to retrieve the data from the model
         try:
             # If id_filter is not empty

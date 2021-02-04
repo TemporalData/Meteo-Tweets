@@ -1,7 +1,6 @@
 function update_leaflet(){
   var startDate = document.getElementById("start_date_input").value;
   var endDate = document.getElementById("end_date_input").value;
-
     // pass dates to views.py to process data; 
     // acquire new data results and generate graphs in template
   

@@ -2,6 +2,7 @@ gunicorn
 django
 djangorestframework
 whitenoise
+psycopg2
 
 numpy
 pandas
