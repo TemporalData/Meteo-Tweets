@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
-from geo_map.models import GeoData, GeoCache
+from geo_map.models import GeoLocation, GeoCache
+
 
 
 class GeoDataSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = GeoData
-        fields = ['latitude', 'longitude']
+        model = GeoLocation
+        fields = ['id','latitude', 'longitude']
 
 
 class GeoCacheSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@ pandas
 bokeh
 scipy
 networkx
-python-igraph
+jgraph
 wordcloud
 emoji
 gensim
