@@ -249,7 +249,7 @@ def community_detection(U):
     # convert network from networkx to igraph
     U2 = ig.Graph.TupleList(U.edges(), directed=True)
     communities = U2.community_infomap()
-    membership = communities.membership
+    membership  = communities.membership
     node_list = list(U.nodes())
     community_dict = {k:v for k,v in zip(node_list, membership)}   
     nx.set_node_attributes(U, community_dict, 'community')

@@ -216,9 +216,3 @@ def _clear_db():
 
 
 
-=======
-
-
-def dashboard(request):
-
-    return render(request, "dashboard.html")
