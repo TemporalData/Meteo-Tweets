@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 
 # Import the model from the app geo map
-from geo_map.models import GeoCache, GeoLocation
+from geo_map.models import GeoCache, GeoLocation, GeoTweet
 # Import function from processing.py from the app geo map
-from geo_map.processing import compute_map_data
+from geo_map.processing import compute_map_data, density_to_color
 
 # Import numpy
 import numpy as np
@@ -47,17 +47,13 @@ class GeoDataAPI(APIView):
                 id_filter = list(map(int, id_filter.split(',')))
 
                 # Load the filtered data into the 'data' variable
-                data = GeoLocation.objects.filter(
+                data = GeoTweet.objects.filter(
                     id__in=id_filter).values_list(
-                        'id',
-                        'latitude',
-                        'longitude')
+                        'geo_location', flat=True)
             # 'id_filter' is empty list
             else:
-                data = GeoLocation.objects.all().values_list(
-                    'id',
-                    'latitude',
-                    'longitude')
+                data = GeoTweet.objects.all().values_list(
+                    'geo_location', flat=True)
             # else:
             #     # Set 'data' to all the entries in the Data model
             #     data = GeoCache.objects.all().values_list(
@@ -71,15 +67,39 @@ class GeoDataAPI(APIView):
             #     return Response(data_response)
 
         # If the Data model does not exist
+        except GeoTweet.DoesNotExist:
+            # Return a internal server error, as Data model isn't populated
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        geo_location_density_array = np.unique(
+            np.array(data), return_counts=True)
+
+        geo_ids = list(geo_location_density_array[0])
+        densities = geo_location_density_array[1]
+
+        # Try to retrieve data from the GeoLocation model
+        try:
+
+            locations = GeoLocation.objects.filter(
+                    id__in=geo_ids).values_list(
+                        'id',
+                        'latitude',
+                        'longitude')
+
+        # If the model does not exist
         except GeoLocation.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Format the data for the output
-        output = pd.DataFrame(np.array(data))
+        output = pd.DataFrame(np.array(locations))
 
         # Add columns for the output
         output.columns = ["id", "lat", "long"]
+
+        density_colors = density_to_color(densities)
+
+        output["color"] = density_colors
 
         json_output = output.to_json(orient="records")
 

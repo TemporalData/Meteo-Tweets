@@ -23,11 +23,12 @@ circle {
 }
 
 .not_possible {
-    fill: rgb(0, 0, 0);
+    fill-opacity:0.5;
+    fill: #000000;
 }
 
 .possible {
-    fill: #15ff00;
+    
 }
 
 .d3map {
