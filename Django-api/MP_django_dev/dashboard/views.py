@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 from ast import literal_eval
 
+from text import topic_pipeline as tp
 # from . import text_processing as process
 from network import generate_network as gn
 
@@ -47,9 +48,12 @@ def dashboard(request):
 
 # Part 2: update weather event's topics
     elif(request.GET.get('selected_event')):
-        selection = request.GET.get('selected_event')
-        flat_js= topic_extract(selection)
-        data = {'response': f'selected_event is {selection}', 'topics':flat_js,} 
+        start = request.GET.get('start')
+        end = request.GET.get('end')  
+        selections = [item for item in request.GET.get('selected_event').split(',')] 
+        raw_text, flat_js= topic_extract(start,end,selections)
+
+        data = {'response': f'selected_event is {selections}', 'text':raw_text,'topics':flat_js,} 
         return JsonResponse(data)
 
 
@@ -104,13 +108,18 @@ def count_tweet(input):
     return list(result)
 
 
-def topic_extract(event):
-    if event == 'dusk/dawn':
-        event = 'dusk_dawn' # Rename to find the topic file 
-    with open(CURRENT_PATH+'termtopic/'+event+'.json','r') as event_file:
-        tw_js = json.load(event_file)
+def topic_extract(start,end, event):
+    
+    selected_text = Document.objects.filter(pub_date__gte=start, pub_date__lte=end).filter(terms__isnull=False).filter(terms__ttype__typename__in=event).distinct().values_list('text',flat=True)
+    response_data = json.dumps(list(selected_text))
 
-    return tw_js
+    # perform LDA on selected_text
+    if tp.lda_process(list(selected_text)):
+        topicsJ = json.dumps(tp.lda_process(list(selected_text)))
+        return response_data,topicsJ
+    return response_data, False
+
+
 
 
 

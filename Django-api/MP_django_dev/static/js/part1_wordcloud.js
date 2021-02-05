@@ -309,17 +309,42 @@ function draw_no_overlap_cloud(){
 }
 
 function update_text(data){
-  // console.log(data.text, data.list);
+  console.log(data.text);
+  d3.selectAll("#my_cloudviz text")
+    .style('opacity', 0.1);
   var sw = d3.selectAll("#my_cloudviz text")
             .filter(function(){
                 return d3.select(this).text() == data.text;
               })
-            .style('opacity', 0.9);
+            .style('opacity', 1);
 
-  console.log(sw);
+  // // Retrieve weather glossaries(classes)
+
+  // $.ajax({
+  //     url: '',
+  //     data: {
+  //       'clickterm': data.text,
+  //     },
+  //     dataType: 'json',
+  //     success: function (data) {
+  //         var jsonObject = data["response"][0]
+  //         if (jsonObject === null){
+  //           // update_menu(jsonObject);
+  //           console.log(jsonObject, "is null");
+  //         }
+  //         else{
+  //           // Select correct option 
+  //           // Exception: "hash wind"
+  //           seleted_option = document.querySelector('[value= "'+jsonObject+'"]')
+  //           console.log(seleted_option)
+  //           seleted_option.selected = "selected";
+  //           // update_menu(jsonObject); // not applicable in chosen?
+  //         }
+  //     }
+  // });
+    
 
 }
-
 
 
 function topic2cloud(term){
@@ -327,6 +352,17 @@ function topic2cloud(term){
             .filter(function(){
                 return d3.select(this).text() == term;
               })
-            .style('opacity', 0.9);
-  console.log(sw);
+            .style('opacity', 1);
+
+}
+
+// Click on blank area: Enable to revert to original wordcloud
+document.getElementById("cloud-body").addEventListener("click", check_cloud_click,false)
+function check_cloud_click(e){
+  if(e.type == "click"){
+    if (e.target.nodeName !== "text"){
+      d3.selectAll("#my_cloudviz text")
+        .style('opacity', 1);
+    }
+  }
 }

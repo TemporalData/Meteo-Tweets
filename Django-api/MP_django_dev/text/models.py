@@ -26,7 +26,7 @@ class Document(models.Model):
 	latitude = models.FloatField(null=True, blank=True)
 	longitude = models.FloatField(null=True, blank=True)
 	pub_date = models.DateField(auto_now=False, auto_now_add=False)
-	# text = models.TextField(blank=True)
+	text = models.TextField(blank=True)
 	terms = models.ManyToManyField(WeatherTerm,blank=True)
 
 
