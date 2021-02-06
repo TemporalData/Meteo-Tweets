@@ -26,7 +26,7 @@ today = timezone.now()
 
 CURRENT_PATH = os.getcwd()+'/static/data/'
 DATA_PATH = CURRENT_PATH + 'partial.csv'
-DOCFILE = "test.csv"#"partial_clean_term.csv"#"test.csv" Or "partial_clean_term.csv" after done with test(load takes a long time)
+DOCFILE = "partial_clean_term.csv"#"test.csv" Or "partial_clean_term.csv" after done with test(load takes a long time)
 
 
 def dashboard(request):
@@ -171,7 +171,7 @@ def _create_db(model):
     if model == 'DW': # 'D'
         # Read all EN data with doc_no, user_screen_name, latitude, longitude, text, date.
         filedir = CURRENT_PATH + DOCFILE 
-        raw = pd.read_csv(filedir, engine='python')
+        raw = pd.read_csv(filedir, engine='c', encoding='utf-8')
 
         for line in raw.iterrows():
             new_doc = Document.objects.create(
@@ -179,7 +179,7 @@ def _create_db(model):
                 user_name = line[1]['user_screen_name'],
                 latitude = line[1]['latitude'],
                 longitude = line[1]['longitude'],
-                # text = line[1]['text'],
+                text = line[1]['text'],
                 pub_date = line[1]['date'],
 
                         )
