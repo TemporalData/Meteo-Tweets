@@ -228,7 +228,13 @@ function build_timeline(data){
 			.call(brush)
 			.call(brush.move, x.range());
 	
-	var rect = svg_t.call(zoom);
+	var rect = svg_t.append("rect") // conflict with mouseG rect; but necessary for zoom in context
+	  .attr("class", "zoom")
+	  .attr("width", width_t)
+	  .attr("height", height_t)
+	  // .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")")
+	  .attr("transform", "translate("+svg_t.attr("width")+"," + margin_t.top + ")") 
+	  .call(zoom);
 	add_mouseG();
 }
 // }); //end of d3.csv function
@@ -271,7 +277,7 @@ function add_mouseG(){
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
     .on('mouseout', function() { // on mouse out hide line, circles and text
-      console.log("mouseout");
+      // console.log("mouseout");
       d3.select(".mouse-line")
         .style("opacity", "0");
       d3.selectAll(".mouse-per-line circle")
@@ -280,7 +286,7 @@ function add_mouseG(){
         .style("opacity", "0");
     })
     .on('mouseover', function() { // on mouse in show line, circles and text
-      console.log("mouseover");
+      // console.log("mouseover");
       d3.select(".mouse-line")
         .style("opacity", "1");
       d3.selectAll(".mouse-per-line circle")
@@ -289,7 +295,7 @@ function add_mouseG(){
         .style("opacity", "1");
     })
     .on('mousemove', function() { // mouse moving over canvas
-      console.log("mouse move");
+      // console.log("mouse move");
       var mouse = d3.mouse(this);
       d3.select(".mouse-line")
         .attr("d", function() {
@@ -301,11 +307,11 @@ function add_mouseG(){
       d3.selectAll(".mouse-per-line")
         .attr("transform", function(d, i) {
           // console.log(width_t/mouse[0]);
-          console.log(x.invert(mouse[0]));
+          // console.log(x.invert(mouse[0]));
           var xDate = x.invert(mouse[0]),
               bisect = d3.bisector(function(d) { return d.date; }).right;
               idx = bisect(avgData, xDate);
-          console.log(idx)
+          // console.log(idx)
           
           var beginning = 0,
               // end = lines[i].getTotalLength(),
@@ -389,6 +395,7 @@ function update_slider(){
 
 	focus.select(".area").attr("d", area);
 	focus.select(".axis--x").call(xAxis);
+  	focus.select(".avg").attr("d", curvedLine);
 	svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
 			.scale((width_t-20) / selectedDuration)
 			.translate(-startIndex, 0));

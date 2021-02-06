@@ -103,13 +103,14 @@ def count_tweet(input):
     if input == "all":
         result = Document.objects.values('pub_date').annotate(count=Count('pub_date')).order_by('pub_date')
     else:
-        result = Document.objects.values('pub_date','terms__ttype__typename').filter(terms__ttype__typename=input).annotate(count=Count('pub_date')).order_by('pub_date')
+        input = [item for item in input.split(',')]
+        result = Document.objects.values('pub_date','terms__ttype__typename').filter(terms__ttype__typename__in=input).annotate(count=Count('pub_date')).order_by('pub_date')
     
     return list(result)
 
 
 def topic_extract(start,end, event):
-    
+
     selected_text = Document.objects.filter(pub_date__gte=start, pub_date__lte=end).filter(terms__isnull=False).filter(terms__ttype__typename__in=event).distinct().values_list('text',flat=True)
     response_data = json.dumps(list(selected_text))
 

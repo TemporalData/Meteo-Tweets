@@ -61,7 +61,7 @@ function generate_topics(selected_event){
         update_relevant_terms(selected_event);
         display_topics(topic_text,extrem);
         
-        // draw_timeline(selected_event);
+        draw_timeline(String(selected_event));
       }
       else{
         alert('No enough data!'); // When capture error returned by LDA modeling
@@ -140,9 +140,9 @@ function display_topics(data,extrem){
   // Color codes
   var colorbar = ["#FFFFFF","#0497cc","#FFFFBF", "#5E4FA2", "#66C2A5", "#3288BD", "#ABDDA4", "#E6F598", "#FEE08B", "#FDAE61", "#F46D43", "#D53E4F", "#9E0142"]
   // Build color scale
-  var myColor = d3.scaleLog()// Options: d3.scalePow(), d3.scaleLinear()
-    .range([colorbar[0],colorbar[1]])
-    .domain([extrem[0],extrem[1]])
+  var myColor = d3.scaleLog()//d3.scalePow() //d3.scaleLinear()
+  .range([colorbar[1],colorbar[0]])
+  .domain([extrem[1],extrem[0]])
 
   // Add color scale legend
   continuous("#topic-legend", myColor);
