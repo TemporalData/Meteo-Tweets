@@ -164,9 +164,10 @@ def generate_partial_dataset(filedir, filename):
     clean_partial = clean(partial)
 
     # Find weather terms mentioned in each doc and save as a list
-    weather_terms = pd.read_csv(os.path.join(filedir, "weather_terms.csv")).terms.tolist()
+    weather_terms = pd.read_csv(os.path.join(filedir, "weather_terms.csv")).terms.apply(lambda x: x.lower()).tolist()
     lem_data, data_no_stop = word_to_list(clean_partial)
-    term_col = [[word for word in line if word in weather_terms] for line in data_no_stop]
+    term_col = [[term for word in line for term in weather_terms if term in word] for line in data_no_stop]
+    
     clean_partial['terms'] = term_col
 
     # save to csv
