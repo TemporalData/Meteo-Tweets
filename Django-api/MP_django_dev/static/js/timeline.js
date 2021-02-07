@@ -236,6 +236,7 @@ function build_timeline(data){
 	  .attr("transform", "translate("+svg_t.attr("width")+"," + margin_t.top + ")") 
 	  .call(zoom);
 	add_mouseG();
+	update_slider();
 }
 // }); //end of d3.csv function
 

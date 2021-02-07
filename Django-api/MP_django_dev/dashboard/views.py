@@ -82,7 +82,6 @@ def dashboard(request):
         # _create_db('DW') # Create document and weather term objects 
 
 
-        # events = pd.read_csv(CURRENT_PATH+'new_weather.csv').iloc[:,0].values.tolist()
         mild = pd.read_csv(CURRENT_PATH+'new_mild.csv')
         severe = pd.read_csv(CURRENT_PATH+'new_severe.csv')
 
