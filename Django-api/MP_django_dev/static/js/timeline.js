@@ -258,7 +258,7 @@ function add_mouseG(){
         .append("g")
         .attr("class", "mouse-per-line");
 
-  console.log(mousePerLine);
+  // console.log(mousePerLine);
   mousePerLine.append("circle")
   .attr("r", 7)      
   .style("stroke",'red')
@@ -268,12 +268,12 @@ function add_mouseG(){
 
   mousePerLine.append("text")
   // .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")");
-  .attr("transform", "translate(10,-30)"); //location of label text
+  // .attr("transform", "translate(10,-30)"); //location of label text
 
 
 
   mouseG.append('rect') // append a rect to catch mouse movements on canvas
-    .attr('width', width_t+100) // can't catch mouse events on a g element
+    .attr('width', width_t) // can't catch mouse events on a g element
     .attr('height', height_t)
     .attr('fill', 'none')
     .attr('pointer-events', 'all')
@@ -332,6 +332,17 @@ function add_mouseG(){
           
           d3.select(this).select('text')
             .text('MA-20 Value: '+y.invert(pos.y).toFixed(2)+', Date: '+toDate(x.invert(mouse[0])));
+            // adjust hover text's location
+            .attr("transform", function(){
+              if (mouse[0]/width_t < 0.5){
+                return "translate(10,-30)";
+              }
+              else {
+                return "translate(-300,-30)";
+              }
+            });          
+
+
           // console.log(toDate(x.invert(mouse[0])));
           return "translate(" + mouse[0] + "," + pos.y +")";
         });
@@ -389,7 +400,7 @@ function update_slider(){
 	var selectedDuration = Math.floor((endDate-startDate)/(1000 * 60 * 60 * 24))/totalDuration*(x.range()[1]-x.range()[0]);
 	console.log(document.getElementById("start").value, startDate);
 	var start2first = Math.floor((startDate-first)/(1000 * 60 * 60 * 24)) ;
-	var startIndex = start2first/totalDuration*(width_t-20); //width_t+2
+	var startIndex = start2first/totalDuration*(width_t); //width_t-20
 	
 	x.domain([startDate,endDate])
 	console.log(x.domain);
@@ -398,8 +409,8 @@ function update_slider(){
 	focus.select(".axis--x").call(xAxis);
   	focus.select(".avg").attr("d", curvedLine);
 	svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
-			.scale((width_t-20) / selectedDuration)
-			.translate(-startIndex, 0));
+			.scale((width_t) / selectedDuration)
+			.translate(-startIndex-0.5, 0));
 
 }
 
