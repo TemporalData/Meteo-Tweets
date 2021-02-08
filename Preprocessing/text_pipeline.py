@@ -30,6 +30,7 @@ DATAFILE = 'complete_swiss_dataset.csv' # Original dataset
 # less records, faster processing
 # output: clean data
 def clean(temp,isdate=False,start='2015-01-01',end='2018-09-06'):
+    temp['raw_text'] = temp['text']
     if isdate == True:
         temp = temp.loc[(temp.date >= start)&(temp.date <= end)]
     # print('selectd data is \n'.format(temp.head()))
@@ -58,10 +59,16 @@ def clean(temp,isdate=False,start='2015-01-01',end='2018-09-06'):
     temp['text'] = temp['text'].apply(lambda x: emoji.demojize(bytes(x,encoding='latin_1').decode('unicode_escape')))
     temp['text'] = temp['text'].apply(lambda x: re.sub('[:\#]', ' ', x)) #remove new ":" from demojize
     temp['text'] = temp['text'].apply(lambda x: x.lower()) 
+        # process raw_text column
+    temp['raw_text'] = temp['raw_text'].apply(lambda x: x.replace(r'<U+',r'\u') )
+    temp['raw_text'] = temp['raw_text'].apply(lambda x: x.replace(r'<u+',r'\u') )
+    temp['raw_text'] = temp['raw_text'].apply(lambda x: x.replace('>','') )
+    temp['raw_text'] = temp['raw_text'].apply(lambda x: re.sub("(?:u0001)|(?:u000e)", "u0001", x))
+    temp['raw_text'] = temp['raw_text'].apply(lambda x: x.replace(r'\u',r'&#x') )
 
     # extract date from datetime 
     temp['date'] = temp['created_at_CET'].apply(lambda x: x.split(' ')[0])
-    temp = temp[['doc_no','user_screen_name','latitude','longitude','date','text']]
+    temp = temp[['doc_no','user_screen_name','latitude','longitude','date','text','raw_text']]
     # print('clean data is \n'.format(temp.head()))
     return temp
 
@@ -207,7 +214,7 @@ def generate_type_topics(filedir):
 
 def main():
     generate_partial_dataset(FILE_DIR, DATAFILE)
-    generate_type_topics(FILE_DIR)
+    # generate_type_topics(FILE_DIR)
 
 
 if __name__ == '__main__':
