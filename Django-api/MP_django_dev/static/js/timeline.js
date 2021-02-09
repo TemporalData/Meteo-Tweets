@@ -331,7 +331,7 @@ function add_mouseG(){
           }
           
           d3.select(this).select('text')
-            .text('MA-20 Value: '+y.invert(pos.y).toFixed(2)+', Date: '+toDate(x.invert(mouse[0])));
+            .text('MA-20 Value: '+y.invert(pos.y).toFixed(2)+', Date: '+toDate(x.invert(mouse[0])))
             // adjust hover text's location
             .attr("transform", function(){
               if (mouse[0]/width_t < 0.5){

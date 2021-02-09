@@ -23,10 +23,11 @@ class WeatherTerm(models.Model):
 class Document(models.Model):
 	doc_idx = models.IntegerField(blank=True)
 	user_name = models.CharField(blank=True, max_length=50)
-	latitude = models.FloatField(null=True, blank=True)
-	longitude = models.FloatField(null=True, blank=True)
+	# latitude = models.FloatField(null=True, blank=True)
+	# longitude = models.FloatField(null=True, blank=True)
 	pub_date = models.DateField(auto_now=False, auto_now_add=False)
 	text = models.TextField(blank=True)
+	raw = models.TextField(blank=True)
 	terms = models.ManyToManyField(WeatherTerm,blank=True)
 
 

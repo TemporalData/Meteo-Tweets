@@ -41,6 +41,29 @@ def word_to_list(data):
 
 
 
+
+def find_dominant_topic(ldamodel, corpus, text_list):
+    dom_topic = pd.DataFrame()
+
+    # Get main topic in each document
+    for i, row_list in enumerate(ldamodel[corpus]):
+        row = row_list[0] if ldamodel.per_word_topics else row_list  
+        row = sorted(row, key=lambda x: (x[1]), reverse=True)
+        # Get the Dominant topic, Perc Contribution and Keywords for each document
+        for j, (topic_num, prop_topic) in enumerate(row):
+            if j == 0:  # => dominant topic
+                wp = ldamodel.show_topic(topic_num)
+                topic_keywords = ", ".join([word for word, prop in wp])
+                dom_topic = dom_topic.append(pd.Series([int(topic_num), round(prop_topic,4), topic_keywords]), ignore_index=True)
+            else:
+                break
+    dom_topic.columns = ['Dominant_Topic', 'Topic_Percentage_Contribution', 'Topic_Keywords']
+
+    return dom_topic[['Dominant_Topic', 'Topic_Percentage_Contribution']]
+
+
+
+
 # Implement Gensim LDA
 # input: word list, number of topics, number of words per topic
 # output: lda model, dominant_topic_df, coherence, perplexity score
@@ -61,9 +84,9 @@ def gensim_lda(word_list,n_topic=10,n_word=20):
     Lda = gensim.models.ldamodel.LdaModel
     
     ldamodel = Lda(doc_term_matrix, num_topics=n_topic, id2word = dictionary, passes=50)
-    
+    topic_dom = find_dominant_topic(ldamodel, doc_term_matrix, word_list)
 
-    return ldamodel
+    return ldamodel, topic_dom
 
 
 
@@ -97,16 +120,14 @@ def model2json(model,num_topics=4):
 
 
 def lda_process(raw_text_list, num_topics = 4, num_words = 10):
-    # raw = pd.read_csv(os.path.join(filedir, "partial_clean_term.csv"), engine='c', encoding='latin_1')
-    
     lem, dlist = word_to_list(raw_text_list) 
-    
-    ldamodel = gensim_lda(lem,n_topic=num_topics,n_word=num_words)
-    # no error reported
-    if ldamodel: 
-        topicData = model2json(ldamodel)
-        return topicData
+    print('\nlem: ', lem)
+    if lem != []:
+        ldamodel, topic_dom_df = gensim_lda(lem,n_topic=num_topics,n_word=num_words)
+        if ldamodel:
+            topicData = model2json(ldamodel)
+            return topicData, topic_dom_df 
     # error occurs
-    return False 
+    return False, False
 
 

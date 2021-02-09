@@ -51,9 +51,9 @@ def dashboard(request):
         start = request.GET.get('start')
         end = request.GET.get('end')  
         selections = [item for item in request.GET.get('selected_event').split(',')] 
-        raw_text, flat_js= topic_extract(start,end,selections)
+        raw_text, flat_js, topic_dom= topic_extract(start,end,selections)
 
-        data = {'response': f'selected_event is {selections}', 'text':raw_text,'topics':flat_js,} 
+        data = {'response': f'selected_event is {selections}', 'text':raw_text,'topics':flat_js, 'dom': topic_dom} 
         return JsonResponse(data)
 
 
@@ -108,17 +108,38 @@ def count_tweet(input):
     return list(result)
 
 
+def convert_topic_tweet(input):
+    input = input.sort_values(by=['Dominant_Topic', 'Topic_Percentage_Contribution'], ascending=False)
+    new_input = pd.DataFrame(columns=input.columns.tolist())
+    for t in input['Dominant_Topic'].unique():
+        new_input = new_input.append(input[input['Dominant_Topic'] == t].iloc[0,:])
+
+    result = []
+    for i in range(len(new_input)):
+        row = {}
+        row['topic'] = int(new_input.iloc[i,0])
+        row['doc_id'] = int(new_input.iloc[i, 2])
+        row['prob'] = new_input.iloc[i, 1]
+        row['raw'] = Document.objects.values_list('raw').distinct().get(doc_idx=row['doc_id'])[0]
+        result.append(row)
+    return result
+
+
+
 def topic_extract(start,end, event):
 
-    selected_text = Document.objects.filter(pub_date__gte=start, pub_date__lte=end).filter(terms__isnull=False).filter(terms__ttype__typename__in=event).distinct().values_list('text',flat=True)
+    selected_text = Document.objects.filter(pub_date__gte=start, pub_date__lte=end).filter(terms__isnull=False).filter(terms__ttype__typename__in=event).distinct().order_by('doc_idx').values_list('text',flat=True)
+    selected_docId = Document.objects.filter(pub_date__gte=start, pub_date__lte=end).filter(terms__isnull=False).filter(terms__ttype__typename__in=event).distinct().order_by('doc_idx').values_list('doc_idx',flat=True)
     response_data = json.dumps(list(selected_text))
 
     # perform LDA on selected_text
-    if tp.lda_process(list(selected_text)):
-        topicsJ = json.dumps(tp.lda_process(list(selected_text)))
-        return response_data,topicsJ
-    return response_data, False
-
+    if tp.lda_process(list(selected_text))[0]:
+        lda_result, topic_df = tp.lda_process(list(selected_text))
+        topic_df['doc_id'] = selected_docId
+        dom_list = json.dumps(convert_topic_tweet(topic_df))
+        topicsJ = json.dumps(lda_result)
+        return response_data, topicsJ, dom_list
+    return response_data, False, False
 
 
 
@@ -176,8 +197,8 @@ def _create_db(model):
             new_doc = Document.objects.create(
                 doc_idx = line[1]['doc_no'],
                 user_name = line[1]['user_screen_name'],
-                latitude = line[1]['latitude'],
-                longitude = line[1]['longitude'],
+                # latitude = line[1]['latitude'],
+                # longitude = line[1]['longitude'],
                 text = line[1]['text'],
                 pub_date = line[1]['date'],
 

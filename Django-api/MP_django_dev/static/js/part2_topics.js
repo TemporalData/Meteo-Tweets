@@ -44,8 +44,20 @@ function generate_topics(selected_event){
     dataType: 'json',
     success: function (data) {
       if(data['topics'] !== false){
+        var textList = jQuery.parseJSON(data['text']);
+        var domList = jQuery.parseJSON(data['dom']);
         var topic_text = jQuery.parseJSON(data['topics']);
-        console.log(topic_text);
+
+        // Add blockquotes of tweets content
+        d3.selectAll("#dom-tweet > *").remove();
+        domList.forEach(function(d){
+          console.log(d.raw);
+          var new_block = document.createElement('blockquote');
+          new_block.innerHTML = d.raw;
+          console.log(new_block)
+          $("#dom-tweet").append(new_block)
+        })
+
 
         var min = Math.min.apply(Math, topic_text.map(function(o) { return o.prob; }))
         var max = Math.max.apply(Math, topic_text.map(function(o) { return o.prob; }))
@@ -56,15 +68,16 @@ function generate_topics(selected_event){
         if(min == 0){min = "1e-6"}
         if(max == 0){max = "1e-6"}
         extrem.push(min.toString(),max.toString())
-        
+        console.log(extrem);
+
         // Update terms, cloud, timeline
         update_relevant_terms(selected_event);
-        display_topics(topic_text,extrem);
-        
+        display_topics(topic_text,extrem, domList); //domList , rep_tweets
         draw_timeline(String(selected_event));
+        // update_slider();
       }
       else{
-        alert('No enough data!'); // When capture error returned by LDA modeling
+        alert('No enough data!');
       }
 
     }
@@ -97,7 +110,7 @@ function display_topics(data,extrem){
   d3.selectAll("#topic-div > *").remove();
   d3.selectAll("#topic-legend > *").remove();
 
-  var margin = {top: 80, right: 25, bottom: 30, left: 40},
+  var margin = {top: 80, right: 25, bottom: 30, left: 60},
   width = 450 - margin.left - margin.right,
   height = 450 - margin.top - margin.bottom;
 
