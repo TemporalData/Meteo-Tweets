@@ -225,6 +225,7 @@ function display_topics(data,extrem){
     .attr("y", function(d) { return y(d.variable)+y.bandwidth()/2; })
     .attr('text-anchor', 'middle')
     .style("font-size", "14px")
+    .style("font-weight", 400)
 
 
 }

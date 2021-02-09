@@ -318,6 +318,21 @@ function update_text(data){
               })
             .style('opacity', 1);
 
+  // Highlight clicked words in heatmap
+  d3.selectAll("#topic-div text")
+    .style("font-size", "14px") 
+    .style("fill","black")  
+    .style("font-weight", 400)
+
+  d3.selectAll("#topic-div text")
+    .filter(function(){
+      return d3.select(this).text() == data.text;
+    })
+    .style("font-size", "20px")
+    .style("font-weight", 700)
+    .style("fill","orange")
+
+
   // // Retrieve weather glossaries(classes)
 
   // $.ajax({
@@ -363,6 +378,11 @@ function check_cloud_click(e){
     if (e.target.nodeName !== "text"){
       d3.selectAll("#my_cloudviz text")
         .style('opacity', 1);
+      // restore heatmap
+      d3.selectAll("#topic-div text")
+        .style("font-size", "14px") 
+        .style("fill","black")  
+        .style("font-weight", 400)
     }
   }
 }
