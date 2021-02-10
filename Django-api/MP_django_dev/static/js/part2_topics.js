@@ -49,7 +49,7 @@ function generate_topics(selected_event){
         var topic_text = jQuery.parseJSON(data['topics']);
 
         // Add blockquotes of tweets content
-        d3.selectAll("#dom-tweet > *").remove();
+        d3.selectAll("#dom-tweet > blockquote").remove();
         domList.forEach(function(d){
           console.log(d.raw);
           var new_block = document.createElement('blockquote');
@@ -110,7 +110,7 @@ function display_topics(data,extrem){
   d3.selectAll("#topic-div > *").remove();
   d3.selectAll("#topic-legend > *").remove();
 
-  var margin = {top: 80, right: 25, bottom: 30, left: 60},
+  var margin = {top: 40, right: 25, bottom: 30, left: 80},
   width = 450 - margin.left - margin.right,
   height = 450 - margin.top - margin.bottom;
 
@@ -235,7 +235,7 @@ function display_topics(data,extrem){
 function continuous(selector_id, colorscale) {
   var legendheight = 430,
       legendwidth = 80,
-      margin_l = {top: 80, right: 60, bottom: 10, left: 2}; //{top: 10, right: 60, bottom: 10, left: 2}
+      margin_l = {top: 40, right: 60, bottom: 10, left: 2}; //{top: 10, right: 60, bottom: 10, left: 2}
   var canvas = d3.select(selector_id)
     .style("height", legendheight + "px")
     .style("width", legendwidth + "px")
