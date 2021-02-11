@@ -9,6 +9,8 @@ from django.core import serializers
 # from django.contrib.postgres.aggregates.general import ArrayAgg
 import json
 from text.models import Document, WeatherTerm, TermType
+from network.models import TweetInfo, UserInfo
+#UserReply, UserMention, Graph_Edge, Graph_Node
 
 import random
 import os
@@ -80,7 +82,7 @@ def dashboard(request):
         # _clear_db()
         # _create_db('T')  # Create termtype objects
         # _create_db('DW') # Create document and weather term objects 
-
+        _create_db('UR') # Create user tweetinfo, user reply and user mention objects        
 
         mild = pd.read_csv(CURRENT_PATH+'new_mild.csv')
         severe = pd.read_csv(CURRENT_PATH+'new_severe.csv')
@@ -214,7 +216,36 @@ def _create_db(model):
 
                     new_doc.terms.add(match_term)   
 
+    if model == 'UR':
+        nwdir =  CURRENT_PATH + 'users_network.csv'
+        nw = pd.read_csv(nwdir, engine='python')
 
+        for line in nw.iterrows():
+            user_info = UserInfo.objects.create(
+                user_id = line[1]['user_id'],
+                user_screen_name = line[1]['user_screen_name'],
+                user_followers_count = line[1]['user_followers_count'],
+                user_following_count = line[1]['user_following_count'],
+                user_favourited_other_tweets_count = line[1]['user_favourited_other_tweets_count'],
+            )
+
+        for line in nw.iterrows():
+            new_info = TweetInfo.objects.create(
+                tweet_id = line[1]['id'],
+                date = line[1]['date'],
+                # place_full_name
+                latitude = line[1]['latitude'],
+	            longitude = line[1]['longitude'],
+                user_id = line[1]['user_id'],
+                is_retweet = line[1]['is_retweet'],
+                retweet_count = line[1]['retweet_count'],
+                is_reply = line[1]['is_reply'],
+                in_reply_to_status_id = line[1]['in_reply_to_status_id'],
+                in_reply_to_user_id = line[1]['in_reply_to_user_id'],
+                n_user_mentions = line[1]['n_user_mentions'],           
+            )
+    
+    # if model == '':
 
 # Delete all existing objects in db
 def _clear_db():

@@ -44,6 +44,7 @@ def generate_json(start,end,filename):
     # JSON_output('bi_user_data.json', U)
     if filename == 'bipartite':
         JSON_output(current_dir+'/text/static/js/bipartite.json', bi_sub_b)
+
 # Load Dataset
 def load_dataset(file1):
     twitter_df = pd.read_csv(file1, encoding='ISO-8859-15')
@@ -123,10 +124,6 @@ def generate_network_df(sample_df):
     network_df[same_columns] = sample_df[same_columns]
 
     # extract 'user_mentions_id' and 'user_mentions_screen_name' from 'user_mentions'
-    # number of users in the sample dataset
-    user_id_list = sample_df.user_id.unique().tolist()
-    # len(user_id_list)
-
     network_df['user_mentions_id'], network_df['user_mentions_screen_name'] = zip(*sample_df['user_mentions'].apply(get_user_mentions))
 
     # extract hashtags

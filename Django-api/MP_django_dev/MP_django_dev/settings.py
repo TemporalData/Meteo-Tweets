@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'geo_map',
+    'network',
     'rest_framework',
     'timeline',
     'text',
