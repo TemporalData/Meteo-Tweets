@@ -8,7 +8,6 @@ from timeline.models import TimeData
 from timeline.serializers import TimeDataSerializer
 # Import function from processing.py from the app geo map
 # from timeline.processing import compute_map_data
-from text.models import Document
 
 # Import numpy
 import numpy as np
@@ -94,52 +93,32 @@ class TimeLineDataAPI(APIView):
 
         # Retrieve the id_filter from the request
         try:
-            # Load the list in the request into term_type variable
-            term_type = request.query_params['termytype']
+            # Load the list in the request into id_filter variable
+            id_filter = request.query_params['id_filter']
         # Catch exceptions caused by 'id_filter' not being in the request
         except Exception:
-            # Return a bad request status due to lacking 'termtype'
+            # Return a bad request status due to lacking 'id_filter
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # Try to retrieve the data from the Data model
         try:
-            if input == "all":
-                result = Document.objects.values(
-                    'pub_date').annotate(
-                        count=Count('pub_date')).order_by('pub_date')
+            # If id_filter is not empty
+            if len(id_filter) > 0:
+                # Transform id_filter into an int list
+                id_filter = list(map(int, id_filter.split(',')))
+                # Load the filtered data into the 'data' variable
+                data = TimeData.objects.filter(
+                    id__in=id_filter).values_list('date', flat=True)
+            # 'id_filter' is empty list
             else:
-                input = [item for item in input.split(',')]
-                result = Document.objects.values(
-                    'pub_date', 'terms__ttype__typename').filter(
-                        terms__ttype__typename__in=input).annotate(
-                            count=Count('pub_date')).order_by('pub_date')
+                # Set 'data' to all the entries in the Data model
+                data = TimeData.objects.values_list('date', flat=True)
         # If the Data model does not exist
-        except Document.DoesNotExist:
+        except TimeData.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        timeline_data = list(result)
+        timeline_data = np.unique(data, return_counts=True)
 
         # Return the map data
         return Response(timeline_data)
-
-
-# # Update timeline with termtype-related data
-#     if(request.GET.get('termtype')):
-#         data = {'response': count_tweet(request.GET.get('termtype'))}
-#         return JsonResponse(data)
-
-
-def count_tweet(input):
-    if input == "all":
-        result = Document.objects.values(
-            'pub_date').annotate(
-                count=Count('pub_date')).order_by('pub_date')
-    else:
-        input = [item for item in input.split(',')]
-        result = Document.objects.values(
-            'pub_date', 'terms__ttype__typename').filter(
-                terms__ttype__typename__in=input).annotate(
-                    count=Count('pub_date')).order_by('pub_date')
-
-    return list(result)
