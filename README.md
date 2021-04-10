@@ -1,3 +1,5 @@
+# PLACEHOLDER
+
 # Social Media Analytics - Master Project
 
 This is the Master project of
