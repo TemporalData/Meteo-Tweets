@@ -1,4 +1,4 @@
 *.pyc
 *.csv#
 *.csv
-settings.json
+.vscode/settings.json
