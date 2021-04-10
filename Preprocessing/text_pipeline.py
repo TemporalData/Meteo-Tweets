@@ -29,9 +29,6 @@ DATAFILE = 'cleaned_dataset.csv'  # Cleaned dataset
 # output: clean data
 def clean(text_data, pbar):
 
-    text_data['raw_text'] = text_data['text']
-    pbar.update(1)
-
     # # Remove index
     # text_data.reset_index(drop=True, inplace=True)
 
@@ -39,6 +36,9 @@ def clean(text_data, pbar):
     text_data['text'] = text_data['text'].apply(
         lambda x: x.split("http")[0])
 
+    pbar.update(1)
+
+    text_data['raw_text'] = text_data['text']
     pbar.update(1)
 
     # remove punctuations, normalize to lowercase, delete default text
@@ -111,10 +111,7 @@ def clean(text_data, pbar):
 
     pbar.update(5)
 
-    # extract date from datetime
-    text_data['date'] = text_data['created_at_CET'].apply(
-        lambda x: x.split(' ')[0])
-    text_data = text_data[['doc_no', 'date', 'text', 'raw_text']]
+    text_data = text_data[['ID', 'text', 'raw_text']]
 
     pbar.update(1)
 
@@ -148,14 +145,33 @@ def generate_partial_dataset(filedir, filename):
 
     # save to csv
     clean_partial.to_csv(
-        os.path.join(filedir, "text_model.csv"), index=False)
+        os.path.join(filedir, "cleaned_text.csv"), index=False)
 
     pbar.update(1)
 
     pbar.close()
 
 
+def generate_topics(filedir):
+
+    # Declaring the name of the file which contains the cleaned text data
+    filename = "cleaned_text.csv"
+
+    # Read the text data from the csv
+    cleaned = pd.read_csv(
+        os.path.join(filedir, filename), engine='python', encoding='latin_1')
+
+    print(word_to_list(cleaned))
+
+
 def main():
+    # Check whether cleaned text data already exists
+    cleaned_text_location = os.path.join(FILE_DIR, 'cleaned_text.csv')
+    print(cleaned_text_location)
+    if(os.path.isfile(cleaned_text_location)):
+        print("works")
+    else:
+        print("nah")
     print("Generating text model data")
     generate_partial_dataset(FILE_DIR, DATAFILE)
     print("Now generating topics")
@@ -171,21 +187,21 @@ if __name__ == '__main__':
 # output: list of word lists i.e.[[],[],...]
 
 
-# def word_to_list(data):
-#     # print('input is {}'.format(data.head()))
-#     # Tokenize to list
-#     word_list = []
-#     word_list += [word_tokenize(sentence) for sentence in data['text'].values.tolist()]
+def word_to_list(data):
+    # print('input is {}'.format(data.head()))
+    # Tokenize to list
+    word_list = []
+    word_list += [word_tokenize(sentence) for sentence in data['text'].values.tolist()]
 
-#     # remove stop words    
-#     data_no_stop = [[word for word in line if word not in stop_words] for line in word_list]
+    # remove stop words
+    data_no_stop = [[word for word in line if word not in stop_words] for line in word_list]
 
-#     # lemmatize and remove blank list
-#     lemmatizer = WordNetLemmatizer() 
-#     lemmatized_words = [[lemmatizer.lemmatize(word) for word in line if word.isalpha()]for line in data_no_stop]
+    # lemmatize and remove blank list
+    lemmatizer = WordNetLemmatizer()
+    lemmatized_words = [[lemmatizer.lemmatize(word) for word in line if word.isalpha()]for line in data_no_stop]
 
-#    #might generate meaningless term: e.g. stormy --> stormi
-#     return lemmatized_words, data_no_stop
+    # might generate meaningless term: e.g. stormy --> stormi
+    return lemmatized_words, data_no_stop
 
 
 
