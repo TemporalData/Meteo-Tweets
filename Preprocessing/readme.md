@@ -2,7 +2,7 @@
 
 This folder contains python scripts for data cleaning and processing.
 
-## filter_dataset.py
+## filter_twitter_dataset.py
 
 *Requires complete_swiss_dataset.csv to be present in ./data*
 
@@ -30,3 +30,7 @@ Running this file will generate csv files corresponding to the models needed for
 *Requires cleaned_dataset.csv to be present in ./data*
 
 Running this file will generate csv files corresponding to the models needed for the text part of the application.
+
+## weather_pipeline.py
+
+Placeholder for future integration of weather data.

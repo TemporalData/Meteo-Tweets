@@ -148,7 +148,7 @@ def generate_partial_dataset(filedir, filename):
 
     # save to csv
     clean_partial.to_csv(
-        os.path.join(filedir, "partial_clean_term.csv"), index=False)
+        os.path.join(filedir, "text_model.csv"), index=False)
 
     pbar.update(1)
 
@@ -158,8 +158,8 @@ def generate_partial_dataset(filedir, filename):
 def main():
     print("Generating text model data")
     generate_partial_dataset(FILE_DIR, DATAFILE)
-    # print("Done. Now generating topics")
-    # generate_type_topics(FILE_DIR)
+    print("Now generating topics")
+    generate_topics(FILE_DIR)
     print("Done.")
 
 
