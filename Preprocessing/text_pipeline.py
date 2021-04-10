@@ -1,5 +1,6 @@
 # Packages and modules
 import os
+from tqdm import tqdm
 import re
 import pandas as pd
 from ast import literal_eval
@@ -26,92 +27,132 @@ DATAFILE = 'cleaned_dataset.csv'  # Cleaned dataset
 # input: data after hdbscan, cluster_id
 # less records, faster processing
 # output: clean data
-def clean(temp, isdate=False, start='2015-01-01', end='2018-09-06'):
-    temp['raw_text'] = temp['text']
-    if isdate:
-        temp = temp.loc[(temp.date >= start) & (temp.date <= end)]
-    # print('selectd data is \n'.format(temp.head()))
+def clean(text_data, pbar):
 
-    # Remove index
-    temp.reset_index(drop=True, inplace=True)
+    text_data['raw_text'] = text_data['text']
+    pbar.update(1)
+
+    # # Remove index
+    # text_data.reset_index(drop=True, inplace=True)
+
     # remove links starting with "http(s)"
-    temp['text'] = temp['text'].apply(lambda x: x.split("http")[0])
+    text_data['text'] = text_data['text'].apply(
+        lambda x: x.split("http")[0])
+
+    pbar.update(1)
 
     # remove punctuations, normalize to lowercase, delete default text
-    temp['text'] = temp['text'].apply(lambda x: re.sub('[,\.!?\@]', ' ', x))
-    temp['text'] = temp['text'].apply(lambda x: re.sub('\r\n', ' ', x))
-    temp['text'] = temp['text'].apply(lambda x: x.lower())
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('[,\.!?\@]', ' ', x))
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('\r\n', ' ', x))
+    text_data['text'] = text_data['text'].apply(
+        lambda x: x.lower())
+
+    pbar.update(3)
 
     # remove default text "Just posted a photo/video"
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.replace('just posted a photo', ''))
-        
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.replace('just posted a video', ''))
 
+    pbar.update(2)
+
     # recognizable unicode format
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.replace(r'<u+', r'\u'))
-
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.replace('>', ''))
-
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: re.sub("(?:u0001)|(?:u000e)", "U0001", x))
+
+    pbar.update(3)
 
     # demojize emoji unicode to text
     # remove distracting "\" at the end of strings
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.rstrip('\\'))
-
-    temp['text'] = temp['text'].apply(
+    text_data['text'] = text_data['text'].apply(
         lambda x: emoji.demojize(
             bytes(x, encoding='latin_1').decode('unicode_escape')))
 
-    # remove new ":" from demojize
-    temp['text'] = temp['text'].apply(
-        lambda x: re.sub('[:\#]', ' ', x))
+    pbar.update(2)
 
-    temp['text'] = temp['text'].apply(
+    # remove new ":" from demojize
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('[:\#]', ' ', x))
+    text_data['text'] = text_data['text'].apply(
         lambda x: x.lower())
 
+    pbar.update(2)
+
+    # Remove extra symbols
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('Ã', '', x))
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('¢', '', x))
+    text_data['text'] = text_data['text'].apply(
+        lambda x: re.sub('Â', '', x))
+
+    pbar.update(3)
+
     # process raw_text column
-    temp['raw_text'] = temp['raw_text'].apply(
+    text_data['raw_text'] = text_data['raw_text'].apply(
         lambda x: x.replace(r'<U+', r'\u'))
-    temp['raw_text'] = temp['raw_text'].apply(
+    text_data['raw_text'] = text_data['raw_text'].apply(
         lambda x: x.replace(r'<u+', r'\u'))
-    temp['raw_text'] = temp['raw_text'].apply(
+    text_data['raw_text'] = text_data['raw_text'].apply(
         lambda x: x.replace('>', ''))
-    temp['raw_text'] = temp['raw_text'].apply(
+    text_data['raw_text'] = text_data['raw_text'].apply(
         lambda x: re.sub("(?:u0001)|(?:u000e)", "u0001", x))
-    temp['raw_text'] = temp['raw_text'].apply(
+    text_data['raw_text'] = text_data['raw_text'].apply(
         lambda x: x.replace(r'\u', r'&#x'))
 
+    pbar.update(5)
+
     # extract date from datetime
-    temp['date'] = temp['created_at_CET'].apply(lambda x: x.split(' ')[0])
-    temp = temp[['doc_no', 'date', 'text', 'raw_text']]
-    # print('clean data is \n'.format(temp.head()))
-    return temp
+    text_data['date'] = text_data['created_at_CET'].apply(
+        lambda x: x.split(' ')[0])
+    text_data = text_data[['doc_no', 'date', 'text', 'raw_text']]
+
+    pbar.update(1)
+
+    return text_data
 
 
 def generate_partial_dataset(filedir, filename):
+
+    # Declare a progress bar
+    pbar = tqdm(total=27)
+
     # Read, slice data
     cleaned = pd.read_csv(
         os.path.join(filedir, filename), engine='python', encoding='latin_1')
 
-    cols = ['text', 'created_at_CET']  # index as "doc_no", i.e. tweet id
+    pbar.update(1)
+
+    cols = ['text']  # index as "doc_no", i.e. tweet id
     partial = cleaned.loc[:, cols].copy()
 
     # Set original index as tweet id
-    partial['doc_no'] = partial.index
+    partial['ID'] = partial.index
+    partial = partial.loc[:, ['ID']+cols]
 
-    print(partial.head())
+    pbar.update(1)
 
     # Text cleaning
-    clean_partial = clean(partial)
+    clean_partial = clean(partial, pbar)
+
+    pbar.update(1)
 
     # save to csv
-    clean_partial.to_csv(os.path.join(filedir, "partial_clean_term.csv"), index=False) 
+    clean_partial.to_csv(
+        os.path.join(filedir, "partial_clean_term.csv"), index=False)
+
+    pbar.update(1)
+
+    pbar.close()
 
 
 def main():
