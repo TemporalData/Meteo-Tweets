@@ -16,7 +16,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer, PorterStemmer
 stop_words = stopwords.words('english')
-stop_words.extend(['switzerland'])  # 'geneva','zurich','day','basel', ...
+stop_words.extend(['switzerland', 'switz'])  # Can be extended further
 
 #  Dataset name and directories
 FILE_DIR = os.path.join(os.getcwd(), 'data')  # Directory to save output
@@ -24,9 +24,8 @@ DATAFILE = 'cleaned_dataset.csv'  # Cleaned dataset
 
 
 # Text Cleaning
-# input: data after hdbscan, cluster_id
-# less records, faster processing
-# output: clean data
+# input: text data in the form of a dataframe
+# output: cleaned text data
 def clean(text_data, pbar):
 
     # # Remove index
@@ -159,21 +158,24 @@ def generate_topics(filedir):
 
     # Read the text data from the csv
     cleaned = pd.read_csv(
-        os.path.join(filedir, filename), engine='python', encoding='latin_1')
+        os.path.join(filedir, filename), engine='c', encoding='latin_1')
+
+    # Drop all the empty entries
+    # These correspond to tweets that only had link in the text
+    cleaned.dropna()
 
     print(word_to_list(cleaned))
 
 
 def main():
-    # Check whether cleaned text data already exists
+    # Declaring the location of the cleaned text data
     cleaned_text_location = os.path.join(FILE_DIR, 'cleaned_text.csv')
-    print(cleaned_text_location)
-    if(os.path.isfile(cleaned_text_location)):
-        print("works")
-    else:
-        print("nah")
-    print("Generating text model data")
-    generate_partial_dataset(FILE_DIR, DATAFILE)
+
+    # Check whether cleaned text data already exists
+    if(not(os.path.isfile(cleaned_text_location))):
+        print("Cleaning text model data")
+        generate_partial_dataset(FILE_DIR, DATAFILE)
+
     print("Now generating topics")
     generate_topics(FILE_DIR)
     print("Done.")
@@ -186,22 +188,21 @@ if __name__ == '__main__':
 # input: clean dataframe
 # output: list of word lists i.e.[[],[],...]
 
+# def word_to_list(data):
+#     # print('input is {}'.format(data.head()))
+#     # Tokenize to list
+#     word_list = []
+#     word_list += [word_tokenize(sentence) for sentence in data['text'].values.tolist()]
 
-def word_to_list(data):
-    # print('input is {}'.format(data.head()))
-    # Tokenize to list
-    word_list = []
-    word_list += [word_tokenize(sentence) for sentence in data['text'].values.tolist()]
+#     # remove stop words
+#     data_no_stop = [[word for word in line if word not in stop_words] for line in word_list]
 
-    # remove stop words
-    data_no_stop = [[word for word in line if word not in stop_words] for line in word_list]
+#     # lemmatize and remove blank list
+#     lemmatizer = WordNetLemmatizer()
+#     lemmatized_words = [[lemmatizer.lemmatize(word) for word in line if word.isalpha()]for line in data_no_stop]
 
-    # lemmatize and remove blank list
-    lemmatizer = WordNetLemmatizer()
-    lemmatized_words = [[lemmatizer.lemmatize(word) for word in line if word.isalpha()]for line in data_no_stop]
-
-    # might generate meaningless term: e.g. stormy --> stormi
-    return lemmatized_words, data_no_stop
+#     # might generate meaningless term: e.g. stormy --> stormi
+#     return lemmatized_words, data_no_stop
 
 
 
