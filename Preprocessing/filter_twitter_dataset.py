@@ -34,7 +34,7 @@ text_cols = ['text']
 timeline_cols = ['created_at_CET']
 
 # Aggregate the columns
-columns = geo_cols + text_cols + network_cols
+columns = geo_cols + text_cols + network_cols + timeline_cols
 
 # Finding the ids of the tweets that are written in english
 english_tweets = np.where(raw['lang'] == 'en')[0]  # 420330 entries
