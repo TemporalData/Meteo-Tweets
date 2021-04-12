@@ -40,6 +40,7 @@ This folder is a django generated folder which contains vital files to operation
 Two of the most important found in this folder:
 
 *settings.py* - This file contains settings for the entire django application.
+
 *urls.py* - This file handles root url routing.
 
 ## ./static/
