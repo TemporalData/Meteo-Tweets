@@ -2,4 +2,4 @@
 *.csv#
 *.csv
 .vscode/settings.json
-*.ipynb_checkpoints
+.ipynb_checkpoints
