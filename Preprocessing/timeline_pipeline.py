@@ -25,16 +25,23 @@ def generate_geo_data(filedir, filename):
     # Columns that the geo model requires
     cols = ['created_at_CET']
 
-    partial = cleaned.loc[:, cols]
+    export = cleaned.loc[:, cols]
     pbar.update(1)
 
     # Set original index as tweet id
-    partial['ID'] = partial.index
-    partial = partial.loc[:, ['ID']+cols]
+    export['tweet_id'] = export.index
+    export = export.loc[:, ['tweet_id']+cols]
     pbar.update(1)
 
+    print(export.head())
+
+    # Format the column to pandas datetime
+    export['datetime'] = pd.to_datetime(export['created_at_CET'])
+
+    timeline_data.loc[:,'time_created'] = timeline_data.loc[:,'datetime'].dt.strftime("%Y-%m-%d %H:%M%z")
+
     # save to csv
-    partial.to_csv(
+    export.to_csv(
         os.path.join(filedir, "timeline_model.csv"), index=False)
 
     pbar.update(1)
