@@ -8,6 +8,7 @@ This folder contains python scripts for data cleaning and processing.
 
 This file is run to clean the original dataset such that the next steps take less time.
 It will retain all the english tweets and the columns specified in the file.
+If any pipeline changes the columns that are used you can edit the respective line in this file.
 
 *Produces: ./data/cleaned_dataset.csv*
 
@@ -20,14 +21,14 @@ Running this file will generate csv files corresponding to the models needed for
 
 ## network_pipeline.py
 
-*Requires cleaned_dataset.csv to be present in ./data*
+*Current version is a placeholder for pipeline for network model*
 
 Running this file will generate csv files corresponding to the models needed for the network part of the application.
 
 
 ## text_pipeline.py
 
-*Requires cleaned_dataset.csv to be present in ./data*
+*Current version is a placeholder for pipeline for text model*
 
 Running this file will generate csv files corresponding to the models needed for the text part of the application.
 
