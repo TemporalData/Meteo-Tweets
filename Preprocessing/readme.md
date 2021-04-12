@@ -25,6 +25,10 @@ Running this file will generate csv files corresponding to the models needed for
 
 Running this file will generate csv files corresponding to the models needed for the network part of the application.
 
+## requirements.txt
+
+This text file contains all the python libraries needed to run the other files in this folder.
+
 
 ## text_pipeline.py
 
