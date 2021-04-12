@@ -1,0 +1,4 @@
+This text file contains the commands that you have to run in the psql command line interface.
+Assumed for these commands is the following:
+You have access to the psql server as no credentials are provided here
+You have migrated the current build of the django application so that the models are present in the database
