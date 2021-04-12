@@ -2,12 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.http import HttpResponse
+
 # Import the model from the app geo map
-from geo_map.models import GeoData, GeoCache
-# Import the serializer from the app geo map
-from geo_map.serializers import GeoDataSerializer, GeoCacheSerializer
+from geo_map.models import GeoCache, GeoLocation, GeoTweet
 # Import function from processing.py from the app geo map
-from geo_map.processing import compute_map_data
+from geo_map.processing import compute_map_data, density_to_color
 
 # Import numpy
 import numpy as np
@@ -16,9 +16,8 @@ import pandas as pd
 
 ###
 # Takes ID list and returns:
-# Latitude, longitude, density
+# id, latitude, longitude
 ###
-
 
 class GeoDataAPI(APIView):
 
@@ -36,10 +35,11 @@ class GeoDataAPI(APIView):
             id_filter = request.query_params['id_filter']
         # Catch exceptions caused by 'id_filter' not being in the request
         except Exception:
-            # Return a bad request status due to lacking 'id_filter
+            # Return a bad request status due to lacking
+            # 'id_filter' or 'geoloc_filter'
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # Try to retrieve the data from the Data model
+        # Try to retrieve the data from the model
         try:
             # If id_filter is not empty
             if len(id_filter) > 0:
@@ -47,30 +47,61 @@ class GeoDataAPI(APIView):
                 id_filter = list(map(int, id_filter.split(',')))
 
                 # Load the filtered data into the 'data' variable
-                data = GeoData.objects.filter(id__in=id_filter)
+                data = GeoTweet.objects.filter(
+                    id__in=id_filter).values_list(
+                        'geo_location', flat=True)
             # 'id_filter' is empty list
             else:
-                # Set 'data' to all the entries in the Data model
-                data = GeoCache.objects.all().values_list(
-                    'data_list',
-                    flat=True)
+                data = GeoTweet.objects.all().values_list(
+                    'geo_location', flat=True)
+            # else:
+            #     # Set 'data' to all the entries in the Data model
+            #     data = GeoCache.objects.all().values_list(
+            #         'data_list',
+            #         flat=True)
 
-                data_response = pd.DataFrame(np.array(data).T)
+            #     data_response = pd.DataFrame(np.array(data).T)
 
-                data_response.columns = ['latitude', 'longitude', 'density']
+            #     data_response.columns = ['latitude', 'longitude', 'density']
 
-                return Response(data_response)
+            #     return Response(data_response)
 
         # If the Data model does not exist
-        except GeoData.DoesNotExist:
+        except GeoTweet.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Store the latitude and longitude data in a variable
-        latLongData = (pd.DataFrame(data.values_list())).iloc[:, [2, 3]]
+        geo_location_density_array = np.unique(
+            np.array(data), return_counts=True)
 
-        # Call compute map data with the lat and long data
-        map_data = compute_map_data(latLongData)
+        geo_ids = list(geo_location_density_array[0])
+        densities = geo_location_density_array[1]
+
+        # Try to retrieve data from the GeoLocation model
+        try:
+
+            locations = GeoLocation.objects.filter(
+                    id__in=geo_ids).values_list(
+                        'id',
+                        'latitude',
+                        'longitude')
+
+        # If the model does not exist
+        except GeoLocation.DoesNotExist:
+            # Return a internal server error, as Data model isn't populated
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # Format the data for the output
+        output = pd.DataFrame(np.array(locations))
+
+        # Add columns for the output
+        output.columns = ["id", "lat", "long"]
+
+        density_colors = density_to_color(densities)
+
+        output["color"] = density_colors
+
+        json_output = output.to_json(orient="records")
 
         # Return the map data
-        return Response(map_data)
+        return HttpResponse(json_output, content_type="application/json")

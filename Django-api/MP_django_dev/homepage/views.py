@@ -13,9 +13,14 @@ def login(request):
     return render(request, "loginpage.html")
 
 
-def timeline(request):
+def d3map(request):
 
-    return render(request, "test.html")
+    return render(request, "d3map.html")
+
+
+def testing(request):
+
+    return render(request, "test2.html")
 
 
 def leaflet(request):
