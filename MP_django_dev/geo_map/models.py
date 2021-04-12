@@ -8,6 +8,10 @@ from django.contrib.gis.db import models
 
 
 class GeoLocation(models.Model):
+
+    # Field which denotes the geo_id
+    geo_id = models.IntegerField(null=False, blank=False)
+
     # Lat and long coordinates
     latitude = models.FloatField(null=False, blank=False)
     longitude = models.FloatField(null=False, blank=False)

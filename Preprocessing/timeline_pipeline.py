@@ -36,8 +36,6 @@ def generate_geo_data(filedir, filename):
     timeline_data = timeline_data.loc[:, ['tweet_id']+cols]
     pbar.update(1)
 
-    print(timeline_data.head())
-
     # Format the column to pandas datetime
     timeline_data['datetime'] = pd.to_datetime(timeline_data['created_at_CET'])
     pbar.update(1)
