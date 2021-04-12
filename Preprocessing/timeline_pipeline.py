@@ -12,7 +12,7 @@ DATAFILE = 'cleaned_dataset.csv'  # Original dataset
 def generate_geo_data(filedir, filename):
 
     # Declare a progress bar
-    pbar = tqdm(total=4)
+    pbar = tqdm(total=7)
 
     # Read, slice data
     cleaned = pd.read_csv(
@@ -25,20 +25,35 @@ def generate_geo_data(filedir, filename):
     # Columns that the geo model requires
     cols = ['created_at_CET']
 
-    export = cleaned.loc[:, cols]
+    # Take a slice of the cleaned data
+    timeline_data = cleaned.loc[:, cols]
     pbar.update(1)
 
     # Set original index as tweet id
-    export['tweet_id'] = export.index
-    export = export.loc[:, ['tweet_id']+cols]
+    timeline_data['tweet_id'] = timeline_data.index
+
+    # Rearrange the order of the columns
+    timeline_data = timeline_data.loc[:, ['tweet_id']+cols]
     pbar.update(1)
 
-    print(export.head())
+    print(timeline_data.head())
 
     # Format the column to pandas datetime
-    export['datetime'] = pd.to_datetime(export['created_at_CET'])
+    timeline_data['datetime'] = pd.to_datetime(timeline_data['created_at_CET'])
+    pbar.update(1)
 
-    timeline_data.loc[:,'time_created'] = timeline_data.loc[:,'datetime'].dt.strftime("%Y-%m-%d %H:%M%z")
+    # Format the datetime to a new columns which removes seconds from the time
+    timeline_data.loc[:, 'time_created'] = timeline_data.loc[
+        :, 'datetime'].dt.strftime("%d-%m-%Y %H:%M%z")
+    pbar.update(1)
+
+    # Format the datetime to a new column which only has the calendar date
+    timeline_data.loc[:, 'date'] = timeline_data.loc[
+        :, 'datetime'].dt.strftime("%d-%m-%Y")
+    pbar.update(1)
+
+    # Take only the desired columns for the export
+    export = timeline_data.loc[:, ['tweet_id', 'time_created', 'date']]
 
     # save to csv
     export.to_csv(
