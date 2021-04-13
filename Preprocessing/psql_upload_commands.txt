@@ -1,0 +1,26 @@
+This text file contains the commands that you have to run in the psql command line interface.
+Assumed for these commands is the following:
+You have access to the psql server as no credentials are provided here
+You have migrated the current build of the django application so that the models are present in the database
+(see the root folder of the django application for details)
+
+---- Upload commands for various csv files to their respective models ----
+
+* Log onto psql using the user 'django_user' or your equivalent *
+
+# The location of .\Preprocessing on your machine is written as the variable #local_preprocessing_location#
+# Replace this with the correct string pointing to the location on your machine
+
+# Populate the GeoLocation model by copying geoLocation_model.csv into the database
+\copy geo_map_geolocation FROM '#local_preprocessing_location#\Preprocessing\data\geoLocation_model.csv' WITH DELIMITER ',' CSV HEADER;
+
+# Populate the GeoTweet model by copying geoTweet_model.csv into the database
+# Note: GeoLocation model has to be populated on the database first, as GeoTweet contains it as a foreign key
+\copy geo_map_geotweet FROM '#local_preprocessing_location#\Preprocessing\data\geoTweet_model.csv' WITH DELIMITER ',' CSV HEADER;
+
+# Populate the timeline model by copying timeline_model.csv into the database
+\copy timeline_timedata FROM '#local_preprocessing_location#\Preprocessing\data\timeline_model.csv' WITH DELIMITER ',' CSV HEADER;
+
+* You can exit the psql cli *
+
+----
