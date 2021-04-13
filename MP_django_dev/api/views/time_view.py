@@ -4,10 +4,8 @@ from rest_framework.views import APIView
 
 # Import the model from the app timeline
 from timeline.models import TimeData
-# Import the serializer from the app geo map
-from timeline.serializers import TimeDataSerializer
-# Import function from processing.py from the app geo map
-# from timeline.processing import compute_map_data
+# Import function from processing.py from the app timelineW
+from timeline.processing import compute_timeline
 
 # Import numpy
 import numpy as np
@@ -75,7 +73,7 @@ class TimeDataAPI(APIView):
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Return the map data
+        # Return the id's filtered by time
         return Response(data)
 
 
@@ -105,19 +103,21 @@ class TimeLineDataAPI(APIView):
                 id_filter = list(map(int, id_filter.split(',')))
                 # Load the filtered data into the 'data' variable
                 data = TimeData.objects.filter(
-                    id__in=id_filter).values_list('date', flat=True)
+                    id__in=id_filter).values_list('time_created', flat=True)
             # 'id_filter' is empty list
             else:
                 # Set 'data' to all the entries in the Data model
-                data = TimeData.objects.values_list('date', flat=True)
+                data = TimeData.objects.values_list('time_created', flat=True)
         # If the Data model does not exist
         except TimeData.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        data = np.sort(data)
+        data = np.fromiter(data, np.dtype('datetime64[D]'))
 
-        timeline_data = np.unique(data, return_counts=True)
+        data = data.astype('str')
+
+        timeline_data = compute_timeline(data)
 
         # Return the map data
         return Response(timeline_data)
