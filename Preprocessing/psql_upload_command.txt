@@ -1,4 +1,12 @@
 This text file contains the commands that you have to run in the psql command line interface.
 Assumed for these commands is the following:
 You have access to the psql server as no credentials are provided here
-You have migrated the current build of the django application so that the models are present in the database
+You have migrated the current build of the django application so that the models are present in the database (see the root folder of the django application for details)
+
+---- Uploading a csv file to a specific model ----
+
+* Log onto psql using the user 'django_user' or your equivalent *
+
+
+
+----

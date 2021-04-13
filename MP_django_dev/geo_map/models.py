@@ -10,7 +10,7 @@ from django.contrib.gis.db import models
 class GeoLocation(models.Model):
 
     # Field which denotes the geo_id
-    geo_id = models.IntegerField(null=False, blank=False)
+    # geo_id = models.IntegerField(null=False, blank=False)
 
     # Lat and long coordinates
     latitude = models.FloatField(null=False, blank=False)
@@ -22,7 +22,7 @@ class GeoLocation(models.Model):
 class GeoTweet(models.Model):
 
     # Field which denotes the tweet_id
-    tweet_id = models.IntegerField(null=False, blank=False)
+    # tweet_id = models.IntegerField(null=False, blank=False)
     # field which points to the location of the tweet
     geo_location = models.ForeignKey(GeoLocation, models.CASCADE, null=False)
 
