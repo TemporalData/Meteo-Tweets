@@ -43,5 +43,22 @@ python manage.py migrate
 
 ----
 
-## The database is now initilized, to populate it with data go to the "Preprocessing" folder in the root of this project
+## The database is now initialized, to populate it with data go to the "Preprocessing" folder in the root of this project
 ## There is another text file describing how to upload the data in that folder.
+
+
+## Once populated you can build indexes for faster performance, this is done below
+
+---- Commands for building indicies to speed up the API ----
+
+* Log onto the postrgres user with your user ('django_user') and password *
+
+# Index to speed up retrieval of temporal data from the timeline model
+CREATE INDEX index_time_created ON timeline_timedata (time_created);
+
+# Index to speed up retrieval of geo_id's from the geoTweet model
+CREATE INDEX index_geo_location ON geo_map_geotweet USING HASH (geo_location_id);
+
+* You can now exit the psql cli *
+
+----

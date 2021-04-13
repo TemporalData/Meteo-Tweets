@@ -38,21 +38,19 @@ class TimeDataAPI(APIView):
             end = request.query_params['end']
 
         # Catch exceptions caused by 'id_filter' not being in the request
+        # Or the varialbes start or end
         except Exception:
             # Return a bad request status due to lacking 'id_filter
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        print(end)
-
         # Check whether start and end variables are the right format
         try:
             # Attempt to convert the variables into datetime
-            datetime.strptime(start, "%d/%m/%Y")
-            datetime.strptime(end, "%d/%m/%Y")
+            start_datetime = datetime.strptime(start, "%d/%m/%Y")
+            end_datetime = datetime.strptime(end, "%d/%m/%Y")
         # If the format is incorrect an exception will be thrown
         except Exception:
             # Return bad request as start or end is in the wrong format
-            print("not datetime")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # Try to retrieve the data from the Data model
@@ -64,18 +62,17 @@ class TimeDataAPI(APIView):
                 # Load the filtered data into the 'data' variable
                 data = TimeData.objects.values_list("id", flat=True).filter(
                     id__in=id_filter).filter(
-                    time_created__range=(start, end)
+                    time_created__range=(start_datetime, end_datetime)
                     )
             # 'id_filter' is empty list
             else:
                 # Set 'data' to all the entries in the Data model
                 data = TimeData.objects.values_list("id", flat=True).filter(
-                    time_created__range=(start, end)
+                    time_created__range=(start_datetime, end_datetime)
                     )
         # If the Data model does not exist
         except TimeData.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
-            print("caught")
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Return the map data
@@ -117,6 +114,8 @@ class TimeLineDataAPI(APIView):
         except TimeData.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        data = np.sort(data)
 
         timeline_data = np.unique(data, return_counts=True)
 
