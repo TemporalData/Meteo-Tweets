@@ -113,11 +113,5 @@ class TimeLineDataAPI(APIView):
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        data = np.fromiter(data, np.dtype('datetime64[D]'))
-
-        data = data.astype('str')
-
-        timeline_data = compute_timeline(data)
-
         # Return the map data
-        return Response(timeline_data)
+        return Response(compute_timeline(data))
