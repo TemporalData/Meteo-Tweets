@@ -12,7 +12,6 @@ from geo_map.processing import density_to_color, compute_geo_location_density
 # Import numpy
 import numpy as np
 import pandas as pd
-import cProfile
 
 
 class GeoFilterAPI(APIView):
@@ -24,53 +23,66 @@ class GeoFilterAPI(APIView):
     # Define the response of a 'GET' request
     def get(self, request):
 
-        # # Retrieve the id_filter from the request
-        # try:
-        #     # Load the list in the request into id_filter variable
-        #     id_filter = request.query_params['id_filter']
-        #     start = request.query_params['start']
-        #     end = request.query_params['end']
+        # Retrieve the geo_id_filter from the request
+        try:
+            # Load request parameters into their variables
+            id_filter = request.query_params['id_filter']
+            geo_id_filter = request.query_params['geo_id_filter']
 
-        # # Catch exceptions caused by 'id_filter' not being in the request
-        # # Or the varialbes start or end
-        # except Exception:
-        #     # Return a bad request status due to lacking 'id_filter
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+        # Catch exceptions caused by either 'id_filter' or 'geo_id_filter'
+        # not being in the request
+        except Exception:
+            # Return a bad request status
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # # Check whether start and end variables are the right format
-        # try:
-        #     # Attempt to convert the variables into datetime
-        #     start_datetime = datetime.strptime(start, "%d/%m/%Y")
-        #     end_datetime = datetime.strptime(end, "%d/%m/%Y")
-        # # If the format is incorrect an exception will be thrown
-        # except Exception:
-        #     # Return bad request as start or end is in the wrong format
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+        # Try to retrieve the data from the GeoTweet model
+        try:
+            # Filter only on tweet id's
+            if len(id_filter) > 0 and len(geo_id_filter) == 0:
+                # Transform id_filter into an int list
+                id_filter = list(map(int, id_filter.split(',')))
 
-        # # Try to retrieve the data from the Data model
-        # try:
-        #     # If id_filter is not empty
-        #     if len(id_filter) > 0:
-        #         # Transform id_filter into an int list
-        #         id_filter = list(map(int, id_filter.split(',')))
-        #         # Load the filtered data into the 'data' variable
-        #         data = TimeData.objects.values_list("id", flat=True).filter(
-        #             id__in=id_filter).filter(
-        #             time_created__range=(start_datetime, end_datetime)
-        #             )
-        #     # 'id_filter' is empty list
-        #     else:
-        #         # Set 'data' to all the entries in the Data model
-        #         data = TimeData.objects.values_list("id", flat=True).filter(
-        #             time_created__range=(start_datetime, end_datetime)
-        #             )
-        # # If the Data model does not exist
-        # except TimeData.DoesNotExist:
-        #     # Return a internal server error, as Data model isn't populated
-        #     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                # Load the filtered data into the 'data' variable
+                data = GeoTweet.objects.filter(
+                    id__in=id_filter
+                    ).values_list('id', flat=True)
+
+            # Filter only on geo location id's
+            elif len(id_filter) == 0 and len(geo_id_filter):
+                # Transform geo_id_filter into an int list
+                geo_id_filter = list(map(int, geo_id_filter.split(',')))
+
+                # Load the filtered data into the 'data' variable
+                data = GeoTweet.objects.filter(
+                    geo_location_id__in=geo_id_filter
+                    ).values_list('id', flat=True)
+
+            # Filter on both tweet id's and geo location id's
+            elif len(id_filter) > 0 and len(geo_id_filter) > 0:
+                # Transform filters into an int list
+                id_filter = list(map(int, id_filter.split(',')))
+                geo_id_filter = list(map(int, geo_id_filter.split(',')))
+
+                # Load the filtered data into the 'data' variable
+                data = GeoTweet.objects.filter(
+                    geo_location_id__in=geo_id_filter
+                    ).filter(
+                    id__in=id_filter
+                    ).values_list(
+                        'id', flat=True)
+                pass
+
+            # Filters are empty, hence return all
+            else:
+                data = GeoTweet.objects.all().values_list('id', flat=True)
+
+        # If the Data model does not exist
+        except GeoTweet.DoesNotExist:
+            # Return a internal server error, as Data model isn't populated
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # # Return the id's filtered by time
-        return Response(1)
+        return Response(data)
 
 
 class GeoDataAPI(APIView):
@@ -108,7 +120,7 @@ class GeoDataAPI(APIView):
                 data = GeoTweet.objects.all().values_list(
                     'geo_location', flat=True)
 
-        # If the Data model does not exist
+        # If the GeoTweet model does not exist
         except GeoTweet.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
