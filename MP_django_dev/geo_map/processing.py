@@ -1,63 +1,40 @@
 import numpy as np
 import pandas as pd
 import math
-
-# Function to compute the map points and their densities given one array
-# Input = [ latitude values, longitude values]
-# Output = {" latitude"  = [...] , " latitude"  = [...], "density" = [...]}
-# Where for each unique lat and longitude there is a corresponding density
+from numba import njit
 
 
-def compute_map_data(latLongData):
+def compute_geo_location_density(data):
 
-    return compute_map_densities(latLongData)
+    geo_location_density_array = np.unique(np.array(data), return_counts=True)
 
-
-def compute_map_densities(latLongData):
-
-    # Give the inputted dataframe column names for clarity
-    latLongData.columns = ['latitude', 'longitude']
-
-    # Sort the list based on latitude and longitude
-    latLongData = latLongData.sort_values(by=['latitude', 'longitude']).copy()
-
-    # Reset the index for the calculation of densities
-    latLongData = latLongData.set_index(np.arange(0, len(latLongData)))
-
-    # Drop all the duplciates
-    # which keeps the first occuring entry in the dataframe
-    latLongData = latLongData.drop_duplicates(
-        subset=['latitude', 'longitude']).copy()
-
-    # Declare an array the length of the coordinates without duplicates
-    # Will represent the density at each coordinate
-    density = np.ones(len(latLongData))
-
-    # Loop the array with all the coordinates
-    for i in range(0, len(latLongData)-1):
-        density[i] = latLongData.index[i+1] - latLongData.index[i]
-
-    # Add the column to the latLongData
-    latLongData['density'] = density
-
-    return latLongData
+    return(
+        list(geo_location_density_array[0]),
+        geo_location_density_array[1])
 
 
 def density_to_color(density_array):
 
-    # Store the maximal density
-    max = density_array.max()
+    # Declare an empty numpy array to store all the hex codes
+    color_list = np.empty(len(density_array), dtype='U7')
 
-    # Declare an empty list to contain the colors
-    color_list = []
+    return(compute_densities(density_array, color_list))
+
+
+@njit
+def compute_densities(density_array, color_list):
+
+    # Store the maximal density
+    array_max = density_array.max()
 
     # Loop all the densities and compute the colors
-    for density in density_array:
-        color = density_color_map(density, max)
-        color_list.append(color)
-    return (np.array(color_list))
+    for i in range(0, len(density_array)):
+        color_list[i] = density_color_map(density_array[i], array_max)
+
+    return(color_list)
 
 
+@njit
 def density_color_map(value, max):
     palette = [
         '#000e5c', '#000f5e', '#000f60', '#011061', '#011063', '#011165',

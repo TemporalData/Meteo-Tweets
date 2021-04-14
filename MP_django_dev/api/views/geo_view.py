@@ -5,13 +5,14 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 
 # Import the model from the app geo map
-from geo_map.models import GeoCache, GeoLocation, GeoTweet
+from geo_map.models import GeoLocation, GeoTweet
 # Import function from processing.py from the app geo map
-from geo_map.processing import compute_map_data, density_to_color
+from geo_map.processing import density_to_color, compute_geo_location_density
 
 # Import numpy
 import numpy as np
 import pandas as pd
+import cProfile
 
 
 class GeoFilterAPI(APIView):
@@ -79,20 +80,19 @@ class GeoDataAPI(APIView):
     permission_classes = []
 
     # Define the response of a 'GET' request
-
     def get(self, request):
 
         # Retrieve the id_filter from the request
         try:
             # Load the list in the request into id_filter variable
             id_filter = request.query_params['id_filter']
+
         # Catch exceptions caused by 'id_filter' not being in the request
         except Exception:
-            # Return a bad request status due to lacking
-            # 'id_filter' or 'geoloc_filter'
+            # Return a bad request status due to lacking 'id_filter'
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # Try to retrieve the data from the model
+        # Try to retrieve the data from the GeoTweet model
         try:
             # If id_filter is not empty
             if len(id_filter) > 0:
@@ -107,28 +107,13 @@ class GeoDataAPI(APIView):
             else:
                 data = GeoTweet.objects.all().values_list(
                     'geo_location', flat=True)
-            # else:
-            #     # Set 'data' to all the entries in the Data model
-            #     data = GeoCache.objects.all().values_list(
-            #         'data_list',
-            #         flat=True)
-
-            #     data_response = pd.DataFrame(np.array(data).T)
-
-            #     data_response.columns = ['latitude', 'longitude', 'density']
-
-            #     return Response(data_response)
 
         # If the Data model does not exist
         except GeoTweet.DoesNotExist:
             # Return a internal server error, as Data model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        geo_location_density_array = np.unique(
-            np.array(data), return_counts=True)
-
-        geo_ids = list(geo_location_density_array[0])
-        densities = geo_location_density_array[1]
+        geo_ids, densities = compute_geo_location_density(data)
 
         # Try to retrieve data from the GeoLocation model
         try:
@@ -141,19 +126,23 @@ class GeoDataAPI(APIView):
 
         # If the model does not exist
         except GeoLocation.DoesNotExist:
-            # Return a internal server error, as Data model isn't populated
+            # Return a internal server error,
+            # as GeoLocation model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Format the data for the output
-        output = pd.DataFrame(np.array(locations))
+        output = pd.DataFrame.from_records(locations)
 
         # Add columns for the output
         output.columns = ["id", "lat", "long"]
 
+        # Calculate the densities at each point
         density_colors = density_to_color(densities)
 
+        # Add these densities to the dataframe
         output["color"] = density_colors
 
+        # Formatting for the output
         json_output = output.to_json(orient="records")
 
         # Return the map data
