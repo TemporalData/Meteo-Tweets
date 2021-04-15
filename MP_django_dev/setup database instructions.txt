@@ -1,0 +1,64 @@
+Documentation postgresql database install for django from fresh psql install.
+# Comments
+
+---- Setting up the database django will use ----
+
+* Log onto the postgres user with your user ('postgres') and password *
+
+# Extend psql with postgis
+CREATE EXTENSION postgis;
+
+# Create a new database
+CREATE DATABASE django_db;
+
+# Create a user with your own password
+# Note: this password will need to be replaced in settings.py in the django application
+CREATE USER django_user WITH ENCRYPTED PASSWORD 'password';
+
+# Setting additional settings
+ALTER ROLE django_user SET client_encoding TO 'utf8';
+ALTER ROLE django_user SET default_transaction_isolation TO 'read committed';
+ALTER ROLE django_user SET timezone TO 'UTC';
+
+# Give the user administrative access to the database
+GRANT ALL PRIVILEGES ON DATABASE django_db to django_user;
+
+* You can now exit the psql command line interface (cli)*
+
+----
+
+## Adjust settings.py so that it has the correct values ##
+
+---- Initializing the database using django ----
+
+* cmd cli into this folder *
+
+# Ensure that the needed libraries are all installed
+pip install -r requirements.txt
+
+# Migrate the models to the database
+python manage.py migrate
+
+* You can now exit the cmd cli *
+
+----
+
+## The database is now initialized, to populate it with data go to the "Preprocessing" folder in the root of this project
+## There is another text file describing how to upload the data in that folder.
+
+
+## Once populated you can build indexes for faster performance, this is done below
+
+---- Commands for building indicies to speed up the API ----
+
+* Log onto the postrgres user with your user ('django_user') and password *
+
+# Index to speed up retrieval of temporal data from the timeline model
+CREATE INDEX index_time_created ON timeline_timedata (time_created);
+
+# Index to speed up retrieval of geo_id's from the geoTweet model
+CREATE INDEX index_geo_location ON geo_map_geotweet USING HASH (geo_location_id);
+
+* You can now exit the psql cli *
+
+----

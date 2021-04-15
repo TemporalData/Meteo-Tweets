@@ -1,3 +1,5 @@
 *.pyc
-*.csv
 *.csv#
+*.csv
+.vscode/settings.json
+.ipynb_checkpoints
