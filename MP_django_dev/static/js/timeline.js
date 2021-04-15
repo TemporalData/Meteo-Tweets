@@ -48,9 +48,9 @@ function movingAvg(data, neighbors) {
 
 var term_type = 'all';
 // Display all counts initially
-draw_timeline(term_type)
+draw_timeline(term_type, "")
 
-function draw_timeline(term_type){
+function draw_timeline(term_type, passed_id_filter){
 		d3.selectAll("#timeline > *").remove();
 		//change timeline's title
 		document.getElementById("timeline-title").innerHTML = ' Tweets Frequency('+term_type+')'; //.toUpperCase()
@@ -131,7 +131,7 @@ function draw_timeline(term_type){
 		$.ajax({
 				url: 'http://127.0.0.1:8000/api/timeline/',
 				data: {
-					id_filter: "",
+					id_filter: passed_id_filter,
 				},
 				dataType: 'json',
 				success: function (data) {
@@ -421,7 +421,7 @@ function update_calendar_cloud(){
 	// Pass dates to calendars' values
 	// Trigger update_cloud(); 
 
-	console.log(x.domain());
+	//console.log(x.domain());
 	var brush_start = new Date(x.domain()[0]);
 	var input_start_picker = ("0"+brush_start.getDate()).slice(-2)+'-'+("0"+(brush_start.getMonth()+1)).slice(-2)+'-'+brush_start.getFullYear();
  
@@ -431,7 +431,7 @@ function update_calendar_cloud(){
 	var brush_end = new Date(x.domain()[1]);
 	var input_end_picker = ("0"+brush_end.getDate()).slice(-2)+'-'+("0"+(brush_end.getMonth()+1)).slice(-2)+'-'+brush_end.getFullYear();
  
-	console.log(input_start_picker, input_end_picker);
+	//console.log(input_start_picker, input_end_picker);
 	// document.getElementById("end").value = input_end_picker;
 	$("#end").datepicker("update", input_end_picker);
 	update_cloud();

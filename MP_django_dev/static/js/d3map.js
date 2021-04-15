@@ -96,13 +96,16 @@ var lasso_end = function() {
 
         // Style the selected dots
         lasso.selectedItems()
-            .classed("selected",true);
+            .attr("opacity",1);
 
         // Reset the style of the not selected dots
         lasso.notSelectedItems()
         .attr("opacity",0);
 
-        console.log(lasso.selectedItems())
+        objArray = Object.values(lasso.selectedItems().data())
+        let result = objArray.map(a => a.id);
+
+        draw_timeline('all',result.join(','))
 
     }
 
