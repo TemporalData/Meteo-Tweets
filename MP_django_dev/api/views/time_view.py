@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.http import HttpResponse
+
 # Import the model from the app timeline
 from timeline.models import TimeData
 # Import function from processing.py from the app timelineW
@@ -134,6 +136,17 @@ class TimeLineDataAPI(APIView):
             # Return a internal server error, as TimeData model isn't populated
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        output = pd.DataFrame(compute_timeline(data), dtype='str')
+
+        output.columns = ['pub_date', 'count']
+
+        output['count'] = pd.to_numeric(output['count'])
+
+        # Formatting for the output
+        json_output = output.to_json(orient="records")
+
         # Return the desired data from the output of compute_timeline
         # This is found in file 'processing.py' in the timeline app
-        return Response(compute_timeline(data))
+
+        return HttpResponse(json_output, content_type="application/json") 
+        # Response(compute_timeline(data))

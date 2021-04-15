@@ -3,12 +3,6 @@
 
 
 <style>
-#leafletMap {height: 20rem;}
-@media (min-width: 1920px) {
-    #leafletMap {
-    height: 40rem;
-  }
-}
 
 /*TimeLine and Tweets Counts*/
 
@@ -128,6 +122,9 @@ blockquote em{
     <!-- leaflet css-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 
+    <!-- D3 Map css-->
+    <link href="{% static 'css/d3map.css' %}" rel="stylesheet">
+
     <!-- Datepicker css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
 
@@ -195,9 +192,9 @@ blockquote em{
                                             <!-- datepicker -->
                                             <div class="input-daterange" id="datepicker" style="height: 100px">
                                                 <div class="input-group">
-                                                    <input type="text" class="input-sm form-control" name="start" id="start" style="margin-right: 20px;" value="07-07-2015"/>
+                                                    <input type="text" class="input-sm form-control" name="start" id="start" style="margin-right: 20px;" value="01-01-2015"/>
                                                     <span class="input-group-addon">to</span>
-                                                    <input type="text" class="input-sm form-control" name="end" id="end" style="margin-left: 20px;" value="08-07-2015"/>
+                                                    <input type="text" class="input-sm form-control" name="end" id="end" style="margin-left: 20px;" value="01-01-2016"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -211,7 +208,7 @@ blockquote em{
                                         </div> -->
 
                                         <!-- Tweets Count Timeline Chart -->
-                                        <div id="time-section" style="height: 500px">
+                                        <div id="time-section" style="height: 600px">
                                             
                                                 <button type="button" class="btn btn-secondary" id="sliderButton" value="Get Dates" onclick="update_slider()">Get Dates <i class="fa fa-arrow-down"></i> </button>
 
@@ -247,10 +244,10 @@ blockquote em{
                                     <div id="some-id"></div>
                                 </div> -->
                                 
-                                <div class="collapse show text-center" id="collapseCardLeaflet" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;">
+                                <div class="collapse show text-center" id="collapseCardLeaflet" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px; height: 500px">
                                     <div class="card-body">
-                                        <div class="chart-area">
-                                            <div id="leafletMap"></div>
+                                        <div class="chart-area" style="height: 500px">
+                                            <div id="d3map"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -403,7 +400,7 @@ blockquote em{
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Meteo Tweets 2020</span>
+                        <span>Copyright &copy; Meteo Tweets 2021</span>
                     </div>
                 </div>
             </footer>
@@ -454,6 +451,7 @@ blockquote em{
 
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/static/js/d3-lasso.min.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
 
     <!-- Load d3-cloud -->
@@ -473,17 +471,18 @@ blockquote em{
     <!-- Timeline script -->
     <script type="text/javascript" src="{% static 'js/timeline.js' %}"></script>
 
-
     <!-- Wordcloud script -->
     <script type="text/javascript" src="{% static 'js/part1_wordcloud.js' %}"></script>
 
     <!-- Topic script-->
-
     <script type="text/javascript" src="{% static 'js/part2_topics.js' %}"></script>
-
 
     <!-- Network script -->
     <script type="text/javascript" src="{% static 'js/part3_network.js' %}"></script>
+
+    <!-- Map script -->
+    <script type="text/javascript" src="{% static 'js/d3map.js' %}"></script>
+    
 
     <script>
         //============ Weather Event Dropdown Menu Initialization ============
@@ -536,6 +535,8 @@ blockquote em{
         });
 
     </script> 
+
+    <script>draw_d3Map()</script>
 
 </body>
 

@@ -135,11 +135,12 @@ function draw_timeline(term_type){
 				},
 				dataType: 'json',
 				success: function (data) {
+
 						var jsonObject;
-						jsonObject  = data["response"].map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; }) //reformat data 
+						jsonObject  = data.map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; }) //reformat data 
 						
 						// Prepare data for moving average line
-						avgData = data["response"].map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; })
+						avgData = data.map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; })
 						avgCount = movingAvg(extractCount(avgData),10) // neighborhood is 10
 						// // Generate moving average data
 				        avgData.forEach(function(data, index){
