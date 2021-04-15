@@ -54,8 +54,8 @@ class TimeFilterAPI(APIView):
         # Check whether start and end variables are the right format
         try:
             # Attempt to convert the variables into datetime
-            start_datetime = datetime.strptime(start, "%d/%m/%Y")
-            end_datetime = datetime.strptime(end, "%d/%m/%Y")
+            start_datetime = datetime.strptime(start, "%d-%m-%Y")
+            end_datetime = datetime.strptime(end, "%d-%m-%Y")
 
         # If the format is incorrect an exception will be thrown
         except Exception:
