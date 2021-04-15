@@ -91,6 +91,7 @@ var lasso_end = function() {
         // Reset the style of the not selected dots
         lasso.notSelectedItems()
         .attr("opacity",1);
+        draw_timeline('all','')
     }
     else {
 
