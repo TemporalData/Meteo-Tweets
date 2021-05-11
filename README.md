@@ -32,13 +32,13 @@ To run the code ensure that your environment has the needed libraries by using p
 
 There are two requirement files corresponding to the libraries needed for preprocessing and running the django application
 
-The requirement file for the preprocessing is located [here](https://github.com/TemporalData/Meteo-Tweets/tree/master/MP_django_dev/requirements.txt)
+The requirement file for the preprocessing is located [here](https://github.com/TemporalData/Meteo-Tweets/tree/master/Preprocessing/requirements.txt)
 
-The requirement file for the django application is located [here](https://github.com/TemporalData/Meteo-Tweets/tree/master/Preprocessing/requirements.txt)
+The requirement file for the django application is located [here](https://github.com/TemporalData/Meteo-Tweets/tree/master/MP_django_dev/requirements.txt)
 
 ## Dependencies
 
-See [requirements]()
+Refer to the requirement files
 
 ## Bugs
 
