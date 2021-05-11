@@ -8,17 +8,17 @@ This is the Master project of
 # Structure of Project
 
     .
-    ├── MP_django_dev				# Data used for our analysis
+    ├── MP_django_dev		# Data used for our analysis
     ├── Preliminary Work            # Previous work that contributed to the project
 	│   ├── Local Visualizations	# 
 	│   └── Radar Data Processing	# Processing of radar data
-	├── Preprocessing				# Contains code for processing raw input data
-    │   └──  data					# Folder for storing raw input data and processed data
+	├── Preprocessing		# Contains code for processing raw input data
+    │   └──  data		# Folder for storing raw input data and processed data
     ├── 
 	│   ├── 
     │   └── 
-	├── .gitignore					# Exclusion rules for the repository
-    └── README.md					# Description file
+	├── .gitignore		# Exclusion rules for the repository
+    └── README.md		# Description file
 	
 ## Download and Usage
 
