@@ -14,20 +14,20 @@ With this in mind we've engineered certain features from the twitter data set an
 # Structure of Project
 
     .
-    ├── MP_django_dev		# Parent folder for the django application
-	│   ├── MP_django_dev			# Main django application folder
-	│   ├── api				# Contains code to handle requests for data on the database
-	│   ├── dashboard			# Contains code for the dashboard
-	│   ├── geo_map				# Contains a model for geographical information and processing of that data
-	│   ├── static				# Contains necessary materials for the front end
-    │   └── timeline			# Contains a model for temporal information and processing of that data
-    ├── Preliminary Work            # Previous work that contributed to the project
-	│   ├── Local Visualizations		# Visualizations that can be rendered locally
-	│   └── Radar Data Processing		# Processing of radar data
-	├── Preprocessing		# Contains code for processing raw input data
-    │   └──  data				# Folder for storing raw input data and processed data
-	├── .gitignore			# Exclusion rules for the repository
-    └── README.md			# Description file
+    ├── MP_django_dev	# Parent folder for the django application
+	│   ├── MP_django_dev		# Main django application folder
+	│   ├── api			# Contains code to handle requests for data on the database
+	│   ├── dashboard		# Contains code for the dashboard
+	│   ├── geo_map			# Contains a model for geographical information and processing of that data
+	│   ├── static			# Contains necessary materials for the front end
+    │   └── timeline		# Contains a model for temporal information and processing of that data
+    ├── Preliminary Work		# Previous work that contributed to the project
+	│   ├── Local Visualizations	# Visualizations that can be rendered locally
+	│   └── Radar Data Processing	# Processing of radar data
+	├── Preprocessing	# Contains code for processing raw input data
+    │   └──  data			# Folder for storing raw input data and processed data
+	├── .gitignore		# Exclusion rules for the repository
+    └── README.md		# Description file
 	
 ## Download and Usage
 
