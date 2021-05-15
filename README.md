@@ -21,7 +21,7 @@ With this in mind we've engineered certain features from the twitter data set an
 	│   ├── geo_map			# Contains a model for geographical information and processing of that data
 	│   ├── static			# Contains necessary materials for the front end
     │   └── timeline		# Contains a model for temporal information and processing of that data
-    ├── Preliminary Work		# Previous work that contributed to the project
+    ├── Preliminary Work	# Previous work that contributed to the project
 	│   ├── Local Visualizations	# Visualizations that can be rendered locally
 	│   └── Radar Data Processing	# Processing of radar data
 	├── Preprocessing	# Contains code for processing raw input data
