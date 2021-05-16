@@ -1,544 +1,439 @@
-// example data
-var metricName   = "Tweet Amount";
-var metricCount  = [1, 3, 1, 2, 1];
-var metricMonths = ["2018-06-07", "2013-04-05", "2015-11-03", "2012-10-02", "2014-09-01"];
-var optwidth        = 1080;
-var optheight       = 256;
+$(start).datepicker('setStartDate', '01-01-2015');
+$(start).datepicker('setEndDate', '06-09-2018');
+$(end).datepicker('setStartDate', '01-01-2015');
+$(end).datepicker('setEndDate', '06-09-2018');
+
+var svg_t,
+// define top focus size parameters
+margin_t,
+// define bottom context size parameters
+margin2_t, 
+width_t,
+height_t,
+height2_t;
 
 
-/*
-* ========================================================================
-*  Prepare data
-* ========================================================================
-*/
+var parseDate = d3.timeParse("%Y-%m-%d");
+// var formatTime = d3.timeParse("%Y/%m/%d");
+var toDate = d3.timeFormat("%Y-%m-%d"); // reverse of parseDate
 
-// Combine the months and count array to make "data"
-var dataset = [];
-for(var i=0; i<metricCount.length; i++){
-    var obj = {count: metricCount[i], month: metricMonths[i]};
-    dataset.push(obj);
+var x,x2,y,y2;
+var xAxis,xAxis2,yAxis;
+var brush, zoom;
+var area, area2;
+var curvedLine;
+// Top line chart
+var focus ;
+// Bottom whole timeline for zoom and brush
+var context;
+var avgCount, avgData;
+var jsonObject;
+var lines;
+
+function extractCount(data,neighbors){
+  return data.map(function(a) {return a.count;});
 }
 
-// format month as a date
-dataset.forEach(function(d) {
-    d.month = d3.time.format("%Y-%m-%d").parse(d.month);
-});
-
-// sort dataset by month
-dataset.sort(function(x, y){
-   return d3.ascending(x.month, y.month);
-});
-
-
-/*
-* ========================================================================
-*  sizing
-* ========================================================================
-*/
-
-/* === Focus chart === */
-
-var margin	= {top: 20, right: 30, bottom: (optheight/2), left: 20},
-    width	= optwidth - margin.left - margin.right,
-    height	= optheight - margin.top - margin.bottom;
-
-/* === Context chart === */
-
-var margin_context = {top: (optheight/2)+20, right: 30, bottom: 20, left: 20},
-    height_context = optheight - margin_context.top - margin_context.bottom;
-
-/*
-* ========================================================================
-*  x and y coordinates
-* ========================================================================
-*/
-
-// the date range of available data:
-var dataXrange = d3.extent(dataset, function(d) { return d.month; });
-var dataYrange = [0, d3.max(dataset, function(d) { return d.count; })];
-
-// maximum date range allowed to display
-var mindate = dataXrange[0],  // use the range of the data
-    maxdate = dataXrange[1];
-
-var DateFormat	  =  d3.time.format("%b %Y");
-
-var dynamicDateFormat = timeFormat([
-    [d3.time.format("%Y"), function() { return true; }],// <-- how to display when Jan 1 YYYY
-    [d3.time.format("%b %Y"), function(d) { return d.getMonth(); }],
-    [function(){return "";}, function(d) { return d.getDate() != 1; }]
-]);
-
-// var dynamicDateFormat =  timeFormat([
-//     [d3.time.format("%Y"), function() { return true; }],
-//     [d3.time.format("%b"), function(d) { return d.getMonth(); }],
-//     [function(){return "";}, function(d) { return d.getDate() != 1; }]
-// ]);
-
-/* === Focus Chart === */
-
-var x = d3.time.scale()
-	.range([0, (width)])
-    .domain(dataXrange);
-
-var y = d3.scale.linear()
-	.range([height, 0])
-    .domain(dataYrange);
-
-var xAxis = d3.svg.axis()
-	.scale(x)
-    .orient("bottom")
-		.tickSize(-(height))
-    .ticks(customTickFunction)
-    .tickFormat(dynamicDateFormat);
-
-var yAxis = d3.svg.axis()
-	.scale(y)
-    .ticks(4)
-    .tickSize(-(width))
-	.orient("right");
-
-/* === Context Chart === */
-
-var x2 = d3.time.scale()
-    .range([0, width])
-    .domain([mindate, maxdate]);
-
-var y2 = d3.scale.linear()
-	.range([height_context, 0])
-    .domain(y.domain());
-
-var xAxis_context = d3.svg.axis()
-    .scale(x2)
-    .orient("bottom")
-    .ticks(customTickFunction)
-    .tickFormat(dynamicDateFormat);
-
-/*
-* ========================================================================
-*  Plotted line and area variables
-* ========================================================================
-*/
-
-/* === Focus Chart === */
-
-var line = d3.svg.line()
-	.x(function(d) { return x(d.month); })
-	.y(function(d) { return y(d.count); });
-
-var area = d3.svg.area()
-  .x(function(d) { return x(d.month); })
-  .y0((height))
-  .y1(function(d) { return y(d.count); });
-
-/* === Context Chart === */
-
-var area_context = d3.svg.area()
-    .x(function(d) { return x2(d.month); })
-    .y0((height_context))
-    .y1(function(d) { return y2(d.count); });
-
-var line_context = d3.svg.line()
-    .x(function(d) { return x2(d.month); })
-    .y(function(d) { return y2(d.count); });
-
-/*
-* ========================================================================
-*  Variables for brushing and zooming behaviour
-* ========================================================================
-*/
-
-var brush = d3.svg.brush()
-    .x(x2)
-    .on("brush", brushed)
-    .on("brushend", brushend);
-
-var zoom = d3.behavior.zoom()
-    .on("zoom", draw)
-    .on("zoomend", brushend);
-
-/*
-* ========================================================================
-*  Define the SVG area ("vis") and append all the layers
-* ========================================================================
-*/
-
-// === the main components === //
-
-var vis = d3.select("#metric-modal").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  	.attr("class", "metric-chart"); // CB -- "line-chart" -- CB //
-
-vis.append("defs").append("clipPath")
-    .attr("id", "clip")
-    .append("rect")
-    .attr("width", width)
-    .attr("height", height);
-    // clipPath is used to keep line and area from moving outside of plot area when user zooms/scrolls/brushes
-
-var context = vis.append("g")
-    .attr("class", "context")
-    .attr("transform", "translate(" + margin_context.left + "," + margin_context.top + ")");
-
-var focus = vis.append("g")
-    .attr("class", "focus")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var rect = vis.append("svg:rect")
-    .attr("class", "pane")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    .call(zoom)
-    .call(draw);
-
-// === current date range text & zoom buttons === //
-
-var display_range_group = vis.append("g")
-    .attr("id", "buttons_group")
-    .attr("transform", "translate(" + 0 + ","+ 0 +")");
-
-var expl_text = display_range_group.append("text")
-    .text("Showing data from: ")
-    .style("text-anchor", "start")
-    .attr("transform", "translate(" + 0 + ","+ 10 +")");
-
-display_range_group.append("text")
-    .attr("id", "displayDates")
-    .text(DateFormat(dataXrange[0]) + " - " + DateFormat(dataXrange[1]))
-    .style("text-anchor", "start")
-    .attr("transform", "translate(" + 82 + ","+ 10 +")");
-
-var expl_text = display_range_group.append("text")
-    .text("Zoom to: ")
-    .style("text-anchor", "start")
-    .attr("transform", "translate(" + 180 + ","+ 10 +")");
-
-// === the zooming/scaling buttons === //
-
-var button_width = 40;
-var button_height = 14;
-
-// don't show year button if < 1 year of data
-var dateRange  = dataXrange[1] - dataXrange[0],
-    ms_in_year = 31540000000;
-
-if (dateRange < ms_in_year)   {
-    var button_data =["month","data"];
-} else {
-    var button_data =["year","month","data"];
-};
-
-var button = display_range_group.selectAll("g")
-    .data(button_data)
-    .enter().append("g")
-    .attr("class", "scale_button")
-    .attr("transform", function(d, i) { return "translate(" + (220 + i*button_width + i*10) + ",0)"; })
-    .on("click", scaleDate);
-
-button.append("rect")
-    .attr("width", button_width)
-    .attr("height", button_height)
-    .attr("rx", 1)
-    .attr("ry", 1);
-
-button.append("text")
-    .attr("dy", (button_height/2 + 3))
-    .attr("dx", button_width/2)
-    .style("text-anchor", "middle")
-    .text(function(d) { return d; });
-
-/* === focus chart === */
-
-focus.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-   	.attr("transform", "translate(" + (width) + ", 0)");
-
-focus.append("path")
-    .datum(dataset)
-    .attr("class", "area")
-    .attr("d", area);
-
-focus.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-focus.append("path")
-    .datum(dataset)
-    .attr("class", "line")
-    .attr("d", line);
-
-/* === context chart === */
-
-context.append("path")
-    .datum(dataset)
-    .attr("class", "area")
-    .attr("d", area_context);
-
-context.append("path")
-    .datum(dataset)
-    .attr("class", "line")
-    .attr("d", line_context);
-
-context.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height_context + ")")
-    .call(xAxis_context);
-
-/* === brush (part of context chart)  === */
-
-var brushg = context.append("g")
-    .attr("class", "x brush")
-    .call(brush);
-
-brushg.selectAll(".extent")
-   .attr("y", -6)
-   .attr("height", height_context + 8);
-   // .extent is the actual window/rectangle showing what's in focus
-
-brushg.selectAll(".resize")
-    .append("rect")
-    .attr("class", "handle")
-    .attr("transform", "translate(0," +  -3 + ")")
-    .attr('rx', 2)
-	.attr('ry', 2)
-    .attr("height", height_context + 6)
-    .attr("width", 3);
-
-brushg.selectAll(".resize")
-    .append("rect")
-    .attr("class", "handle-mini")
-    .attr("transform", "translate(-2,8)")
-    .attr('rx', 3)
-    .attr('ry', 3)
-    .attr("height", (height_context/2))
-    .attr("width", 7);
-    // .resize are the handles on either size
-    // of the 'window' (each is made of a set of rectangles)
-
-/* === y axis title === */
-
-vis.append("text")
-    .attr("class", "y axis title")
-    .text(this.metricName)
-    .attr("x", (-(height)+20))
-    .attr("y", 0)
-    .attr("dy", "1em")
-    .attr("transform", "rotate(-90)")
-    .style("text-anchor", "middle");
-
-// allows zooming before any brush action
-zoom.x(x);
-
-/*
-* ========================================================================
-*  Functions
-* ========================================================================
-*/
-
-// === tick/date formatting functions ===
-// from: https://stackoverflow.com/questions/20010864/d3-axis-labels-become-too-fine-grained-when-zoomed-in
-
-function timeFormat(formats) {
-  return function(date) {
-    var i = formats.length - 1, f = formats[i];
-    while (!f[1](date)) f = formats[--i];
-    return f[0](date);
-  };
-};
-
-function customTickFunction(t0, t1, dt)  {
-    var labelSize = 42; //
-    var maxTotalLabels = Math.floor(width / labelSize);
-
-    function step(date, offset)
-    {
-        date.setMonth(date.getMonth() + offset);
-    }
-
-    var time = d3.time.month.ceil(t0), times = [], monthFactors = [1,3,4,12];
-
-    while (time < t1) times.push(new Date(+time)), step(time, 1);
-    var timesCopy = times;
-    var i;
-    for(i=0 ; times.length > maxTotalLabels ; i++)
-        times = _.filter(timesCopy, function(d){
-            return (d.getMonth()) % monthFactors[i] == 0;
+// data[{date:xxx, count:xxx}]
+function movingAvg(data, neighbors) {
+  return data.map((val, idx, arr) => {
+    let start = Math.max(0, idx - neighbors), end = Math.min(arr.length, idx + neighbors)
+    let subset = arr.slice(start, end + 1)
+    let sum = subset.reduce((a,b) => a + b)
+    return sum / subset.length
+  })
+}
+
+
+
+var term_type = 'all';
+// Display all counts initially
+draw_timeline(term_type, "")
+
+function draw_timeline(term_type, passed_id_filter){
+		d3.selectAll("#timeline > *").remove();
+		//change timeline's title
+		document.getElementById("timeline-title").innerHTML = ' Tweets Frequency('+term_type+')'; //.toUpperCase()
+		
+		svg_t = d3.select("#timeline")
+		.append("svg")
+		.attr("width", 960)
+		.attr("height", 500);
+
+		// define top focus size parameters
+		margin_t = {top: 20, right: 20, bottom: 110, left: 40};
+		// define bottom context size parameters
+		margin2_t = {top: 430, right: 20, bottom: 30, left: 40};
+		width_t = +svg_t.attr("width") - margin_t.left - margin_t.right;
+		height_t = +svg_t.attr("height") - margin_t.top - margin_t.bottom;
+		height2_t = +svg_t.attr("height") - margin2_t.top - margin2_t.bottom;
+
+		x = d3.scaleTime().range([0, width_t]);
+		x2 = d3.scaleTime().range([0, width_t]);
+		y = d3.scaleLinear().range([height_t, 0]);
+		y2 = d3.scaleLinear().range([height2_t, 0]);
+
+		xAxis = d3.axisBottom(x),
+		xAxis2 = d3.axisBottom(x2),
+		yAxis = d3.axisLeft(y);
+
+		brush = d3.brushX()
+		.extent([[0, 0], [width_t, height2_t]]) //movable range in x axis
+		.on("brush end", brushed);
+
+		zoom = d3.zoom()
+		.scaleExtent([1, Infinity])
+		.translateExtent([[0, 0], [width_t, height_t]])
+		.extent([[0, 0], [width_t, height_t]])
+		.on("zoom", zoomed);
+		// focus
+		curvedLine = d3.line()
+		.curve(d3.curveBasis)
+		// .curve(d3.curveMonotoneX)
+		.x(function(d) { return x(d.date);})
+		.y(function(d) { return y(d.count);})
+
+		area = d3.area()
+		.curve(d3.curveBasis)
+		// .curve(d3.curveMonotoneX)
+		.x(function(d) { return x(d.date); })
+		.y0(height_t)
+		.y1(function(d) { return y(d.count); });
+
+		area2 = d3.area()
+		.curve(d3.curveMonotoneX)
+		.x(function(d) { return x2(d.date); })
+		.y0(height2_t)
+		.y1(function(d) { return y2(d.count); });
+
+		svg_t.append("defs")
+		.append("clipPath")
+		.attr("id", "clip")
+		.append("rect")
+		.attr("width", width_t)
+		.attr("height", height_t);
+
+		// Top line chart
+		focus = svg_t.append("g")
+		.attr("class", "focus")
+		.attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")");
+
+		// Bottom whole timeline for zoom and brush
+		context = svg_t.append("g")
+		.attr("class", "context")
+		.attr("transform", "translate(" + margin2_t.left + "," + margin2_t.top + ")");
+
+  		mouseG = svg_t.append("g")
+        .attr("class", "mouse-over-effects")
+        .attr("transform", "translate(" + (margin_t.left) + "," + margin_t.top + ")");
+
+
+		$.ajax({
+				url: 'http://127.0.0.1:8000/api/timeline/',
+				data: {
+					id_filter: passed_id_filter,
+				},
+				dataType: 'json',
+				success: function (data) {
+
+						var jsonObject;
+						jsonObject  = data.map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; }) //reformat data 
+						
+						// Prepare data for moving average line
+						avgData = data.map(function(d) { return {date: parseDate(d.pub_date), count:d.count}; })
+						avgCount = movingAvg(extractCount(avgData),10) // neighborhood is 10
+						// // Generate moving average data
+				        avgData.forEach(function(data, index){
+				          data.count = avgCount[index];
+				        });
+
+				
+						build_timeline(jsonObject);
+		
+				}
+			});
+
+}
+
+
+
+
+
+// d3.csv("/static/data/datecount.csv", type, function(error, data) {
+	// if (error) throw error;
+function build_timeline(data){
+
+	// Clear timeline board
+	focus.select(".area").remove();
+	context.select(".area").remove(); 
+	svg_t.select(".rect").remove(); 
+	focus.select(".axis axis--y").remove();
+
+	x.domain(d3.extent(data, function(d) { return d.date; }));
+	y.domain([0, d3.max(data, function(d) { return d.count; })]);
+	x2.domain(x.domain());
+	y2.domain(y.domain());
+
+	focus.append("path")
+			.datum(data)
+			.attr("class", "area")
+			// .style("fill", "yellow")
+			.style("opacity", 0.75)
+			.attr("d", area);
+
+	// Moving Average line
+	focus.append('path')
+	  .datum(avgData)
+	  .attr("class", "avg")
+	  .attr('d', curvedLine)
+	  .attr('clip-path', 'url(#clip)') //make sure the line not exceed the xaxis
+	  .style("stroke", "red")
+	  .style("stroke-width", "2px")
+	  .style("opacity", 0.5)
+	  .style("fill","none");
+
+
+
+	focus.append("g")
+			.attr("class", "axis axis--x")
+			.attr("transform", "translate(0," + height_t + ")")
+			.call(xAxis);
+
+	focus.append("g")
+			.attr("class", "axis axis--y")
+			.call(yAxis);
+
+	context.append("path")
+			.datum(data)
+			.attr("class", "area")
+			.attr("d", area2);
+
+	context.append("g")
+			.attr("class", "axis axis--x")
+			.attr("transform", "translate(0," + height2_t + ")")
+			.call(xAxis2);
+
+	context.append("g")
+			.attr("class", "brush")
+			//Right click to update calendars and wordcloud;
+			// .on("mousedown", function(){
+			//     if(d3.event.button === 2){  
+			//         update_calendar_cloud();
+			//     };
+			// })
+			.call(brush)
+			.call(brush.move, x.range());
+	
+	var rect = svg_t.append("rect") // conflict with mouseG rect; but necessary for zoom in context
+	  .attr("class", "zoom")
+	  .attr("width", width_t)
+	  .attr("height", height_t)
+	  // .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")")
+	  .attr("transform", "translate("+svg_t.attr("width")+"," + margin_t.top + ")") 
+	  .call(zoom);
+	add_mouseG();
+	update_slider();
+}
+// }); //end of d3.csv function
+
+
+// For vertical line following mouse
+function add_mouseG(){
+  
+  mouseG.append("path") 
+        .attr("class", "mouse-line")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");  
+  
+  lines = document.getElementsByClassName("avg");
+  // console.log(lines, lines[0].getTotalLength());
+  var mousePerLine = mouseG.selectAll('.mouse-per-line')
+        .data([avgData]) //avgData.slice(0,-1)
+        .enter()
+        .append("g")
+        .attr("class", "mouse-per-line");
+
+  // console.log(mousePerLine);
+  mousePerLine.append("circle")
+  .attr("r", 7)      
+  .style("stroke",'red')
+  .style("fill", "none")
+  .style("stroke-width", "1px")
+  .style("opacity", "0");
+
+  mousePerLine.append("text")
+  // .attr("transform", "translate(" + margin_t.left + "," + margin_t.top + ")");
+  // .attr("transform", "translate(10,-30)"); //location of label text
+
+
+
+  mouseG.append('rect') // append a rect to catch mouse movements on canvas
+    .attr('width', width_t) // can't catch mouse events on a g element
+    .attr('height', height_t)
+    .attr('fill', 'none')
+    .attr('pointer-events', 'all')
+    .on('mouseout', function() { // on mouse out hide line, circles and text
+      // console.log("mouseout");
+      d3.select(".mouse-line")
+        .style("opacity", "0");
+      d3.selectAll(".mouse-per-line circle")
+        .style("opacity", "0");
+      d3.selectAll(".mouse-per-line text")
+        .style("opacity", "0");
+    })
+    .on('mouseover', function() { // on mouse in show line, circles and text
+      // console.log("mouseover");
+      d3.select(".mouse-line")
+        .style("opacity", "1");
+      d3.selectAll(".mouse-per-line circle")
+        .style("opacity", "1");
+      d3.selectAll(".mouse-per-line text")
+        .style("opacity", "1");
+    })
+    .on('mousemove', function() { // mouse moving over canvas
+      // console.log("mouse move");
+      var mouse = d3.mouse(this);
+      d3.select(".mouse-line")
+        .attr("d", function() {
+          var d = "M" + mouse[0] + "," + height_t;
+          d += " " + mouse[0] + "," + 0;
+          return d;
         });
+      // console.log(lines);
+      d3.selectAll(".mouse-per-line")
+        .attr("transform", function(d, i) {
+          // console.log(width_t/mouse[0]);
+          // console.log(x.invert(mouse[0]));
+          var xDate = x.invert(mouse[0]),
+              bisect = d3.bisector(function(d) { return d.date; }).right;
+              idx = bisect(avgData, xDate);
+          // console.log(idx)
+          
+          var beginning = 0,
+              // end = lines[i].getTotalLength(),
+              end = lines[i].getTotalLength(),
+              target = null;
 
-    return times;
-};
+          while (true){
+            target = Math.floor((beginning + end) / 2);
+            pos = lines[i].getPointAtLength(target);
+            if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                break;
+            }
+            if (pos.x > mouse[0])      end = target;
+            else if (pos.x < mouse[0]) beginning = target;
+            else break; //position found
+          }
+          
+          d3.select(this).select('text')
+            .text('MA-20 Value: '+y.invert(pos.y).toFixed(2)+', Date: '+toDate(x.invert(mouse[0])))
+            // adjust hover text's location
+            .attr("transform", function(){
+              if (mouse[0]/width_t < 0.5){
+                return "translate(10,-30)";
+              }
+              else {
+                return "translate(-300,-30)";
+              }
+            });          
 
-// === brush and zoom functions ===
+
+          // console.log(toDate(x.invert(mouse[0])));
+          return "translate(" + mouse[0] + "," + pos.y +")";
+        });
+    });
+
+}
+
+
+
 
 function brushed() {
+	if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+	var s = d3.event.selection || x2.range(); // plot width of event selection or whole context range
+	x.domain(s.map(x2.invert, x2)); // invert: numerical range to date range
 
-    x.domain(brush.empty() ? x2.domain() : brush.extent());
-    focus.select(".area").attr("d", area);
-    focus.select(".line").attr("d", line);
-    focus.select(".x.axis").call(xAxis);
-    // Reset zoom scale's domain
-    zoom.x(x);
-    updateDisplayDates();
-    setYdomain();
+	focus.select(".area").attr("d", area);
+	focus.select(".avg").attr("d", curvedLine);
+	focus.select(".axis--x").call(xAxis);
+	svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
+			.scale(width_t / (s[1] - s[0]))
+			.translate(-s[0], 0));
 
-};
 
-function draw() {
-    setYdomain();
-    focus.select(".area").attr("d", area);
-    focus.select(".line").attr("d", line);
-    focus.select(".x.axis").call(xAxis);
-    //focus.select(".y.axis").call(yAxis);
-    // Force changing brush range
-    brush.extent(x.domain());
-    vis.select(".brush").call(brush);
-    // and update the text showing range of dates.
-    updateDisplayDates();
-};
+}
 
-function brushend() {
-// when brush stops moving:
+function zoomed() {
+	if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+	var t = d3.event.transform;
+	// console.log(d3.event, t);
+	x.domain(t.rescaleX(x2).domain());
+	// console.log('zoom',x2.domain()); //[Thu Jan 01 2015 00:00:00 GMT+0100 (Central European Standard Time), Thu Sep 06 2018 00:00:00 GMT+0200 (Central European Summer Time)]
+	focus.select(".area").attr("d", area);
+	focus.select(".avg").attr("d", curvedLine);
+	focus.select(".axis--x").call(xAxis);
+	context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 
-    // check whether chart was scrolled out of bounds and fix,
-    var b = brush.extent();
-    var out_of_bounds = brush.extent().some(function(e) { return e < mindate | e > maxdate; });
-    if (out_of_bounds){ b = moveInBounds(b) };
+	// update_calendar_cloud();
+}
 
-};
+// Transform datatype
+function type(d) {
+	d.date = parseDate(d.date); //convert to Date type
+	d.count = +d.count;
+	return d;
+}
 
-function updateDisplayDates() {
+// Update slider with datepickers
+function update_slider(){
+	var parseCalender = d3.timeParse("%Y-%m-%d")
+	var parseCalender2 = d3.timeParse("%d-%m-%Y")
+	var first = parseCalender('2015-01-01')
+	var last = parseCalender('2018-09-06')
+	var totalDuration = Math.floor((last-first)/(1000 * 60 * 60 * 24)); //1343 days in total
 
-    var b = brush.extent();
-    // update the text that shows the range of displayed dates
-    var localBrushDateStart = (brush.empty()) ? DateFormat(dataXrange[0]) : DateFormat(b[0]),
-        localBrushDateEnd   = (brush.empty()) ? DateFormat(dataXrange[1]) : DateFormat(b[1]);
+	var startDate = parseCalender2(document.getElementById("start").value);
+	var endDate = parseCalender2(document.getElementById("end").value);
+	var selectedDuration = Math.floor((endDate-startDate)/(1000 * 60 * 60 * 24))/totalDuration*(x.range()[1]-x.range()[0]);
+	
+	var start2first = Math.floor((startDate-first)/(1000 * 60 * 60 * 24)) ;
+	var startIndex = start2first/totalDuration*(width_t); //width_t-20
+	
+	x.domain([startDate,endDate])
 
-    // Update start and end dates in upper right-hand corner
-    d3.select("#displayDates")
-        .text(localBrushDateStart == localBrushDateEnd ? localBrushDateStart : localBrushDateStart + " - " + localBrushDateEnd);
-};
+	focus.select(".area").attr("d", area);
+	focus.select(".axis--x").call(xAxis);
+  	focus.select(".avg").attr("d", curvedLine);
+	svg_t.select(".zoom").call(zoom.transform, d3.zoomIdentity
+			.scale((width_t) / selectedDuration)
+			.translate(-startIndex-0.5, 0));
 
-function moveInBounds(b) {
-// move back to boundaries if user pans outside min and max date.
+}
 
-    var ms_in_year = 31536000000,
-        brush_start_new,
-        brush_end_new;
 
-    if       (b[0] < mindate)   { brush_start_new = mindate; }
-    else if  (b[0] > maxdate)   { brush_start_new = new Date(maxdate.getTime() - ms_in_year); }
-    else                        { brush_start_new = b[0]; };
+// Update datepickers with context time domain, draw corresponding wordcloud.
+function update_calendar_cloud(){
 
-    if       (b[1] > maxdate)   { brush_end_new = maxdate; }
-    else if  (b[1] < mindate)   { brush_end_new = new Date(mindate.getTime() + ms_in_year); }
-    else                        { brush_end_new = b[1]; };
+	// Click slider2DatesButton; OR mouseup event?(later)
+	// Get domain of focus
+	// Convert domain to YYYY-mm-dd
+	// Pass dates to calendars' values
+	// Trigger update_cloud(); 
 
-    brush.extent([brush_start_new, brush_end_new]);
+	//console.log(x.domain());
+	var brush_start = new Date(x.domain()[0]);
+	var input_start_picker = ("0"+brush_start.getDate()).slice(-2)+'-'+("0"+(brush_start.getMonth()+1)).slice(-2)+'-'+brush_start.getFullYear();
+ 
+	// document.getElementById("start").value = input_start_picker;
+	$("#start").datepicker("update", input_start_picker);
 
-    brush(d3.select(".brush").transition());
-    brushed();
-    draw();
+	var brush_end = new Date(x.domain()[1]);
+	var input_end_picker = ("0"+brush_end.getDate()).slice(-2)+'-'+("0"+(brush_end.getMonth()+1)).slice(-2)+'-'+brush_end.getFullYear();
+ 
+	//console.log(input_start_picker, input_end_picker);
+	// document.getElementById("end").value = input_end_picker;
+	$("#end").datepicker("update", input_end_picker);
+	update_cloud();
 
-    return(brush.extent())
-};
-
-function setYdomain(){
-// this function dynamically changes the y-axis to fit the data in focus
-
-    // get the min and max date in focus
-    var xleft = new Date(x.domain()[0]);
-    var xright = new Date(x.domain()[1]);
-
-    // a function that finds the nearest point to the right of a point
-    var bisectDate = d3.bisector(function(d) { return d.month; }).right;
-
-    // get the y value of the line at the left edge of view port:
-    var iL = bisectDate(dataset, xleft);
-
-    if (dataset[iL] !== undefined && dataset[iL-1] !== undefined) {
-
-        var left_dateBefore = dataset[iL-1].month,
-            left_dateAfter = dataset[iL].month;
-
-        var intfun = d3.interpolateNumber(dataset[iL-1].count, dataset[iL].count);
-        var yleft = intfun((xleft-left_dateBefore)/(left_dateAfter-left_dateBefore));
-    } else {
-        var yleft = 0;
-    }
-
-    // get the x value of the line at the right edge of view port:
-    var iR = bisectDate(dataset, xright);
-
-    if (dataset[iR] !== undefined && dataset[iR-1] !== undefined) {
-
-        var right_dateBefore = dataset[iR-1].month,
-            right_dateAfter = dataset[iR].month;
-
-        var intfun = d3.interpolateNumber(dataset[iR-1].count, dataset[iR].count);
-        var yright = intfun((xright-right_dateBefore)/(right_dateAfter-right_dateBefore));
-    } else {
-        var yright = 0;
-    }
-
-    // get the y values of all the actual data points that are in view
-    var dataSubset = dataset.filter(function(d){ return d.month >= xleft && d.month <= xright; });
-    var countSubset = [];
-    dataSubset.map(function(d) {countSubset.push(d.count);});
-
-    // add the edge values of the line to the array of counts in view, get the max y;
-    countSubset.push(yleft);
-    countSubset.push(yright);
-    var ymax_new = d3.max(countSubset);
-
-    if(ymax_new == 0){
-        ymax_new = dataYrange[1];
-    }
-
-    // reset and redraw the yaxis
-    y.domain([0, ymax_new*1.05]);
-    focus.select(".y.axis").call(yAxis);
-
-};
-
-function scaleDate(d,i) {
-// action for buttons that scale focus to certain time interval
-
-    var b = brush.extent(),
-        interval_ms,
-        brush_end_new,
-        brush_start_new;
-
-    if      (d == "year")   { interval_ms = 31536000000}
-    else if (d == "month")  { interval_ms = 2592000000 };
-
-    if ( d == "year" | d == "month" )  {
-
-        if((maxdate.getTime() - b[1].getTime()) < interval_ms){
-        // if brush is too far to the right that increasing the right-hand brush boundary would make the chart go out of bounds....
-            brush_start_new = new Date(maxdate.getTime() - interval_ms); // ...then decrease the left-hand brush boundary...
-            brush_end_new = maxdate; //...and set the right-hand brush boundary to the maxiumum limit.
-        } else {
-        // otherwise, increase the right-hand brush boundary.
-            brush_start_new = b[0];
-            brush_end_new = new Date(b[0].getTime() + interval_ms);
-        };
-
-    } else if ( d == "data")  {
-        brush_start_new = dataXrange[0];
-        brush_end_new = dataXrange[1]
-    } else {
-        brush_start_new = b[0];
-        brush_end_new = b[1];
-    };
-
-    brush.extent([brush_start_new, brush_end_new]);
-
-    // now draw the brush to match our extent
-    brush(d3.select(".brush").transition());
-    // now fire the brushstart, brushmove, and brushend events
-    brush.event(d3.select(".brush").transition());
-};
+}

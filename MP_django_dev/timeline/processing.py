@@ -49,7 +49,7 @@ def pad_date_freq(array_df):
     new_dates.append(array_df[0][-1]+1)
     new_freq.append(0)
 
-    return([new_dates, new_freq])
+    return(np.array([new_dates, new_freq]).T)
 
 
 def compute_timeline(timeline_queryset):

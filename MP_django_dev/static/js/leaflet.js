@@ -22,7 +22,7 @@ function update_leaflet(){
         console.log(time_filtered_ids)
 
         $.ajax({
-          url: 'http://127.0.0.1:8000/api/timeline/',
+          url: 'http://127.0.0.1:8000/api/geomap/',
           type: "GET",
           contentType: "application/json; charset=utf-8",
           dataType: 'json',
@@ -158,7 +158,7 @@ function update_leaflet(){
     // document.getElementById("timeperiod").innerHTML = 'From '+String(startDate)+' to '+String(endDate);
   
     $.ajax({
-      url: 'http://127.0.0.1:8000/api/geo/',
+      url: 'http://127.0.0.1:8000/api/geomap/',
       type: "GET",
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
