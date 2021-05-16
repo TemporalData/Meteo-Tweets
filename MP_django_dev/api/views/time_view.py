@@ -1,3 +1,4 @@
+from numpy.core.numeric import NaN
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,6 +9,8 @@ from django.http import HttpResponse
 from timeline.models import TimeData
 # Import function from processing.py from the app timelineW
 from timeline.processing import compute_timeline
+# Import model from the app geo_map
+from geo_map.models import GeoTweet
 
 # Import numpy
 import numpy as np
@@ -109,19 +112,35 @@ class TimeLineDataAPI(APIView):
         # Retrieve the id_filter from the request
         try:
             # Load the list in the request into id_filter variable
-            id_filter = request.query_params['id_filter']
+            geo_id_filter = request.query_params['id_filter']
 
         # Catch exceptions caused by 'id_filter' not being in the request
         except Exception:
             # Return a bad request status due to lacking 'id_filter
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+        # Try to retrieve ids from the GeoTweet model
+        if len(geo_id_filter) > 0:
+            try:
+                # Transform geo_id_filter into an int list
+                geo_id_filter = list(map(int, geo_id_filter.split(',')))
+                # Load the filtered data into the 'data' variable
+                id_filter = GeoTweet.objects.filter(
+                    geo_location_id__in=geo_id_filter).values_list(
+                        'id', flat=True)
+
+            # If the GeoTweet model does not exist
+            except GeoTweet.DoesNotExist:
+
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            # Set id_filter to an empty list
+            id_filter = []
+
         # Try to retrieve the data from the TimeData model
         try:
             # If id_filter is not empty
             if len(id_filter) > 0:
-                # Transform id_filter into an int list
-                id_filter = list(map(int, id_filter.split(',')))
                 # Load the filtered data into the 'data' variable
                 data = TimeData.objects.filter(
                     id__in=id_filter).values_list('time_created', flat=True)
@@ -148,5 +167,5 @@ class TimeLineDataAPI(APIView):
         # Return the desired data from the output of compute_timeline
         # This is found in file 'processing.py' in the timeline app
 
-        return HttpResponse(json_output, content_type="application/json") 
+        return HttpResponse(json_output, content_type="application/json")
         # Response(compute_timeline(data))
