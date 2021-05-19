@@ -27,7 +27,7 @@ Running this file will generate csv files corresponding to the models needed for
 
 ## psql_upload_commands.txt
 
-This text file contains instructions for uploading the model to the postgresql database
+This text file contains instructions for uploading the model to the postgresql database.
 
 ## requirements.txt
 
