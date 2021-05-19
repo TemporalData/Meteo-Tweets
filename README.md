@@ -7,7 +7,7 @@ This is the Master project of
 
 # Description
 
-The project is centered around creating a dashboard to allow for analysis of social media data, in this case tweets from twitter.
+This project is centered around creating a dashboard to allow for analysis of social media data, in this case tweets from twitter.
 The analysis aims to find relations between tweets and weather events.
 With this in mind we've engineered certain features from the twitter data set and visualized them to represent the temporal, geographical, and semantic information present within the tweets.
 
