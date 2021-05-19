@@ -25,6 +25,10 @@ Running this file will generate csv files corresponding to the models needed for
 
 Running this file will generate csv files corresponding to the models needed for the network part of the application.
 
+## psql_upload_commands.txt
+
+This text file contains instructions for uploading the model to the postgresql database
+
 ## requirements.txt
 
 This text file contains all the python libraries needed to run the other files in this folder.
@@ -35,6 +39,10 @@ This text file contains all the python libraries needed to run the other files i
 *Current version is a placeholder for pipeline for text model*
 
 Running this file will generate csv files corresponding to the models needed for the text part of the application.
+
+## timeline_pipeline.py
+
+Running this file will generate csv files corresponding to the models needed for the timeline part of the application.
 
 ## weather_pipeline.py
 
